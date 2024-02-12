@@ -12,9 +12,9 @@ import { Link } from "react-router-dom";
 import ConnectWalletModal from "./ui/ConnectWalletModal";
 import useAuth from "../hooks/useAuth";
 
-export default function Header(props , { onWalletChange }) {
-    const {walletAddress} = useAuth();
-    console.log("walletAddress" , walletAddress);
+export default function Header(props, { onWalletChange }) {
+  const { walletAddress } = useAuth();
+  console.log("walletAddress", walletAddress);
   const [show, setShow] = useState(false);
   const [forMobileView, setForMobileView] = useState(
     window.innerWidth < 992 ? true : false
@@ -29,7 +29,7 @@ export default function Header(props , { onWalletChange }) {
     },
     onWalletChange,
     forMobileView,
-   chainData :  props.chainSelect,
+    chainData: props.chainSelect,
   }));
   return (
     <>
@@ -43,11 +43,23 @@ export default function Header(props , { onWalletChange }) {
                     <img src="assets/images/logo.png" />
                   </Navbar.Brand>
 
-               {!walletAddress.selectedAccount ?  <button onClick={()=>{setShow(true)}} className="ms-auto common-btn">
-                    Connect Wallet
-                  </button> : <button className="ms-auto common-btn">
-                   {walletAddress.selectedAccount.replace(walletAddress.selectedAccount.substring(5 , 37) , "...")}
-                  </button>}
+                  {!walletAddress.selectedAccount ? (
+                    <button
+                      onClick={() => {
+                        setShow(true);
+                      }}
+                      className="ms-auto common-btn"
+                    >
+                      Connect Wallet
+                    </button>
+                  ) : (
+                    <button className="ms-auto common-btn">
+                      {walletAddress.selectedAccount.replace(
+                        walletAddress.selectedAccount.substring(5, 37),
+                        "..."
+                      )}
+                    </button>
+                  )}
                 </div>
               </Col>
             </Row>
