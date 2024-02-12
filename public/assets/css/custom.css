@@ -13,7 +13,7 @@ body{
     font-size: 16px;
     line-height: 26px;
     text-decoration: none;
-    color: #fff;
+    color: #fff !important;
     font-weight: 600;
     border: none !important;
     text-align: center;
@@ -379,9 +379,10 @@ background: transparent;
     margin-top: 20px;
     display: inline-block;
 }
-.transaction-proceed-modal .modal-content{
-background-color: #f3eff1;
-border: none;
+.transaction-proceed-modal .modal-content {
+    background-color: #f3eff1;
+    border: 1px solid #fa255f;
+    border-radius: 20px;
 }
 .transaction-proceed-modal .modal-content .modal-body {
     padding: 30px 30px;
@@ -468,4 +469,59 @@ height: 16px;
 }
 .currency-transfer-loading div:last-child::after{
     content: none;
+}
+.modal-backdrop.show {
+    opacity: 1;
+    background: rgb(30 30 30 / 35%);
+    backdrop-filter: blur(8px);
+}
+.connect-wallet-modal{
+
+}
+.connect-wallet-modal .modal-header {
+    border: none;
+    padding-bottom: 0;
+}
+.connect-wallet-modal .modal-header .modal-title{
+    font-size: 20px;
+    line-height: 26px;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+.connect-wallet-modal .modal-content {
+    background-color: #f3eff1;
+    border: 1px solid #fa255f;
+    border-radius: 20px;
+}
+.connect-wallet-modal .modal-content .common-btn {
+    display: block;
+    margin: 10px 0;
+    width: 100%;
+}
+.connect-wallet-modal .modal-content .common-btn img {
+    height: 20px;
+    width: 20px;
+    margin-left: 8px;
+}
+.connect-wallet-modal .modal-content .learnmore-link{
+    text-align: center;
+    font-size: 14px;
+    line-height: 25px;
+    font-weight: 400;
+}
+.connect-wallet-modal .modal-content .learnmore-link a {
+    color: #FA255F;
+    text-decoration: none;
+}
+.modal.show.connect-wallet-modal .modal-dialog {
+    max-width: 400px;
+    margin: auto;
+}
+.connect-wallet-modal .modal-header .btn-close {
+    background-color: #f46463;
+    opacity: 1;
+    height: 14px;
+    width: 14px;
+    padding: 4px;
+    background-size: 50%;
 }

@@ -46,20 +46,20 @@ export default function ConnectWalletModal({
         <Modal.Title>Connect Wallet</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {chainData === "itcoin" ? (
+        {chainData === "Bitcoin" ? (
           <div className="connect-tech-div">
-            <Button onClick={() => connect("metamask")}>
+            <Button className="common-btn" onClick={() => connect("metamask")}>
               Unisat <img src="assets/images/unisat.jpg" />
             </Button>
 
-            <Button onClick={() => connect("Coinbase")}>
+            <Button className="common-btn" onClick={() => connect("Coinbase")}>
               Slup <img src="assets/images/slup.png" />
             </Button>
           </div>
         ) : (
           <div className="connect-tech-div">
             {forMobileView === false ? (
-              <Button onClick={() => connect("metamask")}>
+              <Button className="common-btn" onClick={() => connect("metamask")}>
                 Metamask <img src="assets/images/metamask.svg" />
               </Button>
             ) : (
@@ -68,13 +68,13 @@ export default function ConnectWalletModal({
             {/* <Button onClick={() => connect("metamask")}>TronLink <img src="assets/img/tronlink.webp" /></Button> */}
             {/* <Button onClick={() => connect("metamask")}>BitKeep <img src="assets/img/bitkeep.svg" /></Button> */}
             {forMobileView === false ? (
-              <Button onClick={() => connect("Coinbase")}>
+              <Button className="common-btn" onClick={() => connect("Coinbase")}>
                 Coinbase Wallet <img src="assets/images/coinbase.webp" />
               </Button>
             ) : (
               ""
             )}
-            <Button onClick={() => connect("walletConnect")}>
+            <Button className="common-btn" onClick={() => connect("walletConnect")}>
               WalletConnect <img src="assets/images/walletconnect.svg" />
             </Button>
           </div>
@@ -82,7 +82,7 @@ export default function ConnectWalletModal({
         <p className="learnmore-link">
           New to Ethereum?{" "}
           <a href="https://ethereum.org/en/wallets/" target={"_blank"}>
-            Learn more about wallets
+            Learn more about wallets →
           </a>
         </p>
       </Modal.Body>

@@ -207,4 +207,64 @@
         background-color: #e8e8fa;
         z-index: 100;
     }
+    .transaction-proceed-modal .modal-content .modal-body {
+        padding: 10px;
+    }
+    .transaction-proceed-modal .modal-content .modal-body .heading-box h4 {
+        font-size: 14px;
+        line-height: 20px;
+    }
+    .transaction-proceed-modal .modal-content .modal-body p {
+        font-size: 10px;
+        line-height: 16px;
+    }
+    .transaction-proceed-modal .modal-content .modal-body .swap-row > div img {
+        height: 30px;
+        margin-right: 6px;
+    }
+    .transaction-proceed-modal .modal-content .modal-body .swap-row > div h4 {
+        font-size: 12px;
+        line-height: 16px;
+    }
+    .transaction-proceed-modal .modal-content .modal-body .swap-row .arrow-img {
+        height: 10px;
+    }
+    .currency-transfer-loading div .loader-ing {
+        height: 16px;
+    }
+    .currency-transfer-loading div .coin-img {
+        height: 24px;
+        margin: 5px 0;
+    }
+    .currency-transfer-loading div span {
+        font-size: 10px;
+        line-height: 14px;
+    }
+    .currency-transfer-loading div::after {
+        content: "";
+        position: absolute;
+        border-bottom: 2px dashed #fa255f;
+        left: 15px;
+        width: 110px;
+        top: 38px;
+    }
+    .modal.transaction-proceed-modal.show .modal-dialog {
+        max-width: 300px;
+        margin: auto;
+    }
+    .outer-bridge-box .common-btn.w-100{
+        padding: 10px !important;
+    }
+    .connect-wallet-modal .modal-content .learnmore-link{
+        font-size: 10px;
+        line-height: 14px;
+    }
+    .modal.show.connect-wallet-modal .modal-dialog {
+        max-width:300px;
+        margin: auto;
+    }
+    .connect-wallet-modal .modal-header .modal-title {
+        font-size: 14px;
+        line-height: 18px;
+    }
 }
