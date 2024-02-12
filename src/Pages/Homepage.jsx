@@ -1,15 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Layout from '../Component/Layout'
-import { Container, Row, Col, Dropdown, Form } from 'react-bootstrap'
+import { Container, Row, Col, Dropdown, Form, Modal, Button } from 'react-bootstrap'
 
 export const Homepage = () => {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   return (
     <>
       <Layout>
             <section className="swap-main-sec">
                 <Container>
                   <Row className="align-items-center">
-                     <Col md={5}>
+                     <Col lg={5} md={12}>
                         <div className="outer-token-informations">
                             <h3>Token Information</h3>
                             <div className="token-with-price">
@@ -24,20 +28,32 @@ export const Homepage = () => {
                                 <a href=""><img src="assets/images/copy.png" alt="" /></a>
                                 <a href=""><img src="assets/images/download.png" alt="" /></a></p>
                             </div>
-                            <Dropdown>
+                            <Dropdown className="dropdown-cross-chain-step">
                               <Dropdown.Toggle className="common-btn" id="dropdown-basic">
                               CROSS CHAIN STEPS
                               </Dropdown.Toggle>
 
                               <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                                  <div>
+                                      <h3>Cross-chain from bitcoin to EVM</h3>
+                                      <p>Connect Bitcoin wallet.Select the ETH or BNB chain, enter the receiving address on the EVM chain,wait for 3-4 blocks, and after minting is successful, tokens are successfully bridged over to the EVM network.</p>
+                                  </div>
+                                  <div>
+                                      <h3>Cross-chain from bitcoin to EVM</h3>
+                                      <p>Connect Bitcoin wallet.Select the ETH or BNB chain, enter the receiving address on the EVM chain,wait for 3-4 blocks, and after minting is successful, tokens are successfully bridged over to the EVM network.</p>
+                                  </div>
+                                  <div>
+                                      <h3>Cross-chain from bitcoin to EVM</h3>
+                                      <p>Connect Bitcoin wallet.Select the ETH or BNB chain, enter the receiving address on the EVM chain,wait for 3-4 blocks, and after minting is successful, tokens are successfully bridged over to the EVM network.</p>
+                                  </div>
+                                  <div>
+                                    <a href="" className="view-all-btn">View All</a>
+                                  </div>
                               </Dropdown.Menu>
                             </Dropdown>
                         </div>
                      </Col>
-                     <Col md={7}>
+                     <Col lg={7} md={12}>
                          <h2 className="bridge-heading">BRIDGE</h2>
                         <div className="outer-bridge-box">
                             <div className="swap-currency-drop">
@@ -136,7 +152,7 @@ export const Homepage = () => {
                             </div>
 
                             <div>
-                              <button className="common-btn w-100 p-3">TRANSFER</button>
+                              <button className="common-btn w-100 p-3"  onClick={handleShow}>TRANSFER</button>
                             </div>
 
                             <div className="new-user-note">
@@ -151,6 +167,51 @@ export const Homepage = () => {
                   </Row>
                 </Container>
             </section>
+
+            <Modal show={show} onHide={handleClose} centered className="transaction-proceed-modal">
+              <Modal.Body >
+                  <div className="heading-box">
+                    <h4>Your Transaction is Being Process</h4>
+                    <p>Transaction status can also be tracked in Recent Trades</p>
+                  </div>
+                  <div className="swap-row">
+                      <div>
+                         <img src="assets/images/MUBI.png" alt="" className="" />
+                         <div>
+                            <h4>MUBI</h4>
+                            <p>mubi</p>
+                         </div>
+                      </div>
+                      <img src="assets/images/Arrow.png" alt="" className="arrow-img" />
+                      <div>
+                         <img src="assets/images/MUBI.png" alt="" className="" />
+                         <div>
+                            <h4>MUBI</h4>
+                            <p>mubi</p>
+                         </div>
+                      </div>
+                  </div>
+                  <div className="currency-transfer-loading">
+                      <div>
+                          <img src="assets/images/loader.gif" alt="" className="loader-ing" />
+                          <img src="assets/images/bitcoin.png" alt="" className="coin-img" />
+                          <span>BTC</span>
+                      </div> 
+                      <div>
+                          <img src="assets/images/loader.gif" alt="" className="loader-ing" />
+                          <img src="assets/images/bitcoin.png" alt="" className="coin-img" />
+                          <span>BTC</span>
+                      </div>
+                      <div>
+                          <img src="assets/images/loader.gif" alt="" className="loader-ing" />
+                          <img src="assets/images/slup.png" alt="" className="coin-img" />
+                          <span>Slup</span>
+                      </div> 
+                  </div>
+                  <p>If your transaction seems to be taking longer than normal (more than 30 mins). Please contact our Support Team at Support@slup.com</p>
+              </Modal.Body>
+            </Modal>
+
       </Layout>
     </>
   )

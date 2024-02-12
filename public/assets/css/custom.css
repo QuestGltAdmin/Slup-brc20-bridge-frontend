@@ -36,10 +36,10 @@ height: 40px;
 }
 .swap-main-sec {
     background-image: url(../images/banner-bg.png);
-    min-height: 100ch;
-    background-position: center;
+    min-height: 100vh;
+    background-position: top 30% center;
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: contain;
     padding-top: 130px;
 }
 .outer-token-informations{
@@ -229,6 +229,15 @@ background-color: #fff;
     display: flex;
     align-items: center;
 }
+.checkbox-agree .form-check {
+    display: flex;
+    min-height: 1.5rem;
+    padding-left: 1.5em;
+    margin-bottom: .125rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+}
 .checkbox-agree .form-check-input {
     background-color: #fa255f !important;
     opacity: 1;
@@ -239,6 +248,7 @@ background-color: #fff;
     margin: 0;
     margin-right: 7px;
     box-shadow: none !important;
+    min-width: 18px;
 }
 .new-user-note{
     text-align: center;
@@ -327,4 +337,135 @@ background-color: #fff;
     line-height: 22px;
     display: inline-block;
     margin-left: 10px;
+}
+.dropdown-cross-chain-step{
+    background: linear-gradient(to bottom, #f46463 0%,#fa255f 100%);
+    border-radius: 16px;
+}
+.dropdown-cross-chain-step .common-btn{
+background: transparent;
+}
+.dropdown-cross-chain-step .dropdown-menu {
+    position: static !important;
+    transform: none !important;
+    border: none !important;
+    background-color: transparent !important;
+    padding: 20px;
+    text-align: left;
+}
+.dropdown-cross-chain-step .dropdown-menu h3 {
+    color: #fff;
+    font-size: 16px;
+    text-align: left;
+    font-weight: 400;
+    background-color: #f76d79;
+    padding: 0 10px;
+    max-width: max-content;
+    margin-bottom: 15px;
+    line-height: 38px;
+}
+.dropdown-cross-chain-step .dropdown-menu p {
+    color: #fff;
+    font-weight: 300;
+    line-height: 22px;
+    font-size: 14px;
+}
+.dropdown-cross-chain-step .dropdown-menu .view-all-btn {
+    font-size: 18px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    margin-top: 20px;
+    display: inline-block;
+}
+.transaction-proceed-modal .modal-content{
+background-color: #f3eff1;
+border: none;
+}
+.transaction-proceed-modal .modal-content .modal-body {
+    padding: 30px 30px;
+}
+.transaction-proceed-modal .modal-content .modal-body .heading-box{
+    text-align: center;
+}
+.transaction-proceed-modal .modal-content .modal-body .heading-box h4 {
+    font-size: 20px;
+    line-height: 26px;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+.transaction-proceed-modal .modal-content .modal-body p{
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    color: #808080;
+    text-align: center;
+}
+.transaction-proceed-modal .modal-content .modal-body .swap-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 30px 0 15px;
+}
+.transaction-proceed-modal .modal-content .modal-body .swap-row > div{
+    display: flex;
+    align-items: center;
+}
+.transaction-proceed-modal .modal-content .modal-body .swap-row > div img {
+    height: 40px;
+    margin-right: 10px;
+}
+.transaction-proceed-modal .modal-content .modal-body .swap-row > div h4 {
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 600;
+    margin: 0;
+    text-align: left;
+}
+.transaction-proceed-modal .modal-content .modal-body .swap-row > div p {
+    text-align: left;
+    margin: 0;
+}
+.transaction-proceed-modal .modal-content .modal-body .swap-row .arrow-img{
+height: 16px;
+}
+.currency-transfer-loading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 5px 15px;
+}
+.currency-transfer-loading div {
+    text-align: center;
+    position: relative;
+}
+.currency-transfer-loading div span{
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+    display: block;
+}
+.currency-transfer-loading div .loader-ing {
+    height: 22px;
+    display: block;
+    margin: auto;
+}
+.currency-transfer-loading div .coin-img {
+    height: 36px;
+    display: block;
+    margin: 10px 0;
+    position: relative;
+    z-index: 1;
+}
+.currency-transfer-loading div::after {
+    content: "";
+    position: absolute;
+    border-bottom: 2px dashed #fa255f;
+    left: 33px;
+    width: 170px;
+    top: 50px;
+}
+.currency-transfer-loading div:last-child::after{
+    content: none;
 }

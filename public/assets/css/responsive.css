@@ -1,0 +1,210 @@
+@media (max-width: 1400px) {
+    .swap-currency-drop .dropdown-toggle {
+        min-width: auto;
+    }
+}
+@media (max-width: 1300px){
+    .outer-token-informations h3 {
+        font-size: 26px;
+        line-height: 32px;
+    }
+    .token-with-price {
+        border-radius: 12px;
+        padding: 12px;
+        margin: 20px 0 15px;
+    }
+    .outer-token-informations h2 {
+        font-size: 22px;
+        margin: 10px 0 15px;
+    }
+    .bridge-heading {
+        font-size: 28px;
+        line-height: 30px;
+    }
+    .swap-currency-drop p {
+        font-size: 14px;
+        line-height: 20px;
+        padding: 4px 10px;
+        border-radius: 6px;
+    }
+    .swap-currency-drop .dropdown-toggle img {
+        height: 20px;
+        margin-right: 5px;
+    }
+    .swap-currency-drop .dropdown-toggle::after {
+        top: 8px;
+    }
+    .swap-currency-drop {
+        padding: 10px;
+        border-radius: 12px;
+    }
+    .swap-btn img {
+        height: 32px;
+    }
+    .common-btn {
+        border-radius: 10px;
+        padding: 8px 20px;
+        font-size: 14px;
+        line-height: 20px;
+    }
+    .outer-bridge-box, .outer-token-informations {
+        border-radius: 15px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 992px){
+    .bridge-heading {
+        margin-top: 30px;
+    }
+}
+
+@media (max-width: 768px){
+    .main-header .navbar-brand img {
+        height: 20px;
+    }
+    .common-btn {
+        border-radius: 5px;
+        padding: 6px 10px;
+        font-size: 12px;
+        line-height: 14px;
+    }
+    .swap-main-sec {
+        padding-top: 70px;
+    }
+    .outer-token-informations h3 {
+        font-size: 18px;
+        line-height: 20px;
+    }
+    .token-with-price {
+        border-radius: 8px;
+        padding: 5px 7px;
+        margin: 10px 0 10px;
+    }
+    .token-with-price p .token-img {
+        height: 22px;
+    }
+    .token-with-price p {
+        font-size: 13px;
+        line-height: 20px;
+    }
+    .outer-token-informations h6 {
+        font-size: 10px;
+        line-height: 20px;
+    }
+    .outer-token-informations span {
+        padding: 5px 5px;
+        line-height: 10px;
+    }
+    .outer-token-informations h2 {
+        font-size: 20px;
+        margin: 5px 0 10px;
+    }
+    .outer-token-informations .slup-address-copy p {
+        font-size: 10px;
+    }
+    .outer-token-informations .dropdown-toggle {
+        padding: 10px 10px;
+        font-size: 12px;
+    }
+    .dropdown-cross-chain-step {
+        border-radius: 5px;
+    }
+    .outer-token-informations .dropdown-toggle::after {
+        right: 13px;
+        top: 15px;
+    }
+    .bridge-heading {
+        margin-top: 18px;
+        font-size: 20px;
+        line-height: 24px;
+    }
+    .swap-currency-drop p {
+        font-size: 10px;
+        line-height: 14px;
+        padding: 4px 5px;
+        border-radius: 5px;
+    }
+    .swap-currency-drop {
+        padding: 8px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    .swap-currency-drop .dropdown-toggle img {
+        height: 16px;
+        margin-right: 3px;
+    }
+    .swap-currency-drop .dropdown-toggle {
+        font-size: 10px;
+        min-width: auto;
+        padding-right: 15px;
+    }
+    .swap-btn img {
+        height: 24px;
+    }
+    .swap-btn {
+        margin: 0px 0 10px;
+    }
+    .available-balance p {
+        font-size: 10px;
+    }
+    .available-balance {
+        margin: 0px 0 10px;
+    }
+    .swap-currency-drop.swap-enter-amount .form-control {
+        font-size: 12px;
+        padding: 0 10px;
+    }
+    .swap-currency-drop.swap-enter-amount .common-btn {
+        border-radius: 5px;
+        line-height: 12px;
+        font-size: 10px;
+    }
+    .service-charge-box p {
+        font-size: 9px;
+        line-height: 12px;
+    }
+    .service-charge-box p.receive-amount span.brc-highlight {
+        padding: 4px 4px;
+        border-radius: 5px;
+        line-height: 6px;
+        margin-left: 5px;
+        font-size: 8px;
+    }
+    .service-charge-box p .service-icon {
+        height: 14px;
+        margin-right: 3px;
+    }
+    .outer-bridge-box, .outer-token-informations {
+        border-radius: 8px;
+        padding: 8px;
+    }
+    .service-charge-box p a img {
+        height: 8px;
+        margin-left: 0px;
+    }
+    .checkbox-agree .form-check {
+        font-size: 10px;
+    }
+    .checkbox-agree .form-check {
+        padding: 0;
+    }
+    .checkbox-agree .form-check-input {
+        height: 12px;
+        width: 12px;
+        min-width: 12px;
+    }
+    .checkbox-agree {
+        margin: 12px auto;
+    }
+    .new-user-note h6, .new-user-note h5 {
+        font-size: 10px;
+        line-height: 16px;
+        margin: 5px 0;
+    }
+    .main-header {
+        padding: 0px 0;
+        background-color: #e8e8fa;
+        z-index: 100;
+    }
+}
