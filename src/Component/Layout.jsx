@@ -6,7 +6,7 @@ function Layout(props) {
   return (
     <div className="dashboard-layout">
             <div className="inner-dash-bpx">
-              <Header/>
+              <Header chainSelect={props.chainSelect}/>
               {props.children}
               {/* <Footer/> */}
             </div>

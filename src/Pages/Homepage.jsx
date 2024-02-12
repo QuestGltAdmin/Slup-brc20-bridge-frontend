@@ -9,7 +9,7 @@ export const Homepage = () => {
   const handleShow = () => setShow(true);
   return (
     <>
-      <Layout>
+      <Layout chainSelect="Bitcoin">
             <section className="swap-main-sec">
                 <Container>
                   <Row className="align-items-center">
