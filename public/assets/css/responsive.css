@@ -203,9 +203,10 @@
         margin: 5px 0;
     }
     .main-header {
-        padding: 0px 0;
-        background-color: #e8e8fa;
-        z-index: 100;
+        padding: 0;
+    }
+    .main-header.darker-header {
+        padding: 0;
     }
     .transaction-proceed-modal .modal-content .modal-body {
         padding: 10px;

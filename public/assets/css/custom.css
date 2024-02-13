@@ -27,7 +27,15 @@ body{
     right: 0;
     top: 0;
     background-color: transparent;
+    z-index: 100;
+    transition: all ease-in-out .2s;
 }
+.main-header.darker-header{
+    background-color: #e7e7fa !important;
+    border-bottom: 1px solid #ddd;
+    padding: 5px 0;
+}
+
 .main-header .navbar-brand{
     padding: 0;
 }
