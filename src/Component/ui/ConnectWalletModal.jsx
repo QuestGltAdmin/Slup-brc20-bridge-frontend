@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { Col, Container, Row, Modal, Navbar, Button } from "react-bootstrap";
 import { Connect } from "../../helpers/Connect";
 import { useDispatch } from "react-redux";
-import { setWalletAddress } from "../../store/reducers/authReducer";
+import { setEVMWallet } from "../../store/reducers/authReducer";
 
 export default function ConnectWalletModal({
-  onWalletChange,
   forMobileView,
   chainData,
   ...props
@@ -18,20 +17,12 @@ export default function ConnectWalletModal({
       const wallet = await Connect(type);
       if (type === "walletConnect") {
         document.addEventListener("ACCOUNT_CONNECTED", (e) => {
-          localStorage.setItem("wallet", JSON.stringify(e.detail));
-          // onWalletChange(e.detail);
-          dispatch(setWalletAddress(e.detail));
-          console.log("1");
+          dispatch(setEVMWallet(e.detail));
         });
-        localStorage.setItem("wallet", JSON.stringify(wallet));
-        // onWalletChange(wallet);
-        dispatch(setWalletAddress(wallet));
-        console.log("2");
+
+        dispatch(setEVMWallet(wallet));
       } else {
-        localStorage.setItem("wallet", JSON.stringify(wallet));
-        // onWalletChange(wallet);
-        dispatch(setWalletAddress(wallet));
-        console.log("3");
+        dispatch(setEVMWallet(wallet));
       }
     } catch (err) {
       console.log("Connect Wallet: ", err);

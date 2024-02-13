@@ -6,7 +6,7 @@ const isAuthenticated = localStorage.getItem("isAuthenticated");
 const isUserAuthenticated = localStorage.getItem("isUserAuthenticated");
 const userRole = localStorage.getItem("userRole");
 const userData = localStorage.getItem("userData");
-const walletAddress = localStorage.getItem("walletAddress");
+const WalletEVM = localStorage.getItem("WalletEVM");
 const proupdatedata = localStorage.getItem("saveprodata");
 
 
@@ -14,7 +14,7 @@ const authSlice =  createSlice({
   name: "auth",
   initialState: {
     isLoading: false,
-    walletAddress:!!walletAddress ? JSON.parse(walletAddress) : {},
+    WalletEVM:!!WalletEVM ? JSON.parse(WalletEVM) : {},
     isAuthenticated: !!isAuthenticated ? true : false,
     isUserAuthenticated: !!isUserAuthenticated ? true : false,
     userRole: !!userRole ? userRole : "",
@@ -80,7 +80,7 @@ const authSlice =  createSlice({
       return {
         ...state,
         isLoading: false,
-        walletAddress: "",
+        WalletEVM: "",
         isUserAuthenticated : false,
         isAuthenticated: false,
         errorMsg: "",
@@ -89,11 +89,11 @@ const authSlice =  createSlice({
       };
     },
 
-    setWalletAddress: (state, action) => {
-      localStorage.setItem("walletAddress", JSON.stringify(action.payload));
+    setEVMWallet: (state, action) => {
+      localStorage.setItem("WalletEVM", JSON.stringify(action.payload));
       return {
         ...state,
-        walletAddress: action.payload,
+        WalletEVM: action.payload,
       };
     },
 
@@ -103,7 +103,7 @@ const authSlice =  createSlice({
 
 export const {
   logout,
-  setWalletAddress,
+  setEVMWallet,
   userLoginSaga,
   userLoginStart,
   saveprofiledata,

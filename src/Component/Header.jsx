@@ -11,11 +11,16 @@ import {
 import { Link } from "react-router-dom";
 import ConnectWalletModal from "./ui/ConnectWalletModal";
 import useAuth from "../hooks/useAuth";
+import { Connect } from "../helpers/Connect";
+import { useDispatch } from "react-redux";
+import { setEVMWallet } from "../store/reducers/authReducer";
 
-export default function Header(props, { onWalletChange }) {
-  const { walletAddress } = useAuth();
-  console.log("walletAddress", walletAddress);
+export default function Header(props) {
+  const dispatch = useDispatch();
+  const { WalletEVM } = useAuth();
+  console.log("WalletEVM", WalletEVM);
   const [show, setShow] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
   const [forMobileView, setForMobileView] = useState(
     window.innerWidth < 992 ? true : false
   );
@@ -27,7 +32,7 @@ export default function Header(props, { onWalletChange }) {
       show: show,
       onHide: handleClose,
     },
-    onWalletChange,
+    // onWalletChange,
     forMobileView,
     chainData: props.chainSelect,
   }));
@@ -46,6 +51,33 @@ export default function Header(props, { onWalletChange }) {
       window.removeEventListener("scroll", controlNavbar);
     };
   }, []);
+
+  const getWalletAddress = async () => {
+    //=================Account change code===============//
+    const walletAcc = await Connect(WalletEVM.type);
+    if (WalletEVM.type === "walletConnect") {
+      document.addEventListener("ACCOUNT_CONNECTED", (e) => {
+        dispatch(setEVMWallet(walletAcc));
+      });
+      dispatch(setEVMWallet(walletAcc));
+    } else {
+      dispatch(setEVMWallet(walletAcc));
+    }
+  };
+
+  useEffect(() => {
+    if (WalletEVM) {
+      let objData = localStorage.getItem("WalletEVM");
+      objData = JSON.parse(objData);
+      setWalletAddress(objData?.selectedAccount);
+    }
+  }, [WalletEVM]);
+
+  useEffect(() => {
+    if (walletAddress) {
+      getWalletAddress();
+    }
+  }, [walletAddress]);
   return (
     <>
       <header className="main-header" id="headerId">
@@ -58,7 +90,7 @@ export default function Header(props, { onWalletChange }) {
                     <img src="assets/images/logo.png" />
                   </Navbar.Brand>
 
-                  {!walletAddress.selectedAccount ? (
+                  {!WalletEVM?.selectedAccount ? (
                     <button
                       onClick={() => {
                         setShow(true);
@@ -69,8 +101,8 @@ export default function Header(props, { onWalletChange }) {
                     </button>
                   ) : (
                     <button className="ms-auto common-btn">
-                      {walletAddress.selectedAccount.replace(
-                        walletAddress.selectedAccount.substring(5, 37),
+                      {WalletEVM?.selectedAccount.replace(
+                        WalletEVM?.selectedAccount.substring(5, 37),
                         "..."
                       )}
                     </button>
