@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Navbar,
   Container,
@@ -31,9 +31,24 @@ export default function Header(props, { onWalletChange }) {
     forMobileView,
     chainData: props.chainSelect,
   }));
+  const controlNavbar = () => {
+    if (window.scrollY) {
+      document.getElementById("headerId").classList.add("darker-header");
+    }
+    if (window.scrollY == 0) {
+      document.getElementById("headerId").classList.remove("darker-header");
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", controlNavbar);
+    return () => {
+      window.removeEventListener("scroll", controlNavbar);
+    };
+  }, []);
   return (
     <>
-      <header className="main-header">
+      <header className="main-header" id="headerId">
         <Navbar expand="lg" sticky="top">
           <Container>
             <Row className="w-100">

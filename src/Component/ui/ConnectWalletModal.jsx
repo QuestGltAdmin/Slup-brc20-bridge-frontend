@@ -21,14 +21,17 @@ export default function ConnectWalletModal({
           localStorage.setItem("wallet", JSON.stringify(e.detail));
           // onWalletChange(e.detail);
           dispatch(setWalletAddress(e.detail));
+          console.log("1");
         });
         localStorage.setItem("wallet", JSON.stringify(wallet));
         // onWalletChange(wallet);
         dispatch(setWalletAddress(wallet));
+        console.log("2");
       } else {
         localStorage.setItem("wallet", JSON.stringify(wallet));
         // onWalletChange(wallet);
         dispatch(setWalletAddress(wallet));
+        console.log("3");
       }
     } catch (err) {
       console.log("Connect Wallet: ", err);
@@ -46,7 +49,7 @@ export default function ConnectWalletModal({
         <Modal.Title>Connect Wallet</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {chainData === "Bitcoin" ? (
+        {chainData === "itcoin" ? (
           <div className="connect-tech-div">
             <Button className="common-btn" onClick={() => connect("metamask")}>
               Unisat <img src="assets/images/unisat.jpg" />
@@ -59,7 +62,10 @@ export default function ConnectWalletModal({
         ) : (
           <div className="connect-tech-div">
             {forMobileView === false ? (
-              <Button className="common-btn" onClick={() => connect("metamask")}>
+              <Button
+                className="common-btn"
+                onClick={() => connect("metamask")}
+              >
                 Metamask <img src="assets/images/metamask.svg" />
               </Button>
             ) : (
@@ -68,13 +74,19 @@ export default function ConnectWalletModal({
             {/* <Button onClick={() => connect("metamask")}>TronLink <img src="assets/img/tronlink.webp" /></Button> */}
             {/* <Button onClick={() => connect("metamask")}>BitKeep <img src="assets/img/bitkeep.svg" /></Button> */}
             {forMobileView === false ? (
-              <Button className="common-btn" onClick={() => connect("Coinbase")}>
+              <Button
+                className="common-btn"
+                onClick={() => connect("Coinbase")}
+              >
                 Coinbase Wallet <img src="assets/images/coinbase.webp" />
               </Button>
             ) : (
               ""
             )}
-            <Button className="common-btn" onClick={() => connect("walletConnect")}>
+            <Button
+              className="common-btn"
+              onClick={() => connect("walletConnect")}
+            >
               WalletConnect <img src="assets/images/walletconnect.svg" />
             </Button>
           </div>

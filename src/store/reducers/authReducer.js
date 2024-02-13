@@ -14,7 +14,7 @@ const authSlice =  createSlice({
   name: "auth",
   initialState: {
     isLoading: false,
-    walletAddress: !!walletAddress ? walletAddress : {},
+    walletAddress:!!walletAddress ? JSON.parse(walletAddress) : {},
     isAuthenticated: !!isAuthenticated ? true : false,
     isUserAuthenticated: !!isUserAuthenticated ? true : false,
     userRole: !!userRole ? userRole : "",
@@ -90,7 +90,7 @@ const authSlice =  createSlice({
     },
 
     setWalletAddress: (state, action) => {
-      localStorage.setItem("walletAddress", action.payload);
+      localStorage.setItem("walletAddress", JSON.stringify(action.payload));
       return {
         ...state,
         walletAddress: action.payload,
