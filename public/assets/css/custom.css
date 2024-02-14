@@ -214,6 +214,18 @@ background-color: #fff;
 .swap-currency-drop  .dropdown-menu .dropdown-item {
     font-size: 14px;
     color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-bottom: 1px solid #eee;
+    padding: 7px  15px;
+}
+.swap-currency-drop  .dropdown-menu .dropdown-item:last-child{
+    border: none;
+}
+.swap-currency-drop .dropdown-menu .dropdown-item img {
+    height: 20px;
+    margin-right: 8px;
 }
 .swap-currency-drop .dropdown-menu .dropdown-item:hover,
 .swap-currency-drop .dropdown-menu .dropdown-item:focus,
@@ -532,4 +544,43 @@ height: 16px;
     width: 14px;
     padding: 4px;
     background-size: 50%;
+}
+.privacy-sec{
+    padding: 120px 0;
+    background-color: #fff;
+    min-height: 100vh;
+    
+}
+.privacy-sec h2{
+text-align: center;
+background: -webkit-linear-gradient( #F46463, #FA255F);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+font-size: 58px;
+line-height: 87px;
+letter-spacing: 1px;
+font-weight: 700;
+}
+.privacy-sec .content-box-privacy{
+    text-align: center;
+    background: linear-gradient(to bottom, #ffffff 0%,#fef3f6 51%,#ffffff 100%); 
+    border: 1px solid #fa255f;
+    border-radius: 25px;
+    padding: 30px;
+}
+.privacy-sec .content-box-privacy h4 {
+    font-size: 20px;
+    line-height: 30px;
+    font-weight: 600;
+    margin-top: 35px;
+    margin-bottom: 10px;
+}
+.privacy-sec .content-box-privacy p,
+.privacy-sec .content-box-privacy ul li{
+    font-size: 14px;
+    line-height: 24px;
+    font-weight: 400;
+}
+.privacy-sec .content-box-privacy ul{
+    text-align: left;
 }

@@ -112,12 +112,29 @@ export const Homepage = () => {
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                        <Dropdown.Item href="#/action-1">
+                              <img src="assets/images/slup.png" alt="" />
+                                Slup Chain
+                        </Dropdown.Item>
                         <Dropdown.Item href="#/action-2">
-                          Another action
+                               <img src="assets/images/bitcoin.png" alt="" />
+                                Bitcoin
                         </Dropdown.Item>
                         <Dropdown.Item href="#/action-3">
-                          Something else
+                              <img src="assets/images/MUBI.png" alt="" />
+                                MUBI
+                        </Dropdown.Item>
+                        <Dropdown.Item href="#/action-1">
+                              <img src="assets/images/slup.png" alt="" />
+                                Slup Chain
+                        </Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">
+                               <img src="assets/images/bitcoin.png" alt="" />
+                                Bitcoin
+                        </Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">
+                              <img src="assets/images/MUBI.png" alt="" />
+                                MUBI
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
@@ -134,18 +151,33 @@ export const Homepage = () => {
                         <Dropdown>
                           <Dropdown.Toggle className="" id="dropdown-basic">
                             <img src="assets/images/slup.png" alt="" />
-                            Bitcoin
+                            Slup Chain
                           </Dropdown.Toggle>
 
                           <Dropdown.Menu>
                             <Dropdown.Item href="#/action-1">
-                              Action
+                                  <img src="assets/images/slup.png" alt="" />
+                                    Slup Chain
                             </Dropdown.Item>
                             <Dropdown.Item href="#/action-2">
-                              Another action
+                                  <img src="assets/images/bitcoin.png" alt="" />
+                                    Bitcoin
                             </Dropdown.Item>
                             <Dropdown.Item href="#/action-3">
-                              Something else
+                                  <img src="assets/images/MUBI.png" alt="" />
+                                    MUBI
+                            </Dropdown.Item>
+                            <Dropdown.Item href="#/action-1">
+                                  <img src="assets/images/slup.png" alt="" />
+                                    Slup Chain
+                            </Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">
+                                  <img src="assets/images/bitcoin.png" alt="" />
+                                    Bitcoin
+                            </Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">
+                                  <img src="assets/images/MUBI.png" alt="" />
+                                    MUBI
                             </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
@@ -157,18 +189,33 @@ export const Homepage = () => {
                         <Dropdown>
                           <Dropdown.Toggle className="" id="dropdown-basic">
                             <img src="assets/images/MUBI.png" alt="" />
-                            Bitcoin
+                            MUBI
                           </Dropdown.Toggle>
 
                           <Dropdown.Menu>
                             <Dropdown.Item href="#/action-1">
-                              Action
+                                  <img src="assets/images/slup.png" alt="" />
+                                    Slup Chain
                             </Dropdown.Item>
                             <Dropdown.Item href="#/action-2">
-                              Another action
+                                  <img src="assets/images/bitcoin.png" alt="" />
+                                    Bitcoin
                             </Dropdown.Item>
                             <Dropdown.Item href="#/action-3">
-                              Something else
+                                  <img src="assets/images/MUBI.png" alt="" />
+                                    MUBI
+                            </Dropdown.Item>
+                            <Dropdown.Item href="#/action-1">
+                                  <img src="assets/images/slup.png" alt="" />
+                                    Slup Chain
+                            </Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">
+                                  <img src="assets/images/bitcoin.png" alt="" />
+                                    Bitcoin
+                            </Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">
+                                  <img src="assets/images/MUBI.png" alt="" />
+                                    MUBI
                             </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>

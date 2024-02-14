@@ -269,3 +269,49 @@
         line-height: 18px;
     }
 }
+
+/* privacy page css */
+
+@media (max-width: 1200px){
+    .privacy-sec h2 {
+        font-size: 40px;
+        line-height: 60px;
+    }
+    .privacy-sec .content-box-privacy {
+        border-radius: 10px;
+        padding: 20px;
+    }
+    .privacy-sec .content-box-privacy p, .privacy-sec .content-box-privacy ul li {
+        font-size: 12px;
+        line-height: 18px;
+    }
+    .privacy-sec .content-box-privacy h4 {
+        font-size: 18px;
+        line-height: 22px;
+        margin-top: 25px;
+        margin-bottom: 5px;
+    }
+}
+@media (max-width: 992px){
+    .privacy-sec {
+        padding: 65px 0;
+    }
+    .privacy-sec h2 {
+        font-size: 28px;
+        line-height: 50px;
+    }
+    .privacy-sec .content-box-privacy {
+        border-radius: 10px;
+        padding: 10px;
+    }
+    .privacy-sec .content-box-privacy p, .privacy-sec .content-box-privacy ul li {
+        font-size: 10px;
+        line-height: 14px;
+    }
+    .privacy-sec .content-box-privacy h4 {
+        font-size: 14px;
+        line-height: 18px;
+        margin-top: 12px;
+        margin-bottom: 10px;
+    }
+}
