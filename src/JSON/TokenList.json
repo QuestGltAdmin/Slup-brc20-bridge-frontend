@@ -1,0 +1,30 @@
+{
+    "logoURI": "https://raw.githubusercontent.com/sushiswap/art/master/sushi/logo-256x256.png",
+    "tokens": [
+      {
+        "name": "Slup Token",
+        "symbol": "Sulp",
+        "address": "0x0000000000000000000000000000000000000000",
+        "chainId": 56,
+        "decimals": 18,
+        "logos": "assets/images/slup.png"
+      },
+      {
+        "name": "Sats Token",
+        "symbol": "Sats",
+        "address": "0x0000000000000000000000000000000000000000",
+        "chainId": 1,
+        "decimals": 18,
+        "logos": "assets/images/bitcoin.png"
+      },
+      {
+        "name": "MUBI Token",
+        "symbol": "MUBI",
+        "address": "0x0000000000000000000000000000000000000000",
+        "chainId": 137,
+        "decimals": 18,
+        "logos": "assets/images/MUBI.png"
+      }
+    ]
+  }
+  

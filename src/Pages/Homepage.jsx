@@ -9,15 +9,27 @@ import {
   Modal,
   Button,
 } from "react-bootstrap";
+import Tokens from "../JSON/TokenList.json";
 
 export const Homepage = () => {
   const [show, setShow] = useState(false);
+  const [amount, setAmount] = useState(0);
+  const [from, setFrom] = useState("Bitcoin");
+  const [to, setTo] = useState("Slup");
+  const [token, setToken] = useState({
+    address: "0x0000000000000000000000000000000000000000",
+    symbol: "MUBI",
+    decimals: 18,
+    name: "MUBI Token",
+    logos: "assets/images/MUBI.png",
+  });
+  const [bitcoinAddress, setBitcoinAddress] = useState();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   return (
     <>
-      <Layout chainSelect="Bitcoin">
+      <Layout chainSelect={from}>
         <section className="swap-main-sec">
           <Container>
             <Row className="align-items-center">
@@ -105,36 +117,31 @@ export const Homepage = () => {
                 <div className="outer-bridge-box">
                   <div className="swap-currency-drop">
                     <p>From</p>
-                    <Dropdown>
+                    <Dropdown
+                      onSelect={(e) => {
+                        setFrom(e);
+                      }}
+                    >
                       <Dropdown.Toggle className="" id="dropdown-basic">
-                        <img src="assets/images/bitcoin.png" alt="" />
-                        Bitcoin
+                        <img
+                          src={
+                            from === "Bitcoin"
+                              ? "assets/images/bitcoin.png"
+                              : "assets/images/slup.png"
+                          }
+                          alt=""
+                        />
+                        {from}
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">
-                              <img src="assets/images/slup.png" alt="" />
-                                Slup Chain
+                        <Dropdown.Item eventKey="Sulp">
+                          <img src="assets/images/slup.png" alt="" />
+                          Slup
                         </Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                               <img src="assets/images/bitcoin.png" alt="" />
-                                Bitcoin
-                        </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                              <img src="assets/images/MUBI.png" alt="" />
-                                MUBI
-                        </Dropdown.Item>
-                        <Dropdown.Item href="#/action-1">
-                              <img src="assets/images/slup.png" alt="" />
-                                Slup Chain
-                        </Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                               <img src="assets/images/bitcoin.png" alt="" />
-                                Bitcoin
-                        </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                              <img src="assets/images/MUBI.png" alt="" />
-                                MUBI
+                        <Dropdown.Item eventKey="Bitcoin">
+                          <img src="assets/images/bitcoin.png" alt="" />
+                          Bitcoin
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
@@ -147,37 +154,32 @@ export const Homepage = () => {
                   <Row>
                     <Col md="6">
                       <div className="swap-currency-drop">
-                        <p>From</p>
-                        <Dropdown>
+                        <p>To</p>
+                        <Dropdown
+                          onSelect={(e) => {
+                            setTo(e);
+                          }}
+                        >
                           <Dropdown.Toggle className="" id="dropdown-basic">
-                            <img src="assets/images/slup.png" alt="" />
-                            Slup Chain
+                            <img
+                              src={
+                                to === "Slup"
+                                  ? "assets/images/slup.png"
+                                  : "assets/images/bitcoin.png"
+                              }
+                              alt=""
+                            />
+                            {to}
                           </Dropdown.Toggle>
 
                           <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">
-                                  <img src="assets/images/slup.png" alt="" />
-                                    Slup Chain
+                            <Dropdown.Item eventKey="Sulp">
+                              <img src="assets/images/slup.png" alt="" />
+                              Slup
                             </Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">
-                                  <img src="assets/images/bitcoin.png" alt="" />
-                                    Bitcoin
-                            </Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">
-                                  <img src="assets/images/MUBI.png" alt="" />
-                                    MUBI
-                            </Dropdown.Item>
-                            <Dropdown.Item href="#/action-1">
-                                  <img src="assets/images/slup.png" alt="" />
-                                    Slup Chain
-                            </Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">
-                                  <img src="assets/images/bitcoin.png" alt="" />
-                                    Bitcoin
-                            </Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">
-                                  <img src="assets/images/MUBI.png" alt="" />
-                                    MUBI
+                            <Dropdown.Item eventKey="Bitcoin">
+                              <img src="assets/images/bitcoin.png" alt="" />
+                              Bitcoin
                             </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
@@ -185,38 +187,47 @@ export const Homepage = () => {
                     </Col>
                     <Col md="6">
                       <div className="swap-currency-drop">
-                        <p>From</p>
-                        <Dropdown>
+                        <p>Tokens</p>
+                        <Dropdown
+                          onSelect={(e) => {
+                            const data = JSON.parse(e);
+                            setToken({
+                              ...token,
+                              name: data.name,
+                              symbol: data.symbol,
+                              decimals: data.decimals,
+                              address: data.address,
+                              logos: data.logos,
+                            });
+                          }}
+                        >
                           <Dropdown.Toggle className="" id="dropdown-basic">
-                            <img src="assets/images/MUBI.png" alt="" />
-                            MUBI
+                            <img src={token.logos} alt="" />
+                            {token.name}
                           </Dropdown.Toggle>
 
                           <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">
-                                  <img src="assets/images/slup.png" alt="" />
-                                    Slup Chain
-                            </Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">
-                                  <img src="assets/images/bitcoin.png" alt="" />
-                                    Bitcoin
-                            </Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">
-                                  <img src="assets/images/MUBI.png" alt="" />
-                                    MUBI
-                            </Dropdown.Item>
-                            <Dropdown.Item href="#/action-1">
-                                  <img src="assets/images/slup.png" alt="" />
-                                    Slup Chain
-                            </Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">
-                                  <img src="assets/images/bitcoin.png" alt="" />
-                                    Bitcoin
+                            {Tokens.tokens?.length > 0
+                              ? Tokens.tokens.map((items, index) => {
+                                  return (
+                                    <Dropdown.Item
+                                      eventKey={JSON.stringify(items)}
+                                    >
+                                      <img src={items.logos} alt="" />
+                                      {items.name}
+                                    </Dropdown.Item>
+                                  );
+                                })
+                              : ""}
+
+                            {/* <Dropdown.Item href="#/action-2">
+                              <img src="assets/images/bitcoin.png" alt="" />
+                              Sats
                             </Dropdown.Item>
                             <Dropdown.Item href="#/action-3">
-                                  <img src="assets/images/MUBI.png" alt="" />
-                                    MUBI
-                            </Dropdown.Item>
+                              <img src="assets/images/MUBI.png" alt="" />
+                              MUBI
+                            </Dropdown.Item> */}
                           </Dropdown.Menu>
                         </Dropdown>
                       </div>
@@ -229,37 +240,50 @@ export const Homepage = () => {
                     </p>
                   </div>
 
-                  <div className="swap-currency-drop swap-enter-amount">
-                    <p>Amount</p>
-                    <Form.Control type="text" placeholder="0" value={"0"} />
-                    <button className="common-btn">Max</button>
-                  </div>
+               {from === "Bitcoin" ?   <>
+                    <div className="swap-currency-drop swap-enter-amount">
+                      <p>Amount</p>
+                      <Form.Control
+                        name="amount"
+                        type="text"
+                        placeholder="0"
+                        onChange={(e) => {
+                          setAmount(e.target.value);
+                        }}
+                        value={amount}
+                      />
+                      <button className="common-btn">Max</button>
+                    </div>
 
-                  <div className="service-charge-box">
-                    <p>
-                      <img
-                        src="assets/images/plugin.png"
-                        alt=""
-                        className="service-icon"
-                      />{" "}
-                      Service fees: 0.03 BNB{" "}
-                      <a href="">
-                        <img src="assets/images/info.png" alt="" />
-                      </a>
-                    </p>
-                    <p className="receive-amount">
-                      You will receive <span>0 MUBI</span>{" "}
-                      <span className="brc-highlight">BRC 20</span>
-                    </p>
-                  </div>
+                    <div className="service-charge-box">
+                      <p>
+                        <img
+                          src="assets/images/plugin.png"
+                          alt=""
+                          className="service-icon"
+                        />{" "}
+                        Service fees: 0.03 BNB{" "}
+                        <a href="">
+                          <img src="assets/images/info.png" alt="" />
+                        </a>
+                      </p>
+                      <p className="receive-amount">
+                        You will receive <span>0 MUBI</span>{" "}
+                        <span className="brc-highlight">BRC 20</span>
+                      </p>
+                    </div>
 
-                  <div className="swap-currency-drop swap-enter-amount">
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter BRC-20 Recipient Address"
-                    />
-                  </div>
-
+                    <div className="swap-currency-drop swap-enter-amount">
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter BRC-20 Recipient Address"
+                        name="bitcoinAddress"
+                        onChange={(e)=>{setBitcoinAddress(e.target.value)}}
+                        value={bitcoinAddress}
+                      />
+                    </div>
+                  </> : <></>
+}
                   <div className="checkbox-agree">
                     <Form.Check
                       aria-label=""

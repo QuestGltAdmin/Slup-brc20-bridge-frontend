@@ -18,7 +18,6 @@ import { setEVMWallet } from "../store/reducers/authReducer";
 export default function Header(props) {
   const dispatch = useDispatch();
   const { WalletEVM } = useAuth();
-  console.log("WalletEVM", WalletEVM);
   const [show, setShow] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [forMobileView, setForMobileView] = useState(

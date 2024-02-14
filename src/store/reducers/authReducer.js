@@ -7,6 +7,7 @@ const isUserAuthenticated = localStorage.getItem("isUserAuthenticated");
 const userRole = localStorage.getItem("userRole");
 const userData = localStorage.getItem("userData");
 const WalletEVM = localStorage.getItem("WalletEVM");
+const WalletBTC = localStorage.getItem("WalletBTC");
 const proupdatedata = localStorage.getItem("saveprodata");
 
 
@@ -15,6 +16,7 @@ const authSlice =  createSlice({
   initialState: {
     isLoading: false,
     WalletEVM:!!WalletEVM ? JSON.parse(WalletEVM) : {},
+    WalletBTC:!!WalletBTC ? JSON.parse(WalletBTC) : {},
     isAuthenticated: !!isAuthenticated ? true : false,
     isUserAuthenticated: !!isUserAuthenticated ? true : false,
     userRole: !!userRole ? userRole : "",
@@ -97,6 +99,15 @@ const authSlice =  createSlice({
       };
     },
 
+
+    setBitcoinWallet: (state, action) => {
+      localStorage.setItem("WalletBTC", JSON.stringify(action.payload));
+      return {
+        ...state,
+        WalletBTC: action.payload,
+      };
+    },
+
   
   },
 });
@@ -109,6 +120,7 @@ export const {
   saveprofiledata,
   userloginSuccess,
   userLoginFail,
+  setBitcoinWallet
 } = authSlice.actions;
 
 export default authSlice.reducer;
