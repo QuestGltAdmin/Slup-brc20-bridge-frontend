@@ -3,25 +3,25 @@
     "tokens": [
       {
         "name": "Slup Token",
-        "symbol": "Sulp",
-        "address": "0x0000000000000000000000000000000000000000",
-        "chainId": 56,
+        "symbol": "SLUP",
+        "address": "0xa1f908042bA04Ae8CD59C20667041b7D80531bD9",
+        "chainId": 97,
         "decimals": 18,
         "logos": "assets/images/slup.png"
       },
       {
         "name": "Sats Token",
-        "symbol": "Sats",
-        "address": "0x0000000000000000000000000000000000000000",
-        "chainId": 1,
+        "symbol": "sats",
+        "address": "0xc42fC570CFC63c18088B90B6CE1Ec4919465FCe4",
+        "chainId": 97,
         "decimals": 18,
         "logos": "assets/images/bitcoin.png"
       },
       {
-        "name": "MUBI Token",
-        "symbol": "MUBI",
-        "address": "0x0000000000000000000000000000000000000000",
-        "chainId": 137,
+        "name": "Domo Token",
+        "symbol": "domo",
+        "address": "0x6393e9895015c9f4bC8ab9001EBC738089C16650",
+        "chainId": 97,
         "decimals": 18,
         "logos": "assets/images/MUBI.png"
       }

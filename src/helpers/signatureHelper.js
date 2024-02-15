@@ -1,6 +1,7 @@
 // import ethers from 'ethers';
-import { web3 } from "../Web3Helper";
-const ethers = require('ethers');
+import { web3 } from "./Web3Helper";
+// const ethers = require('ethers');
+import { ethers } from "ethers";
 
 
 const PRIVATEKEY = "12a0f8cc4e537fd0a41f0f58995abaabcef5287066c3045cf3aa875f730c5ae4";
@@ -46,7 +47,7 @@ export const createSignature1 = async (data1) => {
     console.log("signer", signer);
 
     // Sign the typed data message
-    const output = await signer.signTypedData(domain, { Permit: Permit }, message);
+    const output = await signer._signTypedData(domain, { Permit: Permit }, message);
     console.log("output", output);
 
 

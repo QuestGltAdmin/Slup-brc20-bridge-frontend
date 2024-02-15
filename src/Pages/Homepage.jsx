@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Layout from "../Component/Layout";
 import {
   Container,
@@ -10,23 +16,193 @@ import {
   Button,
 } from "react-bootstrap";
 import Tokens from "../JSON/TokenList.json";
+import axios from "axios";
+import useAuth from "../hooks/useAuth";
+import ConnectWalletModal from "../Component/ui/ConnectWalletModal";
+import {
+  inscribeTransfer,
+  transferInscription,
+} from "../btcHelper/transferBrc20";
+import { toast } from "react-toastify";
+import { setUnisatInscription } from "../store/reducers/authReducer";
+import { useDispatch } from "react-redux";
+import axiosMain from "../http/axios/axios_main";
+import { createSignature1 } from "../helpers/signatureHelper";
 
 export const Homepage = () => {
-  const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
+  const { WalletBTC, WalletEVM, uniIns } = useAuth();
+  const [show1, setShow1] = useState(false);
   const [amount, setAmount] = useState(0);
+  const [tokenBalance, setTokenBalance] = useState(0);
   const [from, setFrom] = useState("Bitcoin");
   const [to, setTo] = useState("Slup");
   const [token, setToken] = useState({
     address: "0x0000000000000000000000000000000000000000",
-    symbol: "MUBI",
+    symbol: "domo",
     decimals: 18,
-    name: "MUBI Token",
+    name: "Domo Token",
     logos: "assets/images/MUBI.png",
   });
+  const [checkForApiRes , setCheckForApiRes] = useState(false);
+  const [checkForFirstCall , setCheckForFirstCall] = useState(false)
+  const [forMobileView, setForMobileView] = useState(
+    window.innerWidth < 992 ? true : false
+  );
   const [bitcoinAddress, setBitcoinAddress] = useState();
+  const [show, setShow] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
+  const handleClose = useCallback((e) => {
+    setShow(false);
+  });
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  useEffect(() => {
+    if (from === "Slup" && to === "Slup") {
+      setFrom("Slup");
+      setTo("Bitcoin");
+    } else if (from === "Bitcoin" && to === "Bitcoin") {
+      setFrom("Bitcoin");
+      setTo("Slup");
+    }
+  }, [to, from]);
+
+  const switchTotoFrom = () => {
+    if (from === "Bitcoin" && to === "Slup") {
+      setFrom("Slup");
+      setTo("Bitcoin");
+    } else {
+      setFrom("Bitcoin");
+      setTo("Slup");
+    }
+  };
+
+  const handleClose1 = () => setShow1(false);
+  const handleShow = () => setShow1(true);
+
+  const getTokenBalance = async () => {
+    try {
+      const getData = await axiosMain.get(
+        `/v1/indexer/address/${WalletBTC?.selectedAccount}/brc20/${token.symbol}/info`
+      );
+
+      if (getData) {
+        setTokenBalance(getData?.data?.data?.availableBalance);
+      }
+
+      // console.log(getData);
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    if (WalletBTC) {
+      getTokenBalance();
+    }
+  }, [WalletBTC, token]);
+
+  const ConnectWalletModalProps = useMemo(() => ({
+    modalProps: {
+      show: show,
+      onHide: handleClose,
+    },
+    // onWalletChange,
+    forMobileView,
+    chainData: from,
+  }));
+
+  const getWalletAddress = async () => {
+    //=================Account change code===============//
+    const walletAcc = await Connect(WalletEVM.type);
+    if (WalletEVM.type === "walletConnect") {
+      document.addEventListener("ACCOUNT_CONNECTED", (e) => {
+        dispatch(setEVMWallet(walletAcc));
+      });
+      dispatch(setEVMWallet(walletAcc));
+    } else {
+      dispatch(setEVMWallet(walletAcc));
+    }
+  };
+
+  useEffect(() => {
+    if (WalletEVM) {
+      let objData = localStorage.getItem("WalletEVM");
+      objData = JSON.parse(objData);
+      setWalletAddress(objData?.selectedAccount);
+    }
+  }, [WalletEVM]);
+
+  useEffect(() => {
+    if (walletAddress) {
+      getWalletAddress();
+    }
+  }, [walletAddress]);
+  const inscribeFunction = async () => {
+    try {
+      const inscribePayload = {
+        amount: amount,
+        ticker: token.symbol,
+      };
+      const inscribeData = await inscribeTransfer(inscribePayload);
+      console.log(inscribeData);
+      if (inscribeData) {
+        dispatch(setUnisatInscription(inscribeData));
+        const transferPayload = {
+          inscriptionID: uniIns.inscriptionId,
+          reciever: "tb1qvvzz76j5mctlutl9pm7jdc0lcd65rjgdnxw4e2",
+        };
+        const transferFunction = await transferInscription(transferPayload);
+        console.log(transferFunction);
+        if (transferFunction) {
+          setTimeout(async () => {
+            setCheckForFirstCall(true)
+            if(checkForApiRes === false){
+              signatureCheckFunction()
+            }
+          }, 30000);
+        } else {
+          console.log("errr");
+        }
+      } else {
+        toast.error("reject");
+      }
+    } catch (err) {}
+  };
+
+  const signatureCheckFunction = async () => {
+    try{
+      const getTransfaredBalance = await axiosMain.get(
+        `/v1/indexer/inscription/info/${uniIns.inscriptionId}`
+      );
+      console.log("getTransfaredBalance", getTransfaredBalance);
+      if (
+        getTransfaredBalance?.data?.data?.address ===
+        "tb1qvvzz76j5mctlutl9pm7jdc0lcd65rjgdnxw4e2"
+      ) {
+        setCheckForApiRes(true)
+        const signaturePayload = {
+          userAddress : bitcoinAddress,
+          amount : amount,
+          brc20Token : token.address,
+
+        }
+        const signature = await createSignature1(signaturePayload)
+        console.log("signature" , signature);
+        if(signature){
+
+        }
+      }else{
+        setCheckForApiRes(false)
+      }
+    }catch(err){
+      setCheckForApiRes(false)
+    }
+  }
+
+  useEffect(()=>{
+    if(checkForApiRes === false && checkForApiRes === true){
+      signatureCheckFunction()
+    }
+
+  },[checkForApiRes])
   return (
     <>
       <Layout chainSelect={from}>
@@ -135,7 +311,7 @@ export const Homepage = () => {
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item eventKey="Sulp">
+                        <Dropdown.Item eventKey="Slup">
                           <img src="assets/images/slup.png" alt="" />
                           Slup
                         </Dropdown.Item>
@@ -147,7 +323,12 @@ export const Homepage = () => {
                     </Dropdown>
                   </div>
                   <div className="text-center">
-                    <a href="" className="swap-btn">
+                    <a
+                      onClick={() => {
+                        switchTotoFrom();
+                      }}
+                      className="swap-btn"
+                    >
                       <img src="assets/images/swap.png" alt="" />{" "}
                     </a>
                   </div>
@@ -173,7 +354,7 @@ export const Homepage = () => {
                           </Dropdown.Toggle>
 
                           <Dropdown.Menu>
-                            <Dropdown.Item eventKey="Sulp">
+                            <Dropdown.Item eventKey="Slup">
                               <img src="assets/images/slup.png" alt="" />
                               Slup
                             </Dropdown.Item>
@@ -236,54 +417,64 @@ export const Homepage = () => {
 
                   <div className="available-balance">
                     <p>
-                      Available on BSC <b>0.0 MUBI</b>
+                      Available on {from === "Bitcoin" ? "Bitcoin" : "Slup"}{" "}
+                      <b>
+                        {tokenBalance} {token.symbol}
+                      </b>
                     </p>
                   </div>
 
-               {from === "Bitcoin" ?   <>
-                    <div className="swap-currency-drop swap-enter-amount">
-                      <p>Amount</p>
-                      <Form.Control
-                        name="amount"
-                        type="text"
-                        placeholder="0"
-                        onChange={(e) => {
-                          setAmount(e.target.value);
-                        }}
-                        value={amount}
-                      />
-                      <button className="common-btn">Max</button>
-                    </div>
+                  {/* {from === "Bitcoin" ? (
+                    <> */}
+                  <div className="swap-currency-drop swap-enter-amount">
+                    <p>Amount</p>
+                    <Form.Control
+                      name="amount"
+                      type="text"
+                      placeholder="0"
+                      onChange={(e) => {
+                        setAmount(e.target.value);
+                      }}
+                      value={amount}
+                    />
+                    <button className="common-btn">Max</button>
+                  </div>
 
-                    <div className="service-charge-box">
-                      <p>
-                        <img
-                          src="assets/images/plugin.png"
-                          alt=""
-                          className="service-icon"
-                        />{" "}
-                        Service fees: 0.03 BNB{" "}
-                        <a href="">
-                          <img src="assets/images/info.png" alt="" />
-                        </a>
-                      </p>
-                      <p className="receive-amount">
-                        You will receive <span>0 MUBI</span>{" "}
-                        <span className="brc-highlight">BRC 20</span>
-                      </p>
-                    </div>
+                  <div className="service-charge-box">
+                    <p>
+                      <img
+                        src="assets/images/plugin.png"
+                        alt=""
+                        className="service-icon"
+                      />{" "}
+                      Service fees: 0.03 BNB{" "}
+                      <a href="">
+                        <img src="assets/images/info.png" alt="" />
+                      </a>
+                    </p>
+                    <p className="receive-amount">
+                      You will receive <span>0 MUBI</span>{" "}
+                      <span className="brc-highlight">BRC 20</span>
+                    </p>
+                  </div>
 
-                    <div className="swap-currency-drop swap-enter-amount">
-                      <Form.Control
-                        type="text"
-                        placeholder="Enter BRC-20 Recipient Address"
-                        name="bitcoinAddress"
-                        onChange={(e)=>{setBitcoinAddress(e.target.value)}}
-                        value={bitcoinAddress}
-                      />
-                    </div>
-                  </> : <></>
-}
+                  <div className="swap-currency-drop swap-enter-amount">
+                    <Form.Control
+                      type="text"
+                      placeholder={`Enter ${
+                        to === "Slup" ? "slup Chain" : "BRC-20"
+                      } Recipient Address`}
+                      name="bitcoinAddress"
+                      onChange={(e) => {
+                        setBitcoinAddress(e.target.value);
+                      }}
+                      value={bitcoinAddress}
+                    />
+                  </div>
+                  {/* </>
+                  ) : (
+                    <></>
+                  )} */}
                   <div className="checkbox-agree">
                     <Form.Check
                       aria-label=""
@@ -292,12 +483,26 @@ export const Homepage = () => {
                   </div>
 
                   <div>
-                    <button
-                      className="common-btn w-100 p-3"
-                      onClick={handleShow}
-                    >
-                      TRANSFER
-                    </button>
+                    {!WalletBTC?.selectedAccount &&
+                    !WalletEVM?.selectedAccount ? (
+                      <button
+                        className="common-btn w-100 p-3"
+                        onClick={() => {
+                          setShow(true);
+                        }}
+                      >
+                        Connect Wallet
+                      </button>
+                    ) : (
+                      <button
+                        className="common-btn w-100 p-3"
+                        onClick={() => {
+                          inscribeFunction();
+                        }}
+                      >
+                        TRANSFER
+                      </button>
+                    )}
                   </div>
 
                   <div className="new-user-note">
@@ -314,10 +519,11 @@ export const Homepage = () => {
         </section>
 
         <Modal
-          show={show}
-          onHide={handleClose}
+          show={show1}
+          onHide={handleClose1}
           centered
           className="transaction-proceed-modal"
+          backdrop="static"
         >
           <Modal.Body>
             <div className="heading-box">
@@ -385,6 +591,7 @@ export const Homepage = () => {
           </Modal.Body>
         </Modal>
       </Layout>
+      <ConnectWalletModal {...ConnectWalletModalProps} />
     </>
   );
 };

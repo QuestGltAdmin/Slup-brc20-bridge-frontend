@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Container, Row, Modal, Navbar, Button } from "react-bootstrap";
 import { Connect } from "../../helpers/Connect";
 import { useDispatch } from "react-redux";
@@ -7,6 +7,7 @@ import {
   setEVMWallet,
 } from "../../store/reducers/authReducer";
 import { connectUnisat } from "../../btcHelper/connectWallet";
+import { toast } from "react-toastify";
 
 export default function ConnectWalletModal({
   forMobileView,
@@ -42,8 +43,29 @@ export default function ConnectWalletModal({
       };
       if (walletData) {
         dispatch(setBitcoinWallet(payload));
+        props.modalProps.onHide();
       }
     } catch (err) {}
+  };
+
+  const handleAccountsChanged = () => {
+    // Do something with the updated accounts array
+    connectUnisatWallet("unisat");
+  };
+
+  useEffect(() => {
+    // Attach the listener when the component mounts
+    window.unisat.on("accountsChanged", handleAccountsChanged);
+
+    // Cleanup function to remove the listener when the component unmounts
+    return () => {
+      window.unisat.removeListener("accountsChanged", handleAccountsChanged);
+    };
+  }, []);
+
+  const slupWalletConnect = async () => {
+    toast.warn("Coming Soon!");
+    props.modalProps.onHide();
   };
 
   return (
@@ -66,7 +88,10 @@ export default function ConnectWalletModal({
               Unisat <img src="assets/images/unisat.jpg" />
             </Button>
 
-            <Button className="common-btn" onClick={() => connect("Coinbase")}>
+            <Button
+              className="common-btn"
+              onClick={() => slupWalletConnect("slup")}
+            >
               Slup Wallet <img src="assets/images/slup.png" />
             </Button>
           </div>

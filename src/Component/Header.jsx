@@ -17,7 +17,7 @@ import { setEVMWallet } from "../store/reducers/authReducer";
 
 export default function Header(props) {
   const dispatch = useDispatch();
-  const { WalletEVM } = useAuth();
+  const { WalletEVM, WalletBTC } = useAuth();
   const [show, setShow] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [forMobileView, setForMobileView] = useState(
@@ -77,6 +77,9 @@ export default function Header(props) {
       getWalletAddress();
     }
   }, [walletAddress]);
+
+
+
   return (
     <>
       <header className="main-header" id="headerId">
@@ -89,7 +92,8 @@ export default function Header(props) {
                     <img src="assets/images/logo.png" />
                   </Navbar.Brand>
 
-                  {!WalletEVM?.selectedAccount ? (
+                  {!WalletEVM?.selectedAccount &&
+                  !WalletBTC?.selectedAccount ? (
                     <button
                       onClick={() => {
                         setShow(true);
@@ -98,10 +102,17 @@ export default function Header(props) {
                     >
                       Connect Wallet
                     </button>
-                  ) : (
+                  ) : WalletEVM?.selectedAccount ? (
                     <button className="ms-auto common-btn">
                       {WalletEVM?.selectedAccount.replace(
                         WalletEVM?.selectedAccount.substring(5, 37),
+                        "..."
+                      )}
+                    </button>
+                  ) : (
+                    <button className="ms-auto common-btn">
+                      {WalletBTC?.selectedAccount.replace(
+                        WalletBTC?.selectedAccount.substring(5, 37),
                         "..."
                       )}
                     </button>
