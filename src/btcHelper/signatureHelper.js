@@ -1,29 +1,27 @@
-import Web3 from "web3";
+// import ethers from 'ethers';
 import { web3 } from "../Web3Helper";
-const ethers = require('ethers')
-import { toast } from "react-toastify";
+const ethers = require('ethers');
 
 
-const PRIVATEKEY = ""
+const PRIVATEKEY = "12a0f8cc4e537fd0a41f0f58995abaabcef5287066c3045cf3aa875f730c5ae4";
 
 export const createSignature1 = async (data1) => {  
   try {
     const web3connect = await web3();
 
-    const accounts = await web3connect.eth.getAccounts();
-
-    let selectedAccount = accounts[0];
-
-    const from_account = web3connect.utils.toChecksumAddress(selectedAccount);
+    const from_account = web3connect.utils.toChecksumAddress(data1.userAddress);
 
     let blockNo = await web3connect.eth.getBlockNumber();
     let block = await web3connect.eth.getBlock(blockNo);
     let timeStamp = block.timestamp;
 
-    const EIP712Domain = [
-      { name: "name", type: "string" },
-      { name: "version", type: "string" },
-    ];
+    // const EIP712Domain = [
+    //   { name: "name", type: "string" },
+    //   { name: "version", type: "string" },
+    // ];
+
+    let amount = "0x" + (parseFloat((data1.amount * (10 ** 18)).toFixed(0))).toString(16);
+
     const domain = {
       name: "BRC20",
       version: "1",
@@ -35,10 +33,10 @@ export const createSignature1 = async (data1) => {
       { name: "brc20Token", type: "address" },
     ];
     const message = {
-      userAddress: data1._userAddress,
-      amount: data1._amount,
+      userAddress: from_account,
+      amount: amount,
       timeStamp: timeStamp,
-      brc20Token: data1._brc20Token,
+      brc20Token: data1.brc20Token,
     };
 
     console.log("voucher", message);
