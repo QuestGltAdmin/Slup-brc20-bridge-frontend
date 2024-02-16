@@ -24,10 +24,14 @@ import {
   transferInscription,
 } from "../btcHelper/transferBrc20";
 import { toast } from "react-toastify";
-import { setUnisatInscription } from "../store/reducers/authReducer";
+import {
+  setUnisatInscription,
+  setUnisatSign,
+} from "../store/reducers/authReducer";
 import { useDispatch } from "react-redux";
 import axiosMain from "../http/axios/axios_main";
 import { createSignature1 } from "../helpers/signatureHelper";
+import CheckWallet from "../helpers/checkWalletHelper";
 
 export const Homepage = () => {
   const dispatch = useDispatch();
@@ -38,20 +42,23 @@ export const Homepage = () => {
   const [from, setFrom] = useState("Bitcoin");
   const [to, setTo] = useState("Slup");
   const [token, setToken] = useState({
-    address: "0x0000000000000000000000000000000000000000",
+    address: "0x6393e9895015c9f4bC8ab9001EBC738089C16650",
     symbol: "domo",
     decimals: 18,
     name: "Domo Token",
     logos: "assets/images/MUBI.png",
   });
-  const [checkForApiRes , setCheckForApiRes] = useState(false);
-  const [checkForFirstCall , setCheckForFirstCall] = useState(false)
+  const [checkForApiRes, setCheckForApiRes] = useState(false);
+  const [checkForFirstCall, setCheckForFirstCall] = useState(false);
+  const [checkBoxActive, setCheckBoxActive] = useState(false);
   const [forMobileView, setForMobileView] = useState(
     window.innerWidth < 992 ? true : false
   );
   const [bitcoinAddress, setBitcoinAddress] = useState();
   const [show, setShow] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
+  const [checkForProcess, setCheckForProcess] = useState(0);
+  const [showClamModel, setShowClamModel] = useState(false);
   const handleClose = useCallback((e) => {
     setShow(false);
   });
@@ -78,6 +85,10 @@ export const Homepage = () => {
 
   const handleClose1 = () => setShow1(false);
   const handleShow = () => setShow1(true);
+
+  const handleClamClose = () => {
+    setShowClamModel(false);
+  };
 
   const getTokenBalance = async () => {
     try {
@@ -136,73 +147,93 @@ export const Homepage = () => {
     }
   }, [walletAddress]);
   const inscribeFunction = async () => {
-    try {
-      const inscribePayload = {
-        amount: amount,
-        ticker: token.symbol,
-      };
-      const inscribeData = await inscribeTransfer(inscribePayload);
-      console.log(inscribeData);
-      if (inscribeData) {
-        dispatch(setUnisatInscription(inscribeData));
-        const transferPayload = {
-          inscriptionID: uniIns.inscriptionId,
-          reciever: "tb1qvvzz76j5mctlutl9pm7jdc0lcd65rjgdnxw4e2",
+    const checkForAddress = await CheckWallet(bitcoinAddress);
+
+    if (!amount || amount <= 0) {
+      toast.warn("Please enter valid amount");
+    } else if (!checkForAddress) {
+      toast.warn("Please enter valid wallet address");
+    } else if (checkBoxActive === false) {
+      toast.warn("Please check checkbox first");
+    } else {
+      handleShow();
+      try {
+        const inscribePayload = {
+          amount: amount,
+          ticker: token.symbol,
         };
-        const transferFunction = await transferInscription(transferPayload);
-        console.log(transferFunction);
-        if (transferFunction) {
+        const inscribeData = await inscribeTransfer(inscribePayload);
+        console.log(inscribeData);
+        if (inscribeData) {
+          setCheckForProcess(1);
+          dispatch(setUnisatInscription(inscribeData));
+          const transferPayload = {
+            inscriptionID: inscribeData.inscriptionId,
+            reciever: "tb1qg6l5arguyze2u96xgc0aqdl8cqfnmaawa78nj7",
+          };
+          console.log("transferPayload", transferPayload);
           setTimeout(async () => {
-            setCheckForFirstCall(true)
-            if(checkForApiRes === false){
-              signatureCheckFunction()
+            const transferFunction = await transferInscription(transferPayload);
+            console.log(transferFunction);
+            if (transferFunction) {
+              setCheckForProcess(2);
+              setTimeout(async () => {
+                try {
+                  const getTransfaredBalance = await axiosMain.get(
+                    `/v1/indexer/inscription/info/${uniIns.inscriptionId}`
+                  );
+                  console.log("getTransfaredBalance", getTransfaredBalance);
+                  if (
+                    getTransfaredBalance?.data?.data?.address ===
+                    "tb1qg6l5arguyze2u96xgc0aqdl8cqfnmaawa78nj7"
+                  ) {
+                    setCheckForApiRes(true);
+                    const signaturePayload = {
+                      userAddress: bitcoinAddress,
+                      amount: amount,
+                      brc20Token: token.address,
+                    };
+                    const signature = await createSignature1(signaturePayload);
+                    console.log("signature", signature);
+                    if (signature) {
+                      setCheckForProcess(3);
+                      dispatch(setUnisatSign(signature));
+                      handleClose1();
+                      setShowClamModel(true);
+                    }
+                  } else {
+                    console.log("yha");
+                  }
+                } catch (err) {
+                  console.log("yha 2");
+
+                }
+              }, 60000);
+            } else {
+              handleClose1();
+              console.log("errr");
             }
-          }, 30000);
+          }, 10000);
         } else {
-          console.log("errr");
+          toast.error("reject");
+          handleClose1();
         }
-      } else {
-        toast.error("reject");
+      } catch (err) {
+        handleClose1();
       }
-    } catch (err) {}
+    }
   };
 
   const signatureCheckFunction = async () => {
-    try{
-      const getTransfaredBalance = await axiosMain.get(
-        `/v1/indexer/inscription/info/${uniIns.inscriptionId}`
-      );
-      console.log("getTransfaredBalance", getTransfaredBalance);
-      if (
-        getTransfaredBalance?.data?.data?.address ===
-        "tb1qvvzz76j5mctlutl9pm7jdc0lcd65rjgdnxw4e2"
-      ) {
-        setCheckForApiRes(true)
-        const signaturePayload = {
-          userAddress : bitcoinAddress,
-          amount : amount,
-          brc20Token : token.address,
+ 
+  };
 
-        }
-        const signature = await createSignature1(signaturePayload)
-        console.log("signature" , signature);
-        if(signature){
-
-        }
-      }else{
-        setCheckForApiRes(false)
-      }
-    }catch(err){
-      setCheckForApiRes(false)
+  useEffect(() => {
+    if (checkForApiRes === false && checkForFirstCall === true) {
+      signatureCheckFunction();
     }
-  }
+  }, [checkForApiRes]);
 
-  useEffect(()=>{
-    if(checkForApiRes === false && checkForApiRes === true){
-      signatureCheckFunction()
-    }
-
-  },[checkForApiRes])
   return (
     <>
       <Layout chainSelect={from}>
@@ -479,6 +510,11 @@ export const Homepage = () => {
                     <Form.Check
                       aria-label=""
                       label="I have learned that service is only available to non-U.S. persons and entities."
+                      name="checkBoxActive"
+                      value={checkBoxActive}
+                      onChange={(e) => {
+                        setCheckBoxActive(e.target.checked);
+                      }}
                     />
                   </div>
 
@@ -493,9 +529,17 @@ export const Homepage = () => {
                       >
                         Connect Wallet
                       </button>
+                    ) : !amount || amount <= 0 ? (
+                      <button className="common-btn w-100 p-3 disable">
+                        Enter amount
+                      </button>
                     ) : (
                       <button
-                        className="common-btn w-100 p-3"
+                        className={
+                          checkBoxActive
+                            ? "common-btn w-100 p-3"
+                            : "common-btn w-100 p-3 disable"
+                        }
                         onClick={() => {
                           inscribeFunction();
                         }}
@@ -550,7 +594,13 @@ export const Homepage = () => {
             <div className="currency-transfer-loading">
               <div>
                 <img
-                  src="assets/images/loader.gif"
+                  src={
+                    checkForProcess === 1 ||
+                    checkForProcess === 2 ||
+                    checkForProcess === 3
+                      ? "assets/images/tik.png"
+                      : "assets/images/loader.gif"
+                  }
                   alt=""
                   className="loader-ing"
                 />
@@ -563,7 +613,11 @@ export const Homepage = () => {
               </div>
               <div>
                 <img
-                  src="assets/images/loader.gif"
+                  src={
+                    checkForProcess === 2 || checkForProcess === 3
+                      ? "assets/images/tik.png"
+                      : "assets/images/loader.gif"
+                  }
                   alt=""
                   className="loader-ing"
                 />
@@ -576,7 +630,11 @@ export const Homepage = () => {
               </div>
               <div>
                 <img
-                  src="assets/images/loader.gif"
+                  src={
+                    checkForProcess === 3
+                      ? "assets/images/tik.png"
+                      : "assets/images/loader.gif"
+                  }
                   alt=""
                   className="loader-ing"
                 />
@@ -588,6 +646,24 @@ export const Homepage = () => {
               If your transaction seems to be taking longer than normal (more
               than 30 mins). Please contact our Support Team at Support@slup.com
             </p>
+          </Modal.Body>
+        </Modal>
+
+        <Modal
+          show={showClamModel}
+          onHide={handleClamClose}
+          centered
+          className="transaction-proceed-modal"
+          backdrop="static"
+        >
+          <Modal.Body>
+            <div className="heading-box">
+              <h4>Clam Your Amount</h4>
+              <p>Transaction status can also be tracked in Recent Trades</p>
+            </div>
+            <div className="swap-row">
+              <button className="common-btn w-100 p-3">Clam Now</button>
+            </div>
           </Modal.Body>
         </Modal>
       </Layout>

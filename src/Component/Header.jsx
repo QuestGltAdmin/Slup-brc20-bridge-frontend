@@ -112,7 +112,7 @@ export default function Header(props) {
                   ) : (
                     <button className="ms-auto common-btn">
                       {WalletBTC?.selectedAccount.replace(
-                        WalletBTC?.selectedAccount.substring(5, 37),
+                        WalletBTC?.selectedAccount.substring(5, 37), 
                         "..."
                       )}
                     </button>

@@ -4,7 +4,7 @@ const web3js = new Web3(new Web3.providers.HttpProvider("https://bsc-dataseed2.b
 
 const CheckWallet = async (data) => {
   try {
-    let wallet = web3js.utils.isAddress(data.BscAddress)
+    let wallet = web3js.utils.isAddress(data)
     return wallet;
   }
   catch (error) {

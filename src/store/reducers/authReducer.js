@@ -9,6 +9,7 @@ const userData = localStorage.getItem("userData");
 const WalletEVM = localStorage.getItem("WalletEVM");
 const WalletBTC = localStorage.getItem("WalletBTC");
 const uniIns = localStorage.getItem("uniIns");
+const uniSign = localStorage.getItem("uniSign");
 const proupdatedata = localStorage.getItem("saveprodata");
 
 
@@ -19,6 +20,7 @@ const authSlice =  createSlice({
     WalletEVM:!!WalletEVM ? JSON.parse(WalletEVM) : {},
     WalletBTC:!!WalletBTC ? JSON.parse(WalletBTC) : {},
     uniIns:!!uniIns ? JSON.parse(uniIns) : {},
+    uniSign:!!uniSign ? JSON.parse(uniSign) : {},
     isAuthenticated: !!isAuthenticated ? true : false,
     isUserAuthenticated: !!isUserAuthenticated ? true : false,
     userRole: !!userRole ? userRole : "",
@@ -118,6 +120,14 @@ const authSlice =  createSlice({
       };
     },
 
+
+    setUnisatSign: (state, action) => {
+      localStorage.setItem("uniSign", JSON.stringify(action.payload));
+      return {
+        ...state,
+        uniSign: action.payload,
+      };
+    },
   
   },
 });
@@ -131,7 +141,8 @@ export const {
   userloginSuccess,
   userLoginFail,
   setBitcoinWallet,
-  setUnisatInscription
+  setUnisatInscription,
+  setUnisatSign
 } = authSlice.actions;
 
 export default authSlice.reducer;

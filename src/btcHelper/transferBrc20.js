@@ -17,7 +17,7 @@ export const inscribeTransfer = async (data) => {
 };
 
 export const transferInscription = async (data) => {
-  console.log("data" , data);
+  console.log("data" , data.inscriptionID);
 
   if (typeof window.unisat == "undefined") {
     console.error("please install unisat wallet!");
@@ -26,7 +26,7 @@ export const transferInscription = async (data) => {
       let txid = await window.unisat.sendInscription(
         data.reciever,
         data.inscriptionID,
-        { feeRate: 1 }
+        { feeRate: 5 }
       );
       return txid;
     } catch (e) {
