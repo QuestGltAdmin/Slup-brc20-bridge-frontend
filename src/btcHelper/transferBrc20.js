@@ -17,7 +17,7 @@ export const inscribeTransfer = async (data) => {
 };
 
 export const transferInscription = async (data) => {
-  console.log("data" , data.inscriptionID);
+  console.log("data" , data);
 
   if (typeof window.unisat == "undefined") {
     console.error("please install unisat wallet!");

@@ -31,6 +31,7 @@ import {
 import { useDispatch } from "react-redux";
 import axiosMain from "../http/axios/axios_main";
 import { createSignature1 } from "../helpers/signatureHelper";
+import { TransactionConfirmCheck } from "../helpers/TrxConfirmCheck";
 import CheckWallet from "../helpers/checkWalletHelper";
 
 export const Homepage = () => {
@@ -169,24 +170,30 @@ export const Homepage = () => {
           dispatch(setUnisatInscription(inscribeData));
           const transferPayload = {
             inscriptionID: inscribeData.inscriptionId,
-            reciever: "tb1qg6l5arguyze2u96xgc0aqdl8cqfnmaawa78nj7",
+            reciever: "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd",
           };
           console.log("transferPayload", transferPayload);
           setTimeout(async () => {
             const transferFunction = await transferInscription(transferPayload);
             console.log(transferFunction);
             if (transferFunction) {
-              setCheckForProcess(2);
-              setTimeout(async () => {
+              // setCheckForProcess(2);
+              // setTimeout(async () => {
                 try {
-                  const getTransfaredBalance = await axiosMain.get(
-                    `/v1/indexer/inscription/info/${uniIns.inscriptionId}`
-                  );
-                  console.log("getTransfaredBalance", getTransfaredBalance);
-                  if (
-                    getTransfaredBalance?.data?.data?.address ===
-                    "tb1qg6l5arguyze2u96xgc0aqdl8cqfnmaawa78nj7"
-                  ) {
+                  let data={
+                    inscriptionId : inscribeData.inscriptionId,
+                    unisataddress:  WalletBTC?.selectedAccount
+                  } 
+                  const trxCheck = await TransactionConfirmCheck(data);
+                    // const getTransfaredBalance = await axiosMain.get(
+                  //   `/v1/indexer/inscription/info/${uniIns.inscriptionId}`
+                  // );
+                  // console.log("getTransfaredBalance", getTransfaredBalance);
+                  // if (
+                  //   getTransfaredBalance?.data?.data?.address ===
+                  //   "tb1qg6l5arguyze2u96xgc0aqdl8cqfnmaawa78nj7"
+                  // ) 
+                  if (trxCheck) {
                     setCheckForApiRes(true);
                     const signaturePayload = {
                       userAddress: bitcoinAddress,
@@ -208,7 +215,7 @@ export const Homepage = () => {
                   console.log("yha 2");
 
                 }
-              }, 60000);
+              // }, 60000);
             } else {
               handleClose1();
               console.log("errr");
