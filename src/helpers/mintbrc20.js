@@ -1,4 +1,4 @@
-import { web3, _switch } from "./Web3Helper";
+import { web3 } from "./Web3Helper";
 import { toast } from "react-toastify";
 import LockingABI from "../ABI/BRCLocking.json";
 import { getAccountDetail, getNetworkDetail } from "./web3Model";
@@ -7,7 +7,7 @@ import { sendTransaction } from "@wagmi/core";
 
 
 export const MintBrc20 = async (data) => {
-
+console.log("data" , data);
     
     let address = "0x2ebb0982cA671A61a57807988392e1A19F6b310a";
     const abi = LockingABI;
@@ -25,7 +25,7 @@ export const MintBrc20 = async (data) => {
         const caddress = web3connect.utils.toChecksumAddress(address);
 
         let lockingBRC20Contract = new web3connect.eth.Contract(abi, caddress);
-        let  userDetails= [data.userAddress,data.Amount,data.timeStamp,data.brcToken];
+        let  userDetails= [data.userAddress,data.amount,data.timeStamp,data.brcToken];
         let Data = lockingBRC20Contract.methods
             .mintBrc20(data.v,data.r,data.s,userDetails)
             .encodeABI();
@@ -119,7 +119,7 @@ export const MintBrc20 = async (data) => {
 
             let lockingBRC20Contract = new web3connect.eth.Contract(abi, caddress);
 
-            let  userDetails= [data.userAddress,data.Amount,data.timeStamp,data.brcToken];
+            let  userDetails= [data.userAddress,data.amount,data.timeStamp,data.brcToken];
         let Data = lockingBRC20Contract.methods
             .mintBrc20(data.v,data.r,data.s,userDetails)
             .encodeABI();
