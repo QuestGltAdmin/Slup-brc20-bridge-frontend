@@ -78,8 +78,6 @@ export default function Header(props) {
     }
   }, [walletAddress]);
 
-
-
   return (
     <>
       <header className="main-header" id="headerId">
@@ -92,27 +90,37 @@ export default function Header(props) {
                     <img src="assets/images/logo.png" />
                   </Navbar.Brand>
 
-                  {!WalletEVM?.selectedAccount &&
-                  !WalletBTC?.selectedAccount ? (
+                  {!WalletEVM?.selectedAccount ? (
                     <button
                       onClick={() => {
                         setShow(true);
                       }}
                       className="ms-auto common-btn"
                     >
-                      Connect Wallet
+                      Connect Metamask Wallet
                     </button>
-                  ) : WalletEVM?.selectedAccount ? (
+                  ) : (
                     <button className="ms-auto common-btn">
                       {WalletEVM?.selectedAccount.replace(
                         WalletEVM?.selectedAccount.substring(5, 37),
                         "..."
                       )}
                     </button>
+                  )}
+
+                  {!WalletBTC?.selectedAccount ? (
+                    <button
+                      className="ms-auto common-btn"
+                      onClick={() => {
+                        setShow(true);
+                      }}
+                    >
+                      Connect Unisat Wallet
+                    </button>
                   ) : (
                     <button className="ms-auto common-btn">
                       {WalletBTC?.selectedAccount.replace(
-                        WalletBTC?.selectedAccount.substring(5, 37), 
+                        WalletBTC?.selectedAccount.substring(5, 37),
                         "..."
                       )}
                     </button>

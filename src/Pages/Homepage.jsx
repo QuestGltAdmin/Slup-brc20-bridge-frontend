@@ -33,10 +33,11 @@ import axiosMain from "../http/axios/axios_main";
 import { createSignature1 } from "../helpers/signatureHelper";
 import { TransactionConfirmCheck } from "../helpers/TrxConfirmCheck";
 import CheckWallet from "../helpers/checkWalletHelper";
+import { MintBrc20 } from "../helpers/mintbrc20";
 
 export const Homepage = () => {
   const dispatch = useDispatch();
-  const { WalletBTC, WalletEVM, uniIns } = useAuth();
+  const { WalletBTC, WalletEVM, uniIns, uniSign } = useAuth();
   const [show1, setShow1] = useState(false);
   const [amount, setAmount] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
@@ -73,6 +74,12 @@ export const Homepage = () => {
       setTo("Slup");
     }
   }, [to, from]);
+
+  useEffect(()=>{
+    if(uniSign){
+      setShowClamModel(true)
+    }
+  },[])
 
   const switchTotoFrom = () => {
     if (from === "Bitcoin" && to === "Slup") {
@@ -179,42 +186,41 @@ export const Homepage = () => {
             if (transferFunction) {
               // setCheckForProcess(2);
               // setTimeout(async () => {
-                try {
-                  let data={
-                    inscriptionId : inscribeData.inscriptionId,
-                    unisataddress:  WalletBTC?.selectedAccount
-                  } 
-                  const trxCheck = await TransactionConfirmCheck(data);
-                    // const getTransfaredBalance = await axiosMain.get(
-                  //   `/v1/indexer/inscription/info/${uniIns.inscriptionId}`
-                  // );
-                  // console.log("getTransfaredBalance", getTransfaredBalance);
-                  // if (
-                  //   getTransfaredBalance?.data?.data?.address ===
-                  //   "tb1qg6l5arguyze2u96xgc0aqdl8cqfnmaawa78nj7"
-                  // ) 
-                  if (trxCheck) {
-                    setCheckForApiRes(true);
-                    const signaturePayload = {
-                      userAddress: bitcoinAddress,
-                      amount: amount,
-                      brc20Token: token.address,
-                    };
-                    const signature = await createSignature1(signaturePayload);
-                    console.log("signature", signature);
-                    if (signature) {
-                      setCheckForProcess(3);
-                      dispatch(setUnisatSign(signature));
-                      handleClose1();
-                      setShowClamModel(true);
-                    }
-                  } else {
-                    console.log("yha");
+              try {
+                let data = {
+                  inscriptionId: inscribeData.inscriptionId,
+                  unisataddress: WalletBTC?.selectedAccount,
+                };
+                const trxCheck = await TransactionConfirmCheck(data);
+                // const getTransfaredBalance = await axiosMain.get(
+                //   `/v1/indexer/inscription/info/${uniIns.inscriptionId}`
+                // );
+                // console.log("getTransfaredBalance", getTransfaredBalance);
+                // if (
+                //   getTransfaredBalance?.data?.data?.address ===
+                //   "tb1qg6l5arguyze2u96xgc0aqdl8cqfnmaawa78nj7"
+                // )
+                if (trxCheck) {
+                  setCheckForApiRes(true);
+                  const signaturePayload = {
+                    userAddress: bitcoinAddress,
+                    amount: amount,
+                    brc20Token: token.address,
+                  };
+                  const signature = await createSignature1(signaturePayload);
+                  console.log("signature", signature);
+                  if (signature) {
+                    setCheckForProcess(3);
+                    dispatch(setUnisatSign(signature));
+                    handleClose1();
+                    setShowClamModel(true);
                   }
-                } catch (err) {
-                  console.log("yha 2");
-
+                } else {
+                  console.log("yha");
                 }
+              } catch (err) {
+                console.log("yha 2");
+              }
               // }, 60000);
             } else {
               handleClose1();
@@ -231,15 +237,40 @@ export const Homepage = () => {
     }
   };
 
-  const signatureCheckFunction = async () => {
- 
-  };
+  // const signatureCheckFunction = async () => {
 
-  useEffect(() => {
-    if (checkForApiRes === false && checkForFirstCall === true) {
-      signatureCheckFunction();
-    }
-  }, [checkForApiRes]);
+  // };
+
+  // useEffect(() => {
+  //   if (checkForApiRes === false && checkForFirstCall === true) {
+  //     signatureCheckFunction();
+  //   }
+  // }, [checkForApiRes]);
+
+  const claimFunction = async () => {
+    try {
+      const payload = {
+        v: uniSign.v,
+        r: uniSign.r,
+        s: uniSign.s,
+        userAddress: uniSign?.voucher?.userAddress,
+        amount: uniSign?.voucher?.amount,
+        timeStamp: uniSign?.voucher?.timeStamp,
+        brcToken: uniSign?.voucher?.brc20Token,
+        type: WalletEVM.type,
+        chainId : WalletEVM.chainId
+      };
+      const claimData = await MintBrc20(payload);
+      if (claimData) {
+      dispatch(setUnisatSign({}))
+        window.open(
+          `https://testnet.bscscan.com/tx/${claimData?.transactionHash}`,
+          "_blank"
+        );
+      } else {
+      }
+    } catch (err) {}
+  };
 
   return (
     <>
@@ -253,11 +284,11 @@ export const Homepage = () => {
                   <div className="token-with-price">
                     <p>
                       <img
-                        src="assets/images/MUBI.png"
+                        src={token.logos}
                         alt=""
                         className="token-img"
                       />{" "}
-                      MUBI
+                      {token.symbol}
                     </p>
                     <p>
                       $0.108725{" "}
@@ -478,7 +509,7 @@ export const Homepage = () => {
                     <button className="common-btn">Max</button>
                   </div>
 
-                  <div className="service-charge-box">
+                  {/* <div className="service-charge-box">
                     <p>
                       <img
                         src="assets/images/plugin.png"
@@ -494,7 +525,7 @@ export const Homepage = () => {
                       You will receive <span>0 MUBI</span>{" "}
                       <span className="brc-highlight">BRC 20</span>
                     </p>
-                  </div>
+                  </div> */}
 
                   <div className="swap-currency-drop swap-enter-amount">
                     <Form.Control
@@ -583,18 +614,16 @@ export const Homepage = () => {
             </div>
             <div className="swap-row">
               <div>
-                <img src="assets/images/MUBI.png" alt="" className="" />
+                <img src={token.logos} alt="" className="" />
                 <div>
-                  <h4>MUBI</h4>
-                  <p>mubi</p>
+                  <h4>{token.symbol}</h4>
                 </div>
               </div>
               <img src="assets/images/Arrow.png" alt="" className="arrow-img" />
               <div>
-                <img src="assets/images/MUBI.png" alt="" className="" />
+                <img src={token.logos} alt="" className="" />
                 <div>
-                  <h4>MUBI</h4>
-                  <p>mubi</p>
+                  <h4>{token.symbol}</h4>
                 </div>
               </div>
             </div>
@@ -616,7 +645,7 @@ export const Homepage = () => {
                   alt=""
                   className="coin-img"
                 />
-                <span>BTC</span>
+                <span>{from.toUpperCase()}</span>
               </div>
               <div>
                 <img
@@ -633,7 +662,7 @@ export const Homepage = () => {
                   alt=""
                   className="coin-img"
                 />
-                <span>BTC</span>
+                <span>{from.toUpperCase()}</span>
               </div>
               <div>
                 <img
@@ -646,7 +675,7 @@ export const Homepage = () => {
                   className="loader-ing"
                 />
                 <img src="assets/images/slup.png" alt="" className="coin-img" />
-                <span>Slup</span>
+                <span>{to.toUpperCase()}</span>
               </div>
             </div>
             <p>
@@ -669,7 +698,7 @@ export const Homepage = () => {
               <p>Transaction status can also be tracked in Recent Trades</p>
             </div>
             <div className="swap-row">
-              <button className="common-btn w-100 p-3">Clam Now</button>
+              <button className="common-btn w-100 p-3" onClick={()=>{claimFunction()}}>Clam Now</button>
             </div>
           </Modal.Body>
         </Modal>
