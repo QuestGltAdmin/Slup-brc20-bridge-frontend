@@ -38,6 +38,7 @@ import { MintBrc20 } from "../helpers/mintbrc20";
 export const Homepage = () => {
   const dispatch = useDispatch();
   const { WalletBTC, WalletEVM, uniIns, uniSign } = useAuth();
+  // console.log("uniSign", uniSign);
   const [show1, setShow1] = useState(false);
   const [amount, setAmount] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
@@ -64,6 +65,7 @@ export const Homepage = () => {
   const handleClose = useCallback((e) => {
     setShow(false);
   });
+  const [disableClaim, setDisableClaim] = useState(false);
 
   useEffect(() => {
     if (from === "Slup" && to === "Slup") {
@@ -75,11 +77,11 @@ export const Homepage = () => {
     }
   }, [to, from]);
 
-  useEffect(()=>{
-    if(uniSign){
-      setShowClamModel(true)
+  useEffect(() => {
+    if (Object.keys(uniSign).length !== 0) {
+      setShowClamModel(true);
     }
-  },[])
+  }, []);
 
   const switchTotoFrom = () => {
     if (from === "Bitcoin" && to === "Slup") {
@@ -171,7 +173,7 @@ export const Homepage = () => {
           ticker: token.symbol,
         };
         const inscribeData = await inscribeTransfer(inscribePayload);
-        console.log(inscribeData);
+        // console.log(inscribeData);
         if (inscribeData) {
           setCheckForProcess(1);
           dispatch(setUnisatInscription(inscribeData));
@@ -179,12 +181,12 @@ export const Homepage = () => {
             inscriptionID: inscribeData.inscriptionId,
             reciever: "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd",
           };
-          console.log("transferPayload", transferPayload);
+          // console.log("transferPayload", transferPayload);
           setTimeout(async () => {
             const transferFunction = await transferInscription(transferPayload);
-            console.log(transferFunction);
+            // console.log(transferFunction);
             if (transferFunction) {
-              // setCheckForProcess(2);
+              setCheckForProcess(2);
               // setTimeout(async () => {
               try {
                 let data = {
@@ -208,7 +210,7 @@ export const Homepage = () => {
                     brc20Token: token.address,
                   };
                   const signature = await createSignature1(signaturePayload);
-                  console.log("signature", signature);
+                  // console.log("signature", signature);
                   if (signature) {
                     setCheckForProcess(3);
                     dispatch(setUnisatSign(signature));
@@ -216,38 +218,30 @@ export const Homepage = () => {
                     setShowClamModel(true);
                   }
                 } else {
-                  console.log("yha");
+                  toast.error("Transaction error");
                 }
               } catch (err) {
-                console.log("yha 2");
+                toast.error("Transaction error");
               }
               // }, 60000);
             } else {
               handleClose1();
-              console.log("errr");
+              toast.error("Transaction error");
             }
           }, 10000);
         } else {
-          toast.error("reject");
+          toast.error("Reject");
           handleClose1();
         }
       } catch (err) {
+        toast.error("Transaction error");
         handleClose1();
       }
     }
   };
 
-  // const signatureCheckFunction = async () => {
-
-  // };
-
-  // useEffect(() => {
-  //   if (checkForApiRes === false && checkForFirstCall === true) {
-  //     signatureCheckFunction();
-  //   }
-  // }, [checkForApiRes]);
-
   const claimFunction = async () => {
+    setDisableClaim(true);
     try {
       const payload = {
         v: uniSign.v,
@@ -258,18 +252,25 @@ export const Homepage = () => {
         timeStamp: uniSign?.voucher?.timeStamp,
         brcToken: uniSign?.voucher?.brc20Token,
         type: WalletEVM.type,
-        chainId : WalletEVM.chainId
+        chainId: WalletEVM.chainId,
       };
       const claimData = await MintBrc20(payload);
       if (claimData) {
-      dispatch(setUnisatSign({}))
+        setDisableClaim(false);
+        dispatch(setUnisatSign({}));
         window.open(
           `https://testnet.bscscan.com/tx/${claimData?.transactionHash}`,
           "_blank"
         );
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
+        setDisableClaim(false);
       }
-    } catch (err) {}
+    } catch (err) {
+      setDisableClaim(false);
+    }
   };
 
   return (
@@ -283,11 +284,7 @@ export const Homepage = () => {
                   <h3>Token Information</h3>
                   <div className="token-with-price">
                     <p>
-                      <img
-                        src={token.logos}
-                        alt=""
-                        className="token-img"
-                      />{" "}
+                      <img src={token.logos} alt="" className="token-img" />{" "}
                       {token.symbol}
                     </p>
                     <p>
@@ -698,7 +695,15 @@ export const Homepage = () => {
               <p>Transaction status can also be tracked in Recent Trades</p>
             </div>
             <div className="swap-row">
-              <button className="common-btn w-100 p-3" onClick={()=>{claimFunction()}}>Clam Now</button>
+              <button
+                className="common-btn w-100 p-3"
+                onClick={() => {
+                  claimFunction();
+                }}
+                disabled={disableClaim}
+              >
+                {disableClaim ? "Processing" : "Clam Now"}
+              </button>
             </div>
           </Modal.Body>
         </Modal>

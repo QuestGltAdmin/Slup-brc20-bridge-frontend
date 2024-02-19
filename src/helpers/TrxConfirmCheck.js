@@ -16,7 +16,7 @@ export const TransactionConfirmCheck = async (data) => {
                 `/v1/indexer/inscription/info/${data.inscriptionId}`
             );
             walletFromAPI = getTransfaredBalance?.data?.data?.address;
-            console.log("walletFromAPI-----------------", walletFromAPI);
+            // console.log("walletFromAPI-----------------", walletFromAPI);
 
             await sleep(expectedBlockTime);
         }
