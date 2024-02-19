@@ -537,8 +537,8 @@ height: 16px;
     color: #FA255F;
     text-decoration: none;
 }
-.modal.show.connect-wallet-modal .modal-dialog {
-    max-width: 400px;
+.modal.connect-wallet-modal .modal-dialog {
+    max-width: 400px !important;
     margin: auto;
 }
 .connect-wallet-modal .modal-header .btn-close {

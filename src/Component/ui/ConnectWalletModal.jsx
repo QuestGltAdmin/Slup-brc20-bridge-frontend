@@ -72,7 +72,7 @@ export default function ConnectWalletModal({
     <Modal
       className="token-list-modal connect-wallet-modal"
       centered
-      size="lg"
+      size="md"
       {...props.modalProps}
       backdrop="static"
     >

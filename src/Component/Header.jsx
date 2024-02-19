@@ -7,6 +7,8 @@ import {
   Col,
   Row,
   NavDropdown,
+  Modal,
+  Form,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ConnectWalletModal from "./ui/ConnectWalletModal";
@@ -14,6 +16,9 @@ import useAuth from "../hooks/useAuth";
 import { Connect } from "../helpers/Connect";
 import { useDispatch } from "react-redux";
 import { setEVMWallet } from "../store/reducers/authReducer";
+import { toast } from "react-toastify";
+import { linkAddress } from "../helpers/linkAddress";
+import { checkAddressType } from "../btcHelper/btcAddressCheck";
 
 export default function Header(props) {
   const dispatch = useDispatch();
@@ -23,10 +28,18 @@ export default function Header(props) {
   const [forMobileView, setForMobileView] = useState(
     window.innerWidth < 992 ? true : false
   );
-  const [switchForWallet , setSwitchForWallet] = useState("Bitcoin")
+  const [switchForWallet, setSwitchForWallet] = useState("Bitcoin");
   const handleClose = useCallback((e) => {
     setShow(false);
   });
+  const [addressLink, setAddressLink] = useState({
+    nativeAddress: "",
+    nestedAddress: "",
+    taprootAddress: "",
+    legacyAddress: "",
+  });
+  const [disableLink , setDisableLink] = useState(false)
+  const [showLinkModel, setShowLinkModel] = useState(false);
   const ConnectWalletModalProps = useMemo(() => ({
     modalProps: {
       show: show,
@@ -43,6 +56,13 @@ export default function Header(props) {
     if (window.scrollY == 0) {
       document.getElementById("headerId").classList.remove("darker-header");
     }
+  };
+
+  const handleLinkClose = () => {
+    setShowLinkModel(false);
+  };
+  const HandelAddress = (e) => {
+    setAddressLink({ ...addressLink, [e.target.name]: e.target.value });
   };
 
   useEffect(() => {
@@ -79,6 +99,49 @@ export default function Header(props) {
     }
   }, [walletAddress]);
 
+  const linkAddressFunction = async () => {
+    const checkNativeAddress = await checkAddressType(
+      addressLink.nativeAddress,
+      WalletBTC.network
+    );
+    const checkTaprootAddress = await checkAddressType(
+      addressLink.taprootAddress,
+      WalletBTC.network
+    );
+    if (!checkNativeAddress) {
+      toast.warn("Please enter valid native address");
+    } else if (!checkTaprootAddress) {
+      toast.warn("Please enter valid taproot address");
+    } else {
+      setDisableLink(true)
+      try {
+        const linkPayload = {
+          type: WalletEVM?.type,
+          nativeAddress: addressLink.nativeAddress,
+          nestedAddress: addressLink.nestedAddress,
+          taprootAddress: addressLink.taprootAddress,
+          legacyAddress: addressLink.legacyAddress,
+          chainId: WalletEVM.chainId,
+        };
+        const LinkAddress = await linkAddress(linkPayload);
+        console.log(LinkAddress);
+        if (LinkAddress) {
+          setDisableLink(false)
+          toast.success("Address link successfully");
+          setAddressLink({
+            nativeAddress: "",
+            nestedAddress: "",
+            taprootAddress: "",
+            legacyAddress: "",
+          });
+          handleLinkClose();
+        }
+      } catch (err) {
+        setDisableLink(false)
+      }
+    }
+  };
+
   return (
     <>
       <header className="main-header" id="headerId">
@@ -95,7 +158,7 @@ export default function Header(props) {
                     <button
                       onClick={() => {
                         setShow(true);
-                        setSwitchForWallet("Slup")
+                        setSwitchForWallet("Slup");
                       }}
                       className="ms-auto common-btn"
                     >
@@ -115,7 +178,7 @@ export default function Header(props) {
                       className="ms-auto common-btn"
                       onClick={() => {
                         setShow(true);
-                        setSwitchForWallet("Bitcoin")
+                        setSwitchForWallet("Bitcoin");
                       }}
                     >
                       Connect BTC Wallet
@@ -128,12 +191,95 @@ export default function Header(props) {
                       )}
                     </button>
                   )}
+                  <button
+                    className="ms-auto common-btn"
+                    onClick={() => {
+                      if (
+                        !WalletBTC?.selectedAccount ||
+                        !WalletEVM?.selectedAccount
+                      ) {
+                        toast.warn("Please connect your both wallets");
+                      } else {
+                        setShowLinkModel(true);
+                      }
+                    }}
+                  >
+                    Link Address
+                  </button>
                 </div>
               </Col>
             </Row>
           </Container>
         </Navbar>
       </header>
+      <Modal
+        show={showLinkModel}
+        onHide={handleLinkClose}
+        centered
+        className="transaction-proceed-modal"
+        backdrop="static"
+      >
+        <Modal.Header closeButton>
+          {/* <Modal.Title>Connect Wallet</Modal.Title> */}
+        </Modal.Header>
+        <Modal.Body>
+          <div className="heading-box">
+            <h4>Link your address</h4>
+            <p>Transaction status can also be tracked in Recent Trades</p>
+          </div>
+          <Form.Group className="mb-3">
+            <Form.Label>Native Segwit</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter native segwit address"
+              name="nativeAddress"
+              onChange={HandelAddress}
+              value={addressLink.nativeAddress}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Nested Segwit</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter nested segwit address"
+              name="nestedAddress"
+              onChange={HandelAddress}
+              value={addressLink.nestedAddress}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Taproot</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter taproot address"
+              name="taprootAddress"
+              onChange={HandelAddress}
+              value={addressLink.taprootAddress}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Legacy</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter legacy address"
+              name="legacyAddress"
+              onChange={HandelAddress}
+              value={addressLink.legacyAddress}
+            />
+          </Form.Group>
+          <div className="swap-row">
+            <button
+              className="common-btn w-100 p-3"
+              onClick={() => {
+                linkAddressFunction();
+              }}
+              disabled={disableLink}
+            >
+             {disableLink === true ? "Processing" : "Link now"}
+            </button>
+          </div>
+        </Modal.Body>
+      </Modal>
       <ConnectWalletModal {...ConnectWalletModalProps} />
     </>
   );

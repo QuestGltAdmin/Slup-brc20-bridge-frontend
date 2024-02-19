@@ -1,12 +1,13 @@
 // import { verifyMessage } from "@unisat/wallet-utils";
 import  bitcore  from "bitcore-lib";
 
-export const checkAddressType = async (data) =>{
+export const checkAddressType = async (address , network) =>{
     try {
-        const addressInstance = bitcore.Address(data, "testnet"); // Specify network here
+        const addressInstance = bitcore.Address(address, network); // Specify network here
         return addressInstance;
     } catch (error) {
-        throw error;
+        // console.log(error);
+       return false
     }
     
 }

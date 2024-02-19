@@ -37,6 +37,7 @@ import CheckWallet from "../helpers/checkWalletHelper";
 import { MintBrc20 } from "../helpers/mintbrc20";
 import { BurnBrc20 } from "../helpers/burnbrc20";
 import { Connect } from "../helpers/Connect";
+import { checkAddressType } from "../btcHelper/btcAddressCheck";
 
 export const Homepage = () => {
   const dispatch = useDispatch();
@@ -278,8 +279,15 @@ export const Homepage = () => {
   };
 
   const burnSlupToBtc = async () => {
+    const checkAddress = await checkAddressType(
+      bitcoinAddress,
+      WalletBTC.network
+    );
+    // console.log(checkAddress);
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
+    } else if (!checkAddress) {
+      toast.warn("Please enter valid wallet address");
     } else if (checkBoxActive === false) {
       toast.warn("Please check checkbox first");
     } else {
@@ -324,7 +332,7 @@ export const Homepage = () => {
                       {token.symbol}
                     </p>
                     <p>
-                      $0.108725{" "}
+                      {/* $0.108725{" "} */}
                       <img
                         src="assets/images/price.png"
                         alt=""
@@ -339,11 +347,20 @@ export const Homepage = () => {
                   <div className="slup-address-copy">
                     <p>Slup chain address</p>
                     <p>
-                      0x38...DE93
-                      <a href="">
+                      {token.address.replace(
+                        token.address.substring(5, 37),
+                        "..."
+                      )}
+                      <a
+                      style={{cursor : "pointer"}}
+                        onClick={() => {
+                          navigator.clipboard.writeText(token.address);
+                          toast.success("Copid...")
+                        }}
+                      >
                         <img src="assets/images/copy.png" alt="" />
                       </a>
-                      <a href="">
+                      <a href={`https://testnet.bscscan.com/address/${token.address}`} target="_blank">
                         <img src="assets/images/download.png" alt="" />
                       </a>
                     </p>
