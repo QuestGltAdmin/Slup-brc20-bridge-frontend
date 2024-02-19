@@ -1,4 +1,4 @@
-import { web3, _switch } from "./Web3Helper";
+import { web3 } from "./Web3Helper";
 import { toast } from "react-toastify";
 import LockingABI from "../ABI/BRCLocking.json";
 import { getAccountDetail, getNetworkDetail } from "./web3Model";
