@@ -1,27 +1,27 @@
 // import { verifyMessage } from "@unisat/wallet-utils";
-import { bitcore } from "bitcore-lib";
+import  bitcore  from "bitcore-lib";
 
 export const checkAddressType = async (data) =>{
     try {
-        const addressInstance = bitcore.Address(data.address, data.network); // Specify network here
-        return addressInstance.type;
+        const addressInstance = bitcore.Address(data, "testnet"); // Specify network here
+        return addressInstance;
     } catch (error) {
-        return "Invalid address";
+        throw error;
     }
     
 }
 
 
-export const checkValidAddress = async (data) =>{
-    try {
-        const isValid = bitcore.Address.isValid(inputAddress);
-        if(!isValid){
-            return false;
-        }
-        else{
-            return true;
-        }
-    } catch (error) {
-        return "Invalid address";
-    }
-}
+// export const checkValidAddress = async (data) =>{
+//     try {
+//         const isValid = bitcore.Address.isValid(data);
+//         if(isValid){
+//             return data;
+//         }
+//         else{
+//             return "Invalid address";
+//         }
+//     } catch (error) {
+//         throw error;
+//     }
+// }
