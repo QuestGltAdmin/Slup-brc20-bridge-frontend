@@ -25,6 +25,7 @@ import {
 } from "../btcHelper/transferBrc20";
 import { toast } from "react-toastify";
 import {
+  setEVMWallet,
   setUnisatInscription,
   setUnisatSign,
 } from "../store/reducers/authReducer";
@@ -34,6 +35,8 @@ import { createSignature1 } from "../helpers/signatureHelper";
 import { TransactionConfirmCheck } from "../helpers/TrxConfirmCheck";
 import CheckWallet from "../helpers/checkWalletHelper";
 import { MintBrc20 } from "../helpers/mintbrc20";
+import { BurnBrc20 } from "../helpers/burnbrc20";
+import { Connect } from "../helpers/Connect";
 
 export const Homepage = () => {
   const dispatch = useDispatch();
@@ -66,6 +69,7 @@ export const Homepage = () => {
     setShow(false);
   });
   const [disableClaim, setDisableClaim] = useState(false);
+  const [switchForWallet, setSwitchForWallet] = useState("Bitcoin");
 
   useEffect(() => {
     if (from === "Slup" && to === "Slup") {
@@ -127,7 +131,7 @@ export const Homepage = () => {
     },
     // onWalletChange,
     forMobileView,
-    chainData: from,
+    chainData: switchForWallet === "Bitcoin" ? "Bitcoin" : "Slup",
   }));
 
   const getWalletAddress = async () => {
@@ -270,6 +274,38 @@ export const Homepage = () => {
       }
     } catch (err) {
       setDisableClaim(false);
+    }
+  };
+
+  const burnSlupToBtc = async () => {
+    if (!amount || amount <= 0) {
+      toast.warn("Please enter valid amount");
+    } else if (checkBoxActive === false) {
+      toast.warn("Please check checkbox first");
+    } else {
+      try {
+        const burnPayload = {
+          type: WalletEVM?.type,
+          userAddress: WalletEVM?.selectedAccount,
+          brcTokenAddress: token?.address,
+          amount: amount,
+          chainId: WalletEVM?.chainId,
+        };
+        const burnData = await BurnBrc20(burnPayload);
+        if (burnData) {
+          const burnInPayload = {
+            amount: amount,
+            ticker: token.symbol,
+          };
+          try {
+            const burnInscribe = await inscribeTransfer(burnInPayload);
+            if (burnInscribe) {
+            }
+          } catch (err) {}
+        } else {
+          toast.error("Transaction error");
+        }
+      } catch (err) {}
     }
   };
 
@@ -524,7 +560,7 @@ export const Homepage = () => {
                     </p>
                   </div> */}
 
-                  <div className="swap-currency-drop swap-enter-amount">
+                  <div className="swap-currency-drop swap-enter-amount mt-3">
                     <Form.Control
                       type="text"
                       placeholder={`Enter ${
@@ -554,15 +590,25 @@ export const Homepage = () => {
                   </div>
 
                   <div>
-                    {!WalletBTC?.selectedAccount &&
-                    !WalletEVM?.selectedAccount ? (
+                    {!WalletBTC?.selectedAccount ? (
                       <button
                         className="common-btn w-100 p-3"
                         onClick={() => {
                           setShow(true);
+                          setSwitchForWallet("Bitcoin");
                         }}
                       >
-                        Connect Wallet
+                        Connect BTC Wallet
+                      </button>
+                    ) : !WalletEVM?.selectedAccount ? (
+                      <button
+                        className="common-btn w-100 p-3"
+                        onClick={() => {
+                          setShow(true);
+                          setSwitchForWallet("Slup");
+                        }}
+                      >
+                        Connect EVM Wallet
                       </button>
                     ) : !amount || amount <= 0 ? (
                       <button className="common-btn w-100 p-3 disable">
@@ -576,7 +622,11 @@ export const Homepage = () => {
                             : "common-btn w-100 p-3 disable"
                         }
                         onClick={() => {
-                          inscribeFunction();
+                          if (from === "Bitcoin") {
+                            inscribeFunction();
+                          } else {
+                            burnSlupToBtc();
+                          }
                         }}
                       >
                         TRANSFER

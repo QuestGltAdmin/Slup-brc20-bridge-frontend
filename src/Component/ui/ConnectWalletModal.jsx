@@ -74,6 +74,7 @@ export default function ConnectWalletModal({
       centered
       size="lg"
       {...props.modalProps}
+      backdrop="static"
     >
       <Modal.Header closeButton>
         <Modal.Title>Connect Wallet</Modal.Title>

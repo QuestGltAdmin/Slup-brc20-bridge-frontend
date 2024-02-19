@@ -23,6 +23,7 @@ export default function Header(props) {
   const [forMobileView, setForMobileView] = useState(
     window.innerWidth < 992 ? true : false
   );
+  const [switchForWallet , setSwitchForWallet] = useState("Bitcoin")
   const handleClose = useCallback((e) => {
     setShow(false);
   });
@@ -33,7 +34,7 @@ export default function Header(props) {
     },
     // onWalletChange,
     forMobileView,
-    chainData: props.chainSelect,
+    chainData: switchForWallet === "Bitcoin" ? "Bitcoin" : "Slup",
   }));
   const controlNavbar = () => {
     if (window.scrollY) {
@@ -94,10 +95,11 @@ export default function Header(props) {
                     <button
                       onClick={() => {
                         setShow(true);
+                        setSwitchForWallet("Slup")
                       }}
                       className="ms-auto common-btn"
                     >
-                      Connect Metamask Wallet
+                      Connect EVM Wallet
                     </button>
                   ) : (
                     <button className="ms-auto common-btn">
@@ -113,9 +115,10 @@ export default function Header(props) {
                       className="ms-auto common-btn"
                       onClick={() => {
                         setShow(true);
+                        setSwitchForWallet("Bitcoin")
                       }}
                     >
-                      Connect Unisat Wallet
+                      Connect BTC Wallet
                     </button>
                   ) : (
                     <button className="ms-auto common-btn">
