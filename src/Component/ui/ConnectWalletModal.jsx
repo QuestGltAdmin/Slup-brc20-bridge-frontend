@@ -15,6 +15,7 @@ export default function ConnectWalletModal({
   ...props
 }) {
   const dispatch = useDispatch();
+  const { WalletBTC, WalletEVM } = useAuth();
   const connect = async (type) => {
     try {
       props.modalProps.onHide();
@@ -54,13 +55,15 @@ export default function ConnectWalletModal({
   };
 
   useEffect(() => {
-    // Attach the listener when the component mounts
-    window.unisat.on("accountsChanged", handleAccountsChanged);
+    if (WalletBTC?.selectedAccount) {
+      window.unisat.on("accountsChanged", handleAccountsChanged);
 
-    // Cleanup function to remove the listener when the component unmounts
-    return () => {
-      window.unisat.removeListener("accountsChanged", handleAccountsChanged);
-    };
+      // Cleanup function to remove the listener when the component unmounts
+      // Attach the listener when the component mounts
+      return () => {
+        window.unisat.removeListener("accountsChanged", handleAccountsChanged);
+      };
+    }
   }, []);
 
   const slupWalletConnect = async () => {
