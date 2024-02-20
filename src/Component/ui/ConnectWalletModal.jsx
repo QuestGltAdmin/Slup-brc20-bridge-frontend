@@ -8,6 +8,7 @@ import {
 } from "../../store/reducers/authReducer";
 import { connectUnisat } from "../../btcHelper/connectWallet";
 import { toast } from "react-toastify";
+import useAuth from "../../hooks/useAuth";
 
 export default function ConnectWalletModal({
   forMobileView,
