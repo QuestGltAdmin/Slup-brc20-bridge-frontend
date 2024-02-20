@@ -178,7 +178,17 @@ export const Transaction = () => {
                                   ""
                                 )}
                               </td>
-                              <td>{items.status}</td>
+                              <td>
+                                <b
+                                  className={
+                                    items.status === "SUCCESS"
+                                      ? "success"
+                                      : "pending"
+                                  }
+                                >
+                                  {items.status}
+                                </b>
+                              </td>
 
                               <td>
                                 {items?.status === "SUCCESS" ? (
