@@ -9,6 +9,7 @@ import {
 import { Homepage } from './Pages/Homepage'
 import { Privacy } from './Pages/Privacy';
 import { ToastContainer } from 'react-toastify';
+import { Transaction } from './Pages/Transaction';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -19,6 +20,7 @@ function App() {
     <ToastContainer/>
       <Routes>
         <Route path="/" element={<Homepage />} />
+        <Route path="/transaction" element={<Transaction />} />
         <Route path="/privacy-policy" element={<Privacy />} />
       </Routes>
     </BrowserRouter>
