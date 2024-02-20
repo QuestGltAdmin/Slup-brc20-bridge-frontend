@@ -18,8 +18,7 @@ export const Transaction = () => {
     setShowClamModel(false);
   };
   const getData = async () => {
-    // const RowEvmAddress = await encryptData(WalletEVM?.selectedAccount);
-    const RowEvmAddress = await encryptData("0x51EFE4987D9D22032aba856A8E6472913cf1Fa04");
+    const RowEvmAddress = await encryptData(WalletEVM?.selectedAccount);
     const payload = {
       evmAddress: RowEvmAddress,
     };
@@ -36,10 +35,10 @@ export const Transaction = () => {
   };
 
   useEffect(() => {
-    // if (WalletEVM?.selectedAccount) {
+    if (WalletEVM?.selectedAccount) {
       getData();
-    // }
-  }, []);
+    }
+  }, [WalletEVM?.selectedAccount]);
 
   const modelOpenFun = (e) => {
     setVoucherData(e);

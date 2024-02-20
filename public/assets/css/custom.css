@@ -619,3 +619,13 @@ font-weight: 700;
     background-color: #f3dbe1;
     color: #000;
 }
+.success{
+color: green;
+}
+.pending{
+color: orangered;
+}
+.transactions-sec .table-outer-box .table tr td a{
+    color: #FA255F !important;
+    text-decoration: none !important;
+}
