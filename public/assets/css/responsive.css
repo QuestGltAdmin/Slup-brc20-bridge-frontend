@@ -315,3 +315,39 @@
         margin-bottom: 10px;
     }
 }
+
+/* transaction page css */
+
+@media (max-width: 992px) {
+    .transactions-sec h2 {
+        font-size: 28px;
+        line-height: 50px;
+    }
+    .transactions-sec .table-outer-box .table tr th, .transactions-sec .table-outer-box .table tr td {
+        font-size: 12px;
+        padding: 5px 5px;
+        vertical-align: middle;
+    }
+    .transactions-sec .table-outer-box {
+        
+        border-radius: 10px;
+        padding: 10px;
+    }
+    .transactions-sec .table-outer-box .table {
+        margin-bottom: 10px;
+        min-width: 1000px;
+    }
+    .transactions-sec {
+        padding: 90px 0 0;
+    }
+    .main-header .common-btn {
+        border-radius: 5px;
+        padding: 5px 5px;
+        font-size: 10px;
+        line-height: 12px;
+        margin: 0 5px;
+    }
+    .main-header .w-100.row{
+        width: auto !important;
+    }
+}

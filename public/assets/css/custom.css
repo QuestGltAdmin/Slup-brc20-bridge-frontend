@@ -588,3 +588,34 @@ font-weight: 700;
 .privacy-sec .content-box-privacy ul{
     text-align: left;
 }
+
+/* transaction page css */
+
+.transactions-sec{
+    padding: 120px 0 0;
+}
+.transactions-sec h2{
+    text-align: center;
+    background: -webkit-linear-gradient( #F46463, #FA255F);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 58px;
+    line-height: 87px;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+.transactions-sec .table-outer-box{
+    background: linear-gradient(to bottom, #ffffff 0%,#fef3f6 51%,#ffffff 100%);
+    border: 1px solid #fa255f;
+    border-radius: 25px;
+    padding: 30px;
+}
+.transactions-sec .table-outer-box .table tr th, .transactions-sec .table-outer-box .table tr td {
+    font-size: 14px;
+    padding: 20px 10px;
+    vertical-align: middle;
+}
+.transactions-sec .table-outer-box .table tr:nth-child(odd) td {
+    background-color: #f3dbe1;
+    color: #000;
+}
