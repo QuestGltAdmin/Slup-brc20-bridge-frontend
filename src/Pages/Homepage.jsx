@@ -38,14 +38,23 @@ import { MintBrc20 } from "../helpers/mintbrc20";
 import { BurnBrc20 } from "../helpers/burnbrc20";
 import { Connect } from "../helpers/Connect";
 import { checkAddressType } from "../btcHelper/btcAddressCheck";
+import { SlupTokenBalance, slupTokenSupply } from "../helpers/slupTokenDetails";
+import { encryptData } from "../helpers/encryption";
+import axiosBack from "../http/axios/axios_Back";
+import { useNavigate } from "react-router-dom";
 
 export const Homepage = () => {
+  //===============================Global Variables==================================//
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { WalletBTC, WalletEVM, uniIns, uniSign } = useAuth();
-  // console.log("uniSign", uniSign);
+  //===============================End Of Code==================================//
+
+  //===============================Local Variables==================================//
   const [show1, setShow1] = useState(false);
   const [amount, setAmount] = useState(0);
-  const [tokenBalance, setTokenBalance] = useState(0);
+  const [tokenBalanceBTC, setTokenBalanceBTC] = useState(0);
+  const [tokenBalanceSLUP, setTokenBalanceSLUP] = useState(0);
   const [from, setFrom] = useState("Bitcoin");
   const [to, setTo] = useState("Slup");
   const [token, setToken] = useState({
@@ -65,13 +74,19 @@ export const Homepage = () => {
   const [show, setShow] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [checkForProcess, setCheckForProcess] = useState(0);
-  const [showClamModel, setShowClamModel] = useState(false);
+  // const [showClamModel, setShowClamModel] = useState(false);
+  // const [disableClaim, setDisableClaim] = useState(false);
+  const [switchForWallet, setSwitchForWallet] = useState("Bitcoin");
+  const [totalTokenSupply, setTotalTokenSupply] = useState(0);
+  //===============================End Of Code==================================//
+
+  //===============================Connect Model Close==================================//
   const handleClose = useCallback((e) => {
     setShow(false);
   });
-  const [disableClaim, setDisableClaim] = useState(false);
-  const [switchForWallet, setSwitchForWallet] = useState("Bitcoin");
+  //===============================End Of Code==================================//
 
+  //===============================Check Not Same From And To==================================//
   useEffect(() => {
     if (from === "Slup" && to === "Slup") {
       setFrom("Slup");
@@ -81,13 +96,9 @@ export const Homepage = () => {
       setTo("Slup");
     }
   }, [to, from]);
+  //===============================End Of Code==================================//
 
-  useEffect(() => {
-    if (Object.keys(uniSign).length !== 0) {
-      setShowClamModel(true);
-    }
-  }, []);
-
+  //===============================Switch From - To==================================//
   const switchTotoFrom = () => {
     if (from === "Bitcoin" && to === "Slup") {
       setFrom("Slup");
@@ -97,46 +108,95 @@ export const Homepage = () => {
       setTo("Slup");
     }
   };
+  //===============================End Of Code==================================//
+
+  //===============================Check For Cliam Model==================================//
+  // useEffect(() => {
+  //   if (Object.keys(uniSign).length !== 0) {
+  //     setShowClamModel(true);
+  //   }
+  // }, []);
+  //===============================End Of Code==================================//
+
+  //===============================Close Claim Model==================================//
+  // const handleClamClose = () => {
+  //   setShowClamModel(false);
+  // };
+  //===============================End Of Code==================================//
 
   const handleClose1 = () => setShow1(false);
   const handleShow = () => setShow1(true);
 
-  const handleClamClose = () => {
-    setShowClamModel(false);
-  };
-
-  const getTokenBalance = async () => {
+  //===============================Token Balance BTC==================================//
+  const getTokenBalanceBTC = async () => {
     try {
       const getData = await axiosMain.get(
         `/v1/indexer/address/${WalletBTC?.selectedAccount}/brc20/${token.symbol}/info`
       );
 
       if (getData) {
-        setTokenBalance(getData?.data?.data?.availableBalance);
+        setTokenBalanceBTC(getData?.data?.data?.availableBalance);
       }
-
-      // console.log(getData);
     } catch (err) {}
   };
 
   useEffect(() => {
     if (WalletBTC) {
-      getTokenBalance();
+      getTokenBalanceBTC();
     }
-  }, [WalletBTC, token]);
+  }, [WalletBTC, token, from]);
+  //===============================End Of Code==================================//
 
+  //===============================Token Balance Slup==================================//
+  const getTokenBalanceSlup = async () => {
+    try {
+      const payload = {
+        tokenAddress: token.address,
+        userAddress: WalletEVM?.selectedAccount,
+      };
+      const getBalance = await SlupTokenBalance(payload);
+      setTokenBalanceSLUP(getBalance);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (WalletEVM) {
+      getTokenBalanceSlup();
+    }
+  }, [WalletEVM, token, from]);
+  //===============================End Of Code==================================//
+
+  //===============================Token Total Supply==================================//
+  const getTokenTotalSupply = async () => {
+    try {
+      const payload = {
+        tokenAddress: token.address,
+      };
+      const getTotalSupply = await slupTokenSupply(payload);
+      setTotalTokenSupply(getTotalSupply);
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    getTokenTotalSupply();
+  }, [token]);
+  //===============================End Of Code==================================//
+
+  //===============================Connect Wallet model props==================================//
   const ConnectWalletModalProps = useMemo(() => ({
     modalProps: {
       show: show,
       onHide: handleClose,
     },
-    // onWalletChange,
     forMobileView,
     chainData: switchForWallet === "Bitcoin" ? "Bitcoin" : "Slup",
   }));
+  //===============================End Of Code==================================//
 
+  //===============================Get Wallet Address==================================//
   const getWalletAddress = async () => {
-    //=================Account change code===============//
     const walletAcc = await Connect(WalletEVM.type);
     if (WalletEVM.type === "walletConnect") {
       document.addEventListener("ACCOUNT_CONNECTED", (e) => {
@@ -161,9 +221,11 @@ export const Homepage = () => {
       getWalletAddress();
     }
   }, [walletAddress]);
+  //===============================End Of Code==================================//
+
+  //===============================Function For BTC to SLUP==================================//
   const inscribeFunction = async () => {
     const checkForAddress = await CheckWallet(bitcoinAddress);
-
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
     } else if (!checkForAddress) {
@@ -178,7 +240,6 @@ export const Homepage = () => {
           ticker: token.symbol,
         };
         const inscribeData = await inscribeTransfer(inscribePayload);
-        // console.log(inscribeData);
         if (inscribeData) {
           setCheckForProcess(1);
           dispatch(setUnisatInscription(inscribeData));
@@ -186,27 +247,17 @@ export const Homepage = () => {
             inscriptionID: inscribeData.inscriptionId,
             reciever: "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd",
           };
-          // console.log("transferPayload", transferPayload);
           setTimeout(async () => {
             const transferFunction = await transferInscription(transferPayload);
-            // console.log(transferFunction);
             if (transferFunction) {
               setCheckForProcess(2);
-              // setTimeout(async () => {
               try {
                 let data = {
                   inscriptionId: inscribeData.inscriptionId,
                   unisataddress: WalletBTC?.selectedAccount,
                 };
                 const trxCheck = await TransactionConfirmCheck(data);
-                // const getTransfaredBalance = await axiosMain.get(
-                //   `/v1/indexer/inscription/info/${uniIns.inscriptionId}`
-                // );
-                // console.log("getTransfaredBalance", getTransfaredBalance);
-                // if (
-                //   getTransfaredBalance?.data?.data?.address ===
-                //   "tb1qg6l5arguyze2u96xgc0aqdl8cqfnmaawa78nj7"
-                // )
+
                 if (trxCheck) {
                   setCheckForApiRes(true);
                   const signaturePayload = {
@@ -215,12 +266,64 @@ export const Homepage = () => {
                     brc20Token: token.address,
                   };
                   const signature = await createSignature1(signaturePayload);
-                  // console.log("signature", signature);
                   if (signature) {
                     setCheckForProcess(3);
-                    dispatch(setUnisatSign(signature));
-                    handleClose1();
-                    setShowClamModel(true);
+                    // dispatch(setUnisatSign(signature));
+                    console.log(signature);
+                    try {
+                      const RowTokenSymbol = await encryptData(token.symbol);
+                      const RowV = await encryptData(signature.v);
+                      const RowR = await encryptData(signature.r);
+                      const RowS = await encryptData(signature.s);
+                      const RowTokenAddress = await encryptData(token.address);
+                      const RowBTCWalletAddress = await encryptData(
+                        WalletBTC?.selectedAccount
+                      );
+                      const RowAmount = await encryptData(amount);
+                      const RowVAmount = await encryptData(
+                        signature?.voucher?.amount
+                      );
+                      const RowVTimeStamp = await encryptData(
+                        signature?.voucher?.timeStamp
+                      );
+                      const RowVBRCToken = await encryptData(
+                        signature?.voucher?.brc20Token
+                      );
+                      const RowVEVMAddress = await encryptData(
+                        signature?.voucher?.userAddress
+                      );
+                      const RowVoucher = {
+                        evmAddress: RowVEVMAddress,
+                        amount: RowVAmount,
+                        timeStamp: RowVTimeStamp,
+                        brcTokenAddress: RowVBRCToken,
+                      };
+                      const payloadApi = {
+                        v: RowV,
+                        r: RowR,
+                        s: RowS,
+                        evmTokenAddress: RowTokenAddress,
+                        btcWalletAddress: RowBTCWalletAddress,
+                        btcAmount: RowAmount,
+                        voucher: RowVoucher,
+                        brcTokenSymbol: RowTokenSymbol,
+                      };
+                      const submitSignature = await axiosBack.post(
+                        "/signature/create-signature",
+                        payloadApi
+                      );
+                      if (submitSignature?.data?.status) {
+                        handleClose1();
+                        toast.success("Transaction successfull...");
+                        setTimeout(() => {
+                          navigate("/transaction");
+                        }, 3000);
+                      }
+                    } catch (err) {
+                      toast.error(err.response.data.message);
+                    }
+
+                    // setShowClamModel(true);
                   }
                 } else {
                   toast.error("Transaction error");
@@ -228,7 +331,6 @@ export const Homepage = () => {
               } catch (err) {
                 toast.error("Transaction error");
               }
-              // }, 60000);
             } else {
               handleClose1();
               toast.error("Transaction error");
@@ -244,46 +346,49 @@ export const Homepage = () => {
       }
     }
   };
+  //===============================End Of Code==================================//
 
-  const claimFunction = async () => {
-    setDisableClaim(true);
-    try {
-      const payload = {
-        v: uniSign.v,
-        r: uniSign.r,
-        s: uniSign.s,
-        userAddress: uniSign?.voucher?.userAddress,
-        amount: uniSign?.voucher?.amount,
-        timeStamp: uniSign?.voucher?.timeStamp,
-        brcToken: uniSign?.voucher?.brc20Token,
-        type: WalletEVM.type,
-        chainId: WalletEVM.chainId,
-      };
-      const claimData = await MintBrc20(payload);
-      if (claimData) {
-        setDisableClaim(false);
-        dispatch(setUnisatSign({}));
-        window.open(
-          `https://testnet.bscscan.com/tx/${claimData?.transactionHash}`,
-          "_blank"
-        );
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      } else {
-        setDisableClaim(false);
-      }
-    } catch (err) {
-      setDisableClaim(false);
-    }
-  };
+  //===============================Claim Function==================================//
+  // const claimFunction = async () => {
+  //   setDisableClaim(true);
+  //   try {
+  //     const payload = {
+  //       v: uniSign.v,
+  //       r: uniSign.r,
+  //       s: uniSign.s,
+  //       userAddress: uniSign?.voucher?.userAddress,
+  //       amount: uniSign?.voucher?.amount,
+  //       timeStamp: uniSign?.voucher?.timeStamp,
+  //       brcToken: uniSign?.voucher?.brc20Token,
+  //       type: WalletEVM.type,
+  //       chainId: WalletEVM.chainId,
+  //     };
+  //     const claimData = await MintBrc20(payload);
+  //     if (claimData) {
+  //       setDisableClaim(false);
+  //       dispatch(setUnisatSign({}));
+  //       window.open(
+  //         `https://testnet.bscscan.com/tx/${claimData?.transactionHash}`,
+  //         "_blank"
+  //       );
+  //       setTimeout(() => {
+  //         window.location.reload();
+  //       }, 1000);
+  //     } else {
+  //       setDisableClaim(false);
+  //     }
+  //   } catch (err) {
+  //     setDisableClaim(false);
+  //   }
+  // };
+  //===============================End Of Code==================================//
 
+  //===============================Function For Slup to BTC==================================//
   const burnSlupToBtc = async () => {
     const checkAddress = await checkAddressType(
       bitcoinAddress,
       WalletBTC.network
     );
-    // console.log(checkAddress);
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
     } else if (!checkAddress) {
@@ -316,6 +421,7 @@ export const Homepage = () => {
       } catch (err) {}
     }
   };
+  //===============================End Of Code==================================//
 
   return (
     <>
@@ -343,7 +449,7 @@ export const Homepage = () => {
                   <h6>
                     Existing cross-chain amount <span>BRC-20</span>
                   </h6>
-                  <h2>912,408,210.38</h2>
+                  <h2>{totalTokenSupply}</h2>
                   <div className="slup-address-copy">
                     <p>Slup chain address</p>
                     <p>
@@ -352,15 +458,18 @@ export const Homepage = () => {
                         "..."
                       )}
                       <a
-                      style={{cursor : "pointer"}}
+                        style={{ cursor: "pointer" }}
                         onClick={() => {
                           navigator.clipboard.writeText(token.address);
-                          toast.success("Copid...")
+                          toast.success("Copid...");
                         }}
                       >
                         <img src="assets/images/copy.png" alt="" />
                       </a>
-                      <a href={`https://testnet.bscscan.com/address/${token.address}`} target="_blank">
+                      <a
+                        href={`https://testnet.bscscan.com/address/${token.address}`}
+                        target="_blank"
+                      >
                         <img src="assets/images/download.png" alt="" />
                       </a>
                     </p>
@@ -538,7 +647,10 @@ export const Homepage = () => {
                     <p>
                       Available on {from === "Bitcoin" ? "Bitcoin" : "Slup"}{" "}
                       <b>
-                        {tokenBalance} {token.symbol}
+                        {from === "Bitcoin"
+                          ? tokenBalanceBTC
+                          : tokenBalanceSLUP}{" "}
+                        {token.symbol}
                       </b>
                     </p>
                   </div>
@@ -748,7 +860,7 @@ export const Homepage = () => {
             </p>
           </Modal.Body>
         </Modal>
-
+        {/* 
         <Modal
           show={showClamModel}
           onHide={handleClamClose}
@@ -773,7 +885,7 @@ export const Homepage = () => {
               </button>
             </div>
           </Modal.Body>
-        </Modal>
+        </Modal> */}
       </Layout>
       <ConnectWalletModal {...ConnectWalletModalProps} />
     </>

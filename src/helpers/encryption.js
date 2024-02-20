@@ -1,7 +1,7 @@
 // var CryptoJS = require("crypto-js");
 import CryptoJS from "crypto-js"
 // const JWT = process.env.REACT_APP_JWTKEY;
-const JWT = "process.env.REACT_APP_JWTKEY";
+const JWT = "Amin@Quest$Key^%$";
 
 export const encryptData = async (text) => {
   try {

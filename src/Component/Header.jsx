@@ -21,8 +21,12 @@ import { linkAddress } from "../helpers/linkAddress";
 import { checkAddressType } from "../btcHelper/btcAddressCheck";
 
 export default function Header(props) {
+  //===============================Global Variables==================================//
   const dispatch = useDispatch();
   const { WalletEVM, WalletBTC } = useAuth();
+  //===============================End Of Code==================================//
+
+  //===============================Local Variables==================================//
   const [show, setShow] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [forMobileView, setForMobileView] = useState(
@@ -38,8 +42,11 @@ export default function Header(props) {
     taprootAddress: "",
     legacyAddress: "",
   });
-  const [disableLink , setDisableLink] = useState(false)
+  const [disableLink, setDisableLink] = useState(false);
   const [showLinkModel, setShowLinkModel] = useState(false);
+  //===============================End Of Code==================================//
+
+  //===============================Connect Wallet model props==================================//
   const ConnectWalletModalProps = useMemo(() => ({
     modalProps: {
       show: show,
@@ -49,6 +56,9 @@ export default function Header(props) {
     forMobileView,
     chainData: switchForWallet === "Bitcoin" ? "Bitcoin" : "Slup",
   }));
+  //===============================End Of Code==================================//
+  
+  //===============================Code For Header Scroll==================================//
   const controlNavbar = () => {
     if (window.scrollY) {
       document.getElementById("headerId").classList.add("darker-header");
@@ -58,19 +68,20 @@ export default function Header(props) {
     }
   };
 
-  const handleLinkClose = () => {
-    setShowLinkModel(false);
-  };
-  const HandelAddress = (e) => {
-    setAddressLink({ ...addressLink, [e.target.name]: e.target.value });
-  };
-
   useEffect(() => {
     window.addEventListener("scroll", controlNavbar);
     return () => {
       window.removeEventListener("scroll", controlNavbar);
     };
   }, []);
+  //===============================End Of Code==================================//
+
+  const handleLinkClose = () => {
+    setShowLinkModel(false);
+  };
+  const HandelAddress = (e) => {
+    setAddressLink({ ...addressLink, [e.target.name]: e.target.value });
+  };
 
   const getWalletAddress = async () => {
     //=================Account change code===============//
@@ -113,7 +124,7 @@ export default function Header(props) {
     } else if (!checkTaprootAddress) {
       toast.warn("Please enter valid taproot address");
     } else {
-      setDisableLink(true)
+      setDisableLink(true);
       try {
         const linkPayload = {
           type: WalletEVM?.type,
@@ -126,7 +137,7 @@ export default function Header(props) {
         const LinkAddress = await linkAddress(linkPayload);
         console.log(LinkAddress);
         if (LinkAddress) {
-          setDisableLink(false)
+          setDisableLink(false);
           toast.success("Address link successfully");
           setAddressLink({
             nativeAddress: "",
@@ -137,7 +148,7 @@ export default function Header(props) {
           handleLinkClose();
         }
       } catch (err) {
-        setDisableLink(false)
+        setDisableLink(false);
       }
     }
   };
@@ -275,7 +286,7 @@ export default function Header(props) {
               }}
               disabled={disableLink}
             >
-             {disableLink === true ? "Processing" : "Link now"}
+              {disableLink === true ? "Processing" : "Link now"}
             </button>
           </div>
         </Modal.Body>
