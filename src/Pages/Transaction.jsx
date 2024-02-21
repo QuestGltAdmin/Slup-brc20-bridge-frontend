@@ -9,14 +9,24 @@ import { toast } from "react-toastify";
 import { MintBrc20 } from "../helpers/mintbrc20";
 
 export const Transaction = () => {
+  //===============================Global Variables==================================//
   const { WalletBTC, WalletEVM } = useAuth();
+  //===============================End Of Code==================================//
+
+  //===============================Local Variables==================================//
   const [showData, setShowData] = useState([]);
   const [disableClaim, setDisableClaim] = useState(false);
   const [voucherData, setVoucherData] = useState([]);
   const [showClamModel, setShowClamModel] = useState(false);
+  //===============================End Of Code==================================//
+
+  //===============================Handel Model Data==================================//
   const handleClamClose = () => {
     setShowClamModel(false);
   };
+  //===============================End Of Code==================================//
+
+  //===============================Get Table Data==================================//
   const getData = async () => {
     const RowEvmAddress = await encryptData(WalletEVM?.selectedAccount);
     const payload = {
@@ -39,14 +49,17 @@ export const Transaction = () => {
       getData();
     }
   }, [WalletEVM?.selectedAccount]);
+  //===============================End Of Code==================================//
 
+  //===============================Model Save Data to state==================================//
   const modelOpenFun = (e) => {
     setVoucherData(e);
     setShowClamModel(true);
   };
+  //===============================End Of Code==================================//
 
+  //===============================Claim Amount Function=================================//
   const claimFunction = async () => {
-    console.log("yha ");
     setDisableClaim(true);
     try {
       const payload = {
@@ -89,14 +102,6 @@ export const Transaction = () => {
         } catch (err) {
           toast.error(err.response.data.message);
         }
-
-        // window.open(
-        //   `https://testnet.bscscan.com/tx/${claimData?.transactionHash}`,
-        //   "_blank"
-        // );
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 1000);
       } else {
         setDisableClaim(false);
       }
@@ -104,6 +109,7 @@ export const Transaction = () => {
       setDisableClaim(false);
     }
   };
+  //===============================End Of Code==================================//
   return (
     <>
       <Layout>
