@@ -15,8 +15,12 @@ export default function ConnectWalletModal({
   chainData,
   ...props
 }) {
+  //===================================Global Variable===================================//
   const dispatch = useDispatch();
   const { WalletBTC, WalletEVM } = useAuth();
+  //===================================End Of Code===================================//
+
+  //===================================Connect EVM Wallet==================================//
   const connect = async (type) => {
     try {
       props.modalProps.onHide();
@@ -34,7 +38,9 @@ export default function ConnectWalletModal({
       console.log("Connect Wallet: ", err);
     }
   };
+  //===================================End Of Code===================================//
 
+  //===================================Connect BTC Wallet===================================//
   const connectUnisatWallet = async (type) => {
     try {
       const walletData = await connectUnisat(type);
@@ -49,7 +55,9 @@ export default function ConnectWalletModal({
       }
     } catch (err) {}
   };
+  //===================================End Of Code===================================//
 
+  //===================================Account Changes from wallet===================================//
   const handleAccountsChanged = () => {
     // Do something with the updated accounts array
     connectUnisatWallet("unisat");
@@ -58,19 +66,19 @@ export default function ConnectWalletModal({
   useEffect(() => {
     if (WalletBTC?.selectedAccount) {
       window.unisat.on("accountsChanged", handleAccountsChanged);
-
-      // Cleanup function to remove the listener when the component unmounts
-      // Attach the listener when the component mounts
       return () => {
         window.unisat.removeListener("accountsChanged", handleAccountsChanged);
       };
     }
   }, []);
+  //===================================End Of Code===================================//
 
+  //===================================Slup Wallet===================================//
   const slupWalletConnect = async () => {
     toast.warn("Coming Soon!");
     props.modalProps.onHide();
   };
+  //===================================End Of Code===================================//
 
   return (
     <Modal

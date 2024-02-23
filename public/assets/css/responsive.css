@@ -57,9 +57,16 @@
     .bridge-heading {
         margin-top: 30px;
     }
+    .for-2-swap.currency-transfer-loading div::after {
+        width: 370px;
+    }
+    
 }
 
 @media (max-width: 768px){
+    .for-2-swap.currency-transfer-loading div::after {
+        width: 240px;
+    }
     .main-header .navbar-brand img {
         height: 20px;
     }

@@ -70,14 +70,16 @@ export const Homepage = () => {
   const [forMobileView, setForMobileView] = useState(
     window.innerWidth < 992 ? true : false
   );
-  const [bitcoinAddress, setBitcoinAddress] = useState();
+  const [bitcoinAddress, setBitcoinAddress] = useState("");
   const [show, setShow] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [checkForProcess, setCheckForProcess] = useState(0);
-  // const [showClamModel, setShowClamModel] = useState(false);
-  // const [disableClaim, setDisableClaim] = useState(false);
+  const [showExModel, setShowExModel] = useState(false);
+  const [trxAddress, setTrxAddress] = useState("");
   const [switchForWallet, setSwitchForWallet] = useState("Bitcoin");
   const [totalTokenSupply, setTotalTokenSupply] = useState(0);
+  const [showSlupToBtc, setShowSlupToBtc] = useState(false);
+  const [checkForProcessSTB, setCheckForProcessSTB] = useState(0);
   //===============================End Of Code==================================//
 
   //===============================Connect Model Close==================================//
@@ -119,9 +121,12 @@ export const Homepage = () => {
   //===============================End Of Code==================================//
 
   //===============================Close Claim Model==================================//
-  // const handleClamClose = () => {
-  //   setShowClamModel(false);
-  // };
+  const handleExClose = () => {
+    setShowExModel(false);
+  };
+  const handleSlupToBTC = () => {
+    setShowSlupToBtc(false);
+  };
   //===============================End Of Code==================================//
 
   const handleClose1 = () => setShow1(false);
@@ -396,6 +401,7 @@ export const Homepage = () => {
     } else if (checkBoxActive === false) {
       toast.warn("Please check checkbox first");
     } else {
+      setShowSlupToBtc(true);
       try {
         const burnPayload = {
           type: WalletEVM?.type,
@@ -406,19 +412,36 @@ export const Homepage = () => {
         };
         const burnData = await BurnBrc20(burnPayload);
         if (burnData) {
+          setCheckForProcessSTB(1);
           const burnInPayload = {
-            amount: amount,
-            ticker: token.symbol,
+            brc20Amount: amount,
+            brc20Ticker: token.symbol,
+            receiveAddress: bitcoinAddress,
           };
           try {
-            const burnInscribe = await inscribeTransfer(burnInPayload);
-            if (burnInscribe) {
+            const createTrx = await axiosBack.post(
+              "/signature/create-tranx",
+              burnInPayload
+            );
+            console.log("createTrx", createTrx);
+            if (createTrx?.status == 200) {
+              setCheckForProcessSTB(2);
+              setShowSlupToBtc(false);
+              toast.success("Transaction success");
+              // console.log(createTrx?.data);
+              setBitcoinAddress("")
+              setAmount(0)
+              setTrxAddress(createTrx?.data);
+              setShowExModel(true);
             }
           } catch (err) {}
         } else {
+          setShowSlupToBtc(false);
           toast.error("Transaction error");
         }
-      } catch (err) {}
+      } catch (err) {
+        setShowSlupToBtc(false);
+      }
     }
   };
   //===============================End Of Code==================================//
@@ -661,12 +684,15 @@ export const Homepage = () => {
                     <p>Amount</p>
                     <Form.Control
                       name="amount"
-                      type="text"
+                      type="number"
                       placeholder="0"
                       onChange={(e) => {
                         setAmount(e.target.value);
                       }}
                       value={amount}
+                      onWheel={(e) => {
+                        e.target.blur();
+                      }}
                     />
                     <button className="common-btn">Max</button>
                   </div>
@@ -860,32 +886,100 @@ export const Homepage = () => {
             </p>
           </Modal.Body>
         </Modal>
-        {/* 
+
         <Modal
-          show={showClamModel}
-          onHide={handleClamClose}
+          show={showSlupToBtc}
+          onHide={handleSlupToBTC}
           centered
           className="transaction-proceed-modal"
           backdrop="static"
         >
           <Modal.Body>
             <div className="heading-box">
-              <h4>Clam Your Amount</h4>
+              <h4>Your Transaction is Being Process</h4>
               <p>Transaction status can also be tracked in Recent Trades</p>
             </div>
             <div className="swap-row">
-              <button
+              <div>
+                <img src={token.logos} alt="" className="" />
+                <div>
+                  <h4>{token.symbol}</h4>
+                </div>
+              </div>
+              <img src="assets/images/Arrow.png" alt="" className="arrow-img" />
+              <div>
+                <img src={token.logos} alt="" className="" />
+                <div>
+                  <h4>{token.symbol}</h4>
+                </div>
+              </div>
+            </div>
+            <div className="currency-transfer-loading for-2-swap">
+              <div>
+                <img
+                  src={
+                    checkForProcessSTB === 1 || checkForProcessSTB === 2
+                      ? "assets/images/tik.png"
+                      : "assets/images/loader.gif"
+                  }
+                  alt=""
+                  className="loader-ing"
+                />
+                <img
+                  src="assets/images/slup.png"
+                  alt=""
+                  className="coin-img"
+                />
+                <span>{from.toUpperCase()}</span>
+              </div>
+
+              <div>
+                <img
+                  src={
+                    checkForProcessSTB === 2
+                      ? "assets/images/tik.png"
+                      : "assets/images/loader.gif"
+                  }
+                  alt=""
+                  className="loader-ing"
+                />
+                <img src="assets/images/bitcoin.png" alt="" className="coin-img" />
+                <span>{to.toUpperCase()}</span>
+              </div>
+            </div>
+            <p>
+              If your transaction seems to be taking longer than normal (more
+              than 30 mins). Please contact our Support Team at Support@slup.com
+            </p>
+          </Modal.Body>
+        </Modal>
+
+        <Modal
+          show={showExModel}
+          onHide={handleExClose}
+          centered
+          className="transaction-proceed-modal"
+          backdrop="static"
+        >
+          <Modal.Header closeButton>
+            {/* <Modal.Title>Connect Wallet</Modal.Title> */}
+          </Modal.Header>
+          <Modal.Body>
+            <div className="heading-box">
+              <h4>View on explorer</h4>
+              <p>Transaction status can also be tracked in Recent Trades</p>
+            </div>
+            <div className="swap-row">
+              <a
+                href={`https://mempool.space/testnet/tx/${trxAddress}`}
                 className="common-btn w-100 p-3"
-                onClick={() => {
-                  claimFunction();
-                }}
-                disabled={disableClaim}
+                target="_blank"
               >
-                {disableClaim ? "Processing" : "Clam Now"}
-              </button>
+                View
+              </a>
             </div>
           </Modal.Body>
-        </Modal> */}
+        </Modal>
       </Layout>
       <ConnectWalletModal {...ConnectWalletModalProps} />
     </>

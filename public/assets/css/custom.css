@@ -629,3 +629,6 @@ color: orangered;
     color: #FA255F !important;
     text-decoration: none !important;
 }
+.for-2-swap.currency-transfer-loading div::after {
+    width: 370px;
+}

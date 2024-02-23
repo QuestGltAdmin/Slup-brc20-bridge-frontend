@@ -24,9 +24,10 @@ export const BurnBrc20 = async (data) => {
         const caddress = web3connect.utils.toChecksumAddress(address);
 
         let lockingBRC20Contract = new web3connect.eth.Contract(abi, caddress);
-
+        let amount = "0x" + (parseFloat((data.amount * (10 ** 18)).toFixed(0))).toString(16);
+        console.log(amount , data.amount);
         let Data = lockingBRC20Contract.methods
-        .BurnBrc20(data.userAddress,data.brcTokenAddress,data.amount)
+        .BurnBrc20(data.userAddress,data.brcTokenAddress,amount)
         .encodeABI();
 
         const nonce = await web3connect.eth.getTransactionCount(
@@ -84,7 +85,7 @@ export const BurnBrc20 = async (data) => {
 
             if (transactionReceipt.status) {
                 toast.update(ids, {
-                    render: "Transaction Success",
+                    render: "Wallet Transaction Success",
                     type: "success",
                     isLoading: false,
                     autoClose: 2000,
@@ -97,12 +98,12 @@ export const BurnBrc20 = async (data) => {
                     isLoading: false,
                     autoClose: 2000,
                 });
-                window.location.reload();
+                //window.location.reload();
             }
         } catch (error) {
             toast.error("Transaction Reverted");
             setTimeout(() => {
-                window.location.reload();
+                //window.location.reload();
             }, 3000);
             console.log(error);
             throw error;
@@ -117,9 +118,10 @@ export const BurnBrc20 = async (data) => {
             const caddress = web3connect.utils.toChecksumAddress(address);
 
             let lockingBRC20Contract = new web3connect.eth.Contract(abi, caddress);
-
+            let amount = "0x" + (parseFloat((data.amount * (10 ** 18)).toFixed(0))).toString(16);
+            console.log(amount , data.amount);
             let Data = lockingBRC20Contract.methods
-            .BurnBrc20(data.userAddress,data.brcTokenAddress,data.amount)
+            .BurnBrc20(data.userAddress,data.brcTokenAddress,amount)
             .encodeABI();
 
             const nonce = await web3connect.eth.getTransactionCount(
@@ -182,7 +184,7 @@ export const BurnBrc20 = async (data) => {
                         }
                         if (transactionReceipt.status) {
                             toast.update(ids, {
-                                render: "Transaction Success",
+                                render: "Wallet Transaction Success",
                                 type: "success",
                                 isLoading: false,
                                 autoClose: 1000,
@@ -198,19 +200,19 @@ export const BurnBrc20 = async (data) => {
                                 autoClose: 2000,
                             });
                             // toast.error('Transaction Reverted');
-                            window.location.reload();
+                            //window.location.reload();
                         }
                     })();
                 } else {
                     toast.error("Transaction Reverted");
-                    window.location.reload();
+                    //window.location.reload();
                 }
             });
             return recipt;
         } catch (error) {
             toast.error("Transaction Reverted");
             setTimeout(() => {
-                window.location.reload();
+                //window.location.reload();
             }, 3000);
             console.log(error);
         }

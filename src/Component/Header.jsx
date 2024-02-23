@@ -57,7 +57,7 @@ export default function Header(props) {
     chainData: switchForWallet === "Bitcoin" ? "Bitcoin" : "Slup",
   }));
   //===============================End Of Code==================================//
-  
+
   //===============================Code For Header Scroll==================================//
   const controlNavbar = () => {
     if (window.scrollY) {
@@ -110,6 +110,7 @@ export default function Header(props) {
     }
   }, [walletAddress]);
 
+  //===============================Link Address Code==================================//
   const linkAddressFunction = async () => {
     const checkNativeAddress = await checkAddressType(
       addressLink.nativeAddress,
@@ -152,6 +153,7 @@ export default function Header(props) {
       }
     }
   };
+  //===============================End Of Code==================================//
 
   return (
     <>
