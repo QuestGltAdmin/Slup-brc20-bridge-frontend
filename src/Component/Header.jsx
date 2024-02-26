@@ -172,22 +172,22 @@ console.log(disconnect);
   return (
     <>
       <header className="main-header" id="headerId">
-        <Navbar expand="lg" sticky="top">
-          <Container>
-            <Row className="w-100">
+      <Container>
+            <Row className="">
               <Col>
                 <div className="d-flex justify-content-between align-items-center">
                   <Navbar.Brand href="/">
                     <img src="assets/images/logo.png" />
                   </Navbar.Brand>
 
-                  {!WalletEVM?.selectedAccount ? (
+                 <Navbar>
+                 {!WalletEVM?.selectedAccount ? (
                     <button
                       onClick={() => {
                         setShow(true);
                         setSwitchForWallet("Slup");
                       }}
-                      className="ms-auto common-btn"
+                      className=" common-btn"
                     >
                       Connect EVM Wallet
                     </button>
@@ -233,7 +233,7 @@ console.log(disconnect);
 
                   {!WalletBTC?.selectedAccount ? (
                     <button
-                      className="ms-auto common-btn"
+                      className=" common-btn"
                       onClick={() => {
                         setShow(true);
                         setSwitchForWallet("Bitcoin");
@@ -293,11 +293,11 @@ console.log(disconnect);
                   >
                     Link Address
                   </button>
-                </div>
+                  </Navbar>
+                 </div>
               </Col>
             </Row>
           </Container>
-        </Navbar>
       </header>
       <Modal
         show={showLinkModel}
