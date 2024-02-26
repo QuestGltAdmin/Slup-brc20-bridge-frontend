@@ -62,6 +62,7 @@ height: 40px;
     border: none;
     right: 10px;
     left: auto;
+    overflow: hidden;
 }
 .main-header .navbar .dropdown .dropdown-menu .dropdown-item{
 font-size: 14px;
@@ -656,4 +657,13 @@ color: orangered;
 }
 .for-2-swap.currency-transfer-loading div::after {
     width: 370px;
+}
+.transaction-proceed-modal.for-4-swap div::after {
+    width: 120px;
+}
+.transaction-proceed-modal.for-4-swap .currency-transfer-loading div .coin-img {
+    margin: 10px auto;
+}
+.transaction-proceed-modal.for-4-swap .currency-transfer-loading div {
+    width: 24%;
 }

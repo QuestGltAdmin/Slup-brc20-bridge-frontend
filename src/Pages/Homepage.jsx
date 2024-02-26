@@ -851,7 +851,7 @@ export const Homepage = () => {
           show={show1}
           onHide={handleClose1}
           centered
-          className="transaction-proceed-modal"
+          className="transaction-proceed-modal for-4-swap"
           backdrop="static"
         >
           <Modal.Body>
