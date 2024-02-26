@@ -52,7 +52,7 @@ export const Homepage = () => {
   //===============================End Of Code==================================//
 
   //===============================Local Variables==================================//
-  const [show1, setShow1] = useState(true);
+  const [show1, setShow1] = useState(false);
   const [amount, setAmount] = useState(0);
   const [tokenBalanceBTC, setTokenBalanceBTC] = useState(0);
   const [tokenBalanceSLUP, setTokenBalanceSLUP] = useState(0);

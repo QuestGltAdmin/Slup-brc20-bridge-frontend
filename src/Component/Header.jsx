@@ -161,27 +161,25 @@ export default function Header(props) {
     dispatch(setBitcoinWallet({}));
   };
   const logoutEVM = async () => {
-    try{
-const disconnect = await onDisconnect();
-console.log(disconnect);
+    try {
+      const disconnect = await onDisconnect();
+      console.log(disconnect);
       dispatch(setEVMWallet({}));
-    }catch(err){
-
-    }
+    } catch (err) {}
   };
   return (
     <>
       <header className="main-header" id="headerId">
-      <Container>
-            <Row className="">
-              <Col>
-                <div className="d-flex justify-content-between align-items-center">
-                  <Navbar.Brand href="/">
-                    <img src="assets/images/logo.png" />
-                  </Navbar.Brand>
+        <Container>
+          <Row className="">
+            <Col>
+              <div className="d-flex justify-content-between align-items-center">
+                <Navbar.Brand href="/">
+                  <img src="assets/images/logo.png" />
+                </Navbar.Brand>
 
-                 <Navbar>
-                 {!WalletEVM?.selectedAccount ? (
+                <Navbar>
+                  {!WalletEVM?.selectedAccount ? (
                     <button
                       onClick={() => {
                         setShow(true);
@@ -293,11 +291,11 @@ console.log(disconnect);
                   >
                     Link Address
                   </button>
-                  </Navbar>
-                 </div>
-              </Col>
-            </Row>
-          </Container>
+                </Navbar>
+              </div>
+            </Col>
+          </Row>
+        </Container>
       </header>
       <Modal
         show={showLinkModel}

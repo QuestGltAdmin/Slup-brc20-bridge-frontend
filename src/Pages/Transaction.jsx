@@ -242,7 +242,7 @@ export const Transaction = () => {
         </Modal.Header>
         <Modal.Body>
           <div className="heading-box">
-            <h4>Clam Your Amount</h4>
+            <h4>Claim Your Amount</h4>
             <p>
               BTC Address{" "}
               {voucherData?.btcWalletAddress?.replace(
