@@ -42,6 +42,7 @@ import { SlupTokenBalance, slupTokenSupply } from "../helpers/slupTokenDetails";
 import { encryptData } from "../helpers/encryption";
 import axiosBack from "../http/axios/axios_Back";
 import { useNavigate } from "react-router-dom";
+import { transferBtc } from "../btcHelper/sendBtc";
 
 export const Homepage = () => {
   //===============================Global Variables==================================//
@@ -146,7 +147,7 @@ export const Homepage = () => {
   };
 
   useEffect(() => {
-    if (WalletBTC) {
+    if (WalletBTC?.selectedAccount) {
       getTokenBalanceBTC();
     }
   }, [WalletBTC, token, from]);
@@ -159,7 +160,7 @@ export const Homepage = () => {
         tokenAddress: token.address,
         userAddress: WalletEVM?.selectedAccount,
       };
-      const getBalance = await SlupTokenBalance(payload);
+      let getBalance = await SlupTokenBalance(payload);
       setTokenBalanceSLUP(getBalance);
     } catch (err) {
       console.log(err);
@@ -167,7 +168,7 @@ export const Homepage = () => {
   };
 
   useEffect(() => {
-    if (WalletEVM) {
+    if (WalletEVM?.selectedAccount) {
       getTokenBalanceSlup();
     }
   }, [WalletEVM, token, from]);
@@ -233,6 +234,8 @@ export const Homepage = () => {
     const checkForAddress = await CheckWallet(bitcoinAddress);
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
+    } else if (tokenBalanceBTC < amount) {
+      toast.warn("Balance insufficent");
     } else if (!checkForAddress) {
       toast.warn("Please enter valid wallet address");
     } else if (checkBoxActive === false) {
@@ -240,108 +243,132 @@ export const Homepage = () => {
     } else {
       handleShow();
       try {
-        const inscribePayload = {
-          amount: amount,
-          ticker: token.symbol,
-        };
-        const inscribeData = await inscribeTransfer(inscribePayload);
-        if (inscribeData) {
-          setCheckForProcess(1);
-          dispatch(setUnisatInscription(inscribeData));
-          const transferPayload = {
-            inscriptionID: inscribeData.inscriptionId,
+        try {
+          const feesPayload = {
+            amount: 10000,
             reciever: "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd",
           };
-          setTimeout(async () => {
-            const transferFunction = await transferInscription(transferPayload);
-            if (transferFunction) {
+          const sendFees = await transferBtc(feesPayload);
+          if (sendFees) {
+            setCheckForProcess(1);
+            const inscribePayload = {
+              amount: amount,
+              ticker: token.symbol,
+            };
+            const inscribeData = await inscribeTransfer(inscribePayload);
+            if (inscribeData) {
               setCheckForProcess(2);
-              try {
-                let data = {
-                  inscriptionId: inscribeData.inscriptionId,
-                  unisataddress: WalletBTC?.selectedAccount,
-                };
-                const trxCheck = await TransactionConfirmCheck(data);
+              dispatch(setUnisatInscription(inscribeData));
+              const transferPayload = {
+                inscriptionID: inscribeData.inscriptionId,
+                reciever: "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd",
+              };
+              setTimeout(async () => {
+                const transferFunction = await transferInscription(
+                  transferPayload
+                );
+                if (transferFunction) {
+                  setCheckForProcess(3);
+                  try {
+                    let data = {
+                      inscriptionId: inscribeData.inscriptionId,
+                      unisataddress: WalletBTC?.selectedAccount,
+                    };
+                    const trxCheck = await TransactionConfirmCheck(data);
 
-                if (trxCheck) {
-                  setCheckForApiRes(true);
-                  const signaturePayload = {
-                    userAddress: bitcoinAddress,
-                    amount: amount,
-                    brc20Token: token.address,
-                  };
-                  const signature = await createSignature1(signaturePayload);
-                  if (signature) {
-                    setCheckForProcess(3);
-                    // dispatch(setUnisatSign(signature));
-                    console.log(signature);
-                    try {
-                      const RowTokenSymbol = await encryptData(token.symbol);
-                      const RowV = await encryptData(signature.v);
-                      const RowR = await encryptData(signature.r);
-                      const RowS = await encryptData(signature.s);
-                      const RowTokenAddress = await encryptData(token.address);
-                      const RowBTCWalletAddress = await encryptData(
-                        WalletBTC?.selectedAccount
-                      );
-                      const RowAmount = await encryptData(amount);
-                      const RowVAmount = await encryptData(
-                        signature?.voucher?.amount
-                      );
-                      const RowVTimeStamp = await encryptData(
-                        signature?.voucher?.timeStamp
-                      );
-                      const RowVBRCToken = await encryptData(
-                        signature?.voucher?.brc20Token
-                      );
-                      const RowVEVMAddress = await encryptData(
-                        signature?.voucher?.userAddress
-                      );
-                      const RowVoucher = {
-                        evmAddress: RowVEVMAddress,
-                        amount: RowVAmount,
-                        timeStamp: RowVTimeStamp,
-                        brcTokenAddress: RowVBRCToken,
+                    if (trxCheck) {
+                      setCheckForApiRes(true);
+                      const signaturePayload = {
+                        userAddress: bitcoinAddress,
+                        amount: amount,
+                        brc20Token: token.address,
                       };
-                      const payloadApi = {
-                        v: RowV,
-                        r: RowR,
-                        s: RowS,
-                        evmTokenAddress: RowTokenAddress,
-                        btcWalletAddress: RowBTCWalletAddress,
-                        btcAmount: RowAmount,
-                        voucher: RowVoucher,
-                        brcTokenSymbol: RowTokenSymbol,
-                      };
-                      const submitSignature = await axiosBack.post(
-                        "/signature/create-signature",
-                        payloadApi
+                      const signature = await createSignature1(
+                        signaturePayload
                       );
-                      if (submitSignature?.data?.status) {
-                        handleClose1();
-                        toast.success("Transaction successfull...");
-                        setTimeout(() => {
-                          navigate("/transaction");
-                        }, 3000);
+                      if (signature) {
+                        setCheckForProcess(4);
+                        // dispatch(setUnisatSign(signature));
+                        console.log(signature);
+                        try {
+                          const RowTokenSymbol = await encryptData(
+                            token.symbol
+                          );
+                          const RowV = await encryptData(signature.v);
+                          const RowR = await encryptData(signature.r);
+                          const RowS = await encryptData(signature.s);
+                          const RowTokenAddress = await encryptData(
+                            token.address
+                          );
+                          const RowBTCWalletAddress = await encryptData(
+                            WalletBTC?.selectedAccount
+                          );
+                          const RowAmount = await encryptData(amount);
+                          const RowVAmount = await encryptData(
+                            signature?.voucher?.amount
+                          );
+                          const RowVTimeStamp = await encryptData(
+                            signature?.voucher?.timeStamp
+                          );
+                          const RowVBRCToken = await encryptData(
+                            signature?.voucher?.brc20Token
+                          );
+                          const RowVEVMAddress = await encryptData(
+                            signature?.voucher?.userAddress
+                          );
+                          const RowVoucher = {
+                            evmAddress: RowVEVMAddress,
+                            amount: RowVAmount,
+                            timeStamp: RowVTimeStamp,
+                            brcTokenAddress: RowVBRCToken,
+                          };
+                          const payloadApi = {
+                            v: RowV,
+                            r: RowR,
+                            s: RowS,
+                            evmTokenAddress: RowTokenAddress,
+                            btcWalletAddress: RowBTCWalletAddress,
+                            btcAmount: RowAmount,
+                            voucher: RowVoucher,
+                            brcTokenSymbol: RowTokenSymbol,
+                          };
+                          const submitSignature = await axiosBack.post(
+                            "/signature/create-signature",
+                            payloadApi
+                          );
+                          if (submitSignature?.data?.status) {
+                            handleClose1();
+                            toast.success("Transaction successfull...");
+                            setTimeout(() => {
+                              navigate("/transaction");
+                            }, 3000);
+                          }
+                        } catch (err) {
+                          toast.error(err.response.data.message);
+                        }
+
+                        // setShowClamModel(true);
                       }
-                    } catch (err) {
-                      toast.error(err.response.data.message);
+                    } else {
+                      toast.error("Transaction error");
                     }
-
-                    // setShowClamModel(true);
+                  } catch (err) {
+                    toast.error("Transaction error");
                   }
                 } else {
+                  handleClose1();
                   toast.error("Transaction error");
                 }
-              } catch (err) {
-                toast.error("Transaction error");
-              }
+              }, 10000);
             } else {
+              toast.error("Reject");
               handleClose1();
-              toast.error("Transaction error");
             }
-          }, 10000);
-        } else {
+          } else {
+            toast.error("Reject");
+            handleClose1();
+          }
+        } catch (err) {
           toast.error("Reject");
           handleClose1();
         }
@@ -396,6 +423,8 @@ export const Homepage = () => {
     );
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
+    } else if (tokenBalanceSLUP < amount) {
+      toast.warn("Balance insufficent");
     } else if (!checkAddress) {
       toast.warn("Please enter valid wallet address");
     } else if (checkBoxActive === false) {
@@ -403,39 +432,55 @@ export const Homepage = () => {
     } else {
       setShowSlupToBtc(true);
       try {
-        const burnPayload = {
-          type: WalletEVM?.type,
-          userAddress: WalletEVM?.selectedAccount,
-          brcTokenAddress: token?.address,
-          amount: amount,
-          chainId: WalletEVM?.chainId,
-        };
-        const burnData = await BurnBrc20(burnPayload);
-        if (burnData) {
-          setCheckForProcessSTB(1);
-          const burnInPayload = {
-            brc20Amount: amount,
-            brc20Ticker: token.symbol,
-            receiveAddress: bitcoinAddress,
+        try {
+          const feesPayload = {
+            amount: 10000,
+            reciever: "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd",
           };
-          try {
-            const createTrx = await axiosBack.post(
-              "/signature/create-tranx",
-              burnInPayload
-            );
-            console.log("createTrx", createTrx);
-            if (createTrx?.status == 200) {
+          const sendFees = await transferBtc(feesPayload);
+          if (sendFees) {
+            setCheckForProcessSTB(1);
+            const burnPayload = {
+              type: WalletEVM?.type,
+              userAddress: WalletEVM?.selectedAccount,
+              brcTokenAddress: token?.address,
+              amount: amount,
+              chainId: WalletEVM?.chainId,
+            };
+            const burnData = await BurnBrc20(burnPayload);
+            if (burnData) {
               setCheckForProcessSTB(2);
+              const burnInPayload = {
+                brc20Amount: amount,
+                brc20Ticker: token.symbol,
+                receiveAddress: bitcoinAddress,
+              };
+              try {
+                const createTrx = await axiosBack.post(
+                  "/signature/create-tranx",
+                  burnInPayload
+                );
+                console.log("createTrx", createTrx);
+                if (createTrx?.status == 200) {
+                  setCheckForProcessSTB(3);
+                  setShowSlupToBtc(false);
+                  toast.success("Transaction success");
+                  // console.log(createTrx?.data);
+                  setBitcoinAddress("");
+                  setAmount(0);
+                  setTrxAddress(createTrx?.data);
+                  setShowExModel(true);
+                }
+              } catch (err) {}
+            } else {
               setShowSlupToBtc(false);
-              toast.success("Transaction success");
-              // console.log(createTrx?.data);
-              setBitcoinAddress("")
-              setAmount(0)
-              setTrxAddress(createTrx?.data);
-              setShowExModel(true);
+              toast.error("Transaction error");
             }
-          } catch (err) {}
-        } else {
+          } else {
+            setShowSlupToBtc(false);
+            toast.error("Transaction error");
+          }
+        } catch (err) {
           setShowSlupToBtc(false);
           toast.error("Transaction error");
         }
@@ -671,8 +716,8 @@ export const Homepage = () => {
                       Available on {from === "Bitcoin" ? "Bitcoin" : "Slup"}{" "}
                       <b>
                         {from === "Bitcoin"
-                          ? tokenBalanceBTC
-                          : tokenBalanceSLUP}{" "}
+                          ? (tokenBalanceBTC * 1).toFixed(4)
+                          : (tokenBalanceSLUP * 1).toFixed(4)}{" "}
                         {token.symbol}
                       </b>
                     </p>
@@ -697,23 +742,23 @@ export const Homepage = () => {
                     <button className="common-btn">Max</button>
                   </div>
 
-                  {/* <div className="service-charge-box">
+                  <div className="service-charge-box">
                     <p>
                       <img
                         src="assets/images/plugin.png"
                         alt=""
                         className="service-icon"
                       />{" "}
-                      Service fees: 0.03 BNB{" "}
+                      Service fees: 0.0001 BTC{" "}
                       <a href="">
                         <img src="assets/images/info.png" alt="" />
                       </a>
                     </p>
-                    <p className="receive-amount">
+                    {/* <p className="receive-amount">
                       You will receive <span>0 MUBI</span>{" "}
                       <span className="brc-highlight">BRC 20</span>
-                    </p>
-                  </div> */}
+                    </p> */}
+                  </div>
 
                   <div className="swap-currency-drop swap-enter-amount mt-3">
                     <Form.Control
@@ -791,10 +836,10 @@ export const Homepage = () => {
 
                   <div className="new-user-note">
                     <h6>Estimated 3 blocks to confirm.</h6>
-                    <h5>
+                    {/* <h5>
                       I don't have a wallet plug-in,{" "}
                       <a href="">HD Wallet Mode →</a>
-                    </h5>
+                    </h5> */}
                   </div>
                 </div>
               </Col>
@@ -835,7 +880,27 @@ export const Homepage = () => {
                   src={
                     checkForProcess === 1 ||
                     checkForProcess === 2 ||
-                    checkForProcess === 3
+                    checkForProcess === 3 ||
+                    checkForProcess === 4
+                      ? "assets/images/tik.png"
+                      : "assets/images/loader.gif"
+                  }
+                  alt=""
+                  className="loader-ing"
+                />
+                <img
+                  src="assets/images/bitcoin.png"
+                  alt=""
+                  className="coin-img"
+                />
+                <span>Service fees</span>
+              </div>
+              <div>
+                <img
+                  src={
+                    checkForProcess === 2 ||
+                    checkForProcess === 3 ||
+                    checkForProcess === 4
                       ? "assets/images/tik.png"
                       : "assets/images/loader.gif"
                   }
@@ -852,7 +917,7 @@ export const Homepage = () => {
               <div>
                 <img
                   src={
-                    checkForProcess === 2 || checkForProcess === 3
+                    checkForProcess === 3 || checkForProcess === 4
                       ? "assets/images/tik.png"
                       : "assets/images/loader.gif"
                   }
@@ -869,7 +934,7 @@ export const Homepage = () => {
               <div>
                 <img
                   src={
-                    checkForProcess === 3
+                    checkForProcess === 4
                       ? "assets/images/tik.png"
                       : "assets/images/loader.gif"
                   }
@@ -914,36 +979,56 @@ export const Homepage = () => {
                 </div>
               </div>
             </div>
-            <div className="currency-transfer-loading for-2-swap">
+            <div className="currency-transfer-loading">
               <div>
                 <img
                   src={
-                    checkForProcessSTB === 1 || checkForProcessSTB === 2
+                    checkForProcessSTB === 1 ||
+                    checkForProcessSTB === 2 ||
+                    checkForProcessSTB === 3
                       ? "assets/images/tik.png"
                       : "assets/images/loader.gif"
                   }
                   alt=""
                   className="loader-ing"
                 />
-                <img
-                  src="assets/images/slup.png"
-                  alt=""
-                  className="coin-img"
-                />
-                <span>{from.toUpperCase()}</span>
+                <img src="assets/images/slup.png" alt="" className="coin-img" />
+                <span>Service fees</span>
               </div>
 
               <div>
                 <img
                   src={
-                    checkForProcessSTB === 2
+                    checkForProcessSTB === 2 || checkForProcessSTB === 3
                       ? "assets/images/tik.png"
                       : "assets/images/loader.gif"
                   }
                   alt=""
                   className="loader-ing"
                 />
-                <img src="assets/images/bitcoin.png" alt="" className="coin-img" />
+                <img
+                  src="assets/images/bitcoin.png"
+                  alt=""
+                  className="coin-img"
+                />
+                <span>{to.toUpperCase()}</span>
+              </div>
+
+              <div>
+                <img
+                  src={
+                    checkForProcessSTB === 3
+                      ? "assets/images/tik.png"
+                      : "assets/images/loader.gif"
+                  }
+                  alt=""
+                  className="loader-ing"
+                />
+                <img
+                  src="assets/images/bitcoin.png"
+                  alt=""
+                  className="coin-img"
+                />
                 <span>{to.toUpperCase()}</span>
               </div>
             </div>

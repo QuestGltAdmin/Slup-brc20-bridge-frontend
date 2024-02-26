@@ -9,16 +9,18 @@ import {
   NavDropdown,
   Modal,
   Form,
+  Dropdown,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ConnectWalletModal from "./ui/ConnectWalletModal";
 import useAuth from "../hooks/useAuth";
-import { Connect } from "../helpers/Connect";
+import { Connect, onDisconnect } from "../helpers/Connect";
 import { useDispatch } from "react-redux";
-import { setEVMWallet } from "../store/reducers/authReducer";
+import { setBitcoinWallet, setEVMWallet } from "../store/reducers/authReducer";
 import { toast } from "react-toastify";
 import { linkAddress } from "../helpers/linkAddress";
 import { checkAddressType } from "../btcHelper/btcAddressCheck";
+import { Disconnect } from "../helpers/Web3Helper";
 
 export default function Header(props) {
   //===============================Global Variables==================================//
@@ -155,6 +157,18 @@ export default function Header(props) {
   };
   //===============================End Of Code==================================//
 
+  const logoutBTC = async () => {
+    dispatch(setBitcoinWallet({}));
+  };
+  const logoutEVM = async () => {
+    try{
+const disconnect = await onDisconnect();
+console.log(disconnect);
+      dispatch(setEVMWallet({}));
+    }catch(err){
+
+    }
+  };
   return (
     <>
       <header className="main-header" id="headerId">
@@ -178,12 +192,43 @@ export default function Header(props) {
                       Connect EVM Wallet
                     </button>
                   ) : (
-                    <button className="ms-auto common-btn">
-                      {WalletEVM?.selectedAccount.replace(
-                        WalletEVM?.selectedAccount.substring(5, 37),
-                        "..."
-                      )}
-                    </button>
+                    <Dropdown>
+                      <Dropdown.Toggle
+                        className="common-btn"
+                        id="dropdown-basic"
+                      >
+                        <img
+                          src={
+                            WalletEVM?.type === "metamask"
+                              ? "assets/images/metamask.svg"
+                              : WalletEVM?.type === "walletConnect"
+                              ? "assets/images/walletconnect.svg"
+                              : "assets/images/coinbase.webp"
+                          }
+                          alt=""
+                        />
+                        {WalletEVM?.selectedAccount.replace(
+                          WalletEVM?.selectedAccount.substring(5, 37),
+                          "..."
+                        )}
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+                        <Dropdown.Item
+                          onClick={() => {
+                            logoutEVM();
+                          }}
+                        >
+                          Logout
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                    // <button className="ms-auto common-btn">
+                    //   {WalletEVM?.selectedAccount.replace(
+                    //     WalletEVM?.selectedAccount.substring(5, 37),
+                    //     "..."
+                    //   )}
+                    // </button>
                   )}
 
                   {!WalletBTC?.selectedAccount ? (
@@ -197,12 +242,41 @@ export default function Header(props) {
                       Connect BTC Wallet
                     </button>
                   ) : (
-                    <button className="ms-auto common-btn">
-                      {WalletBTC?.selectedAccount.replace(
-                        WalletBTC?.selectedAccount.substring(5, 37),
-                        "..."
-                      )}
-                    </button>
+                    <Dropdown>
+                      <Dropdown.Toggle
+                        className="common-btn"
+                        id="dropdown-basic"
+                      >
+                        <img
+                          src={
+                            WalletBTC?.type === "unisat"
+                              ? "assets/images/unisat.jpg"
+                              : "assets/images/slup.png"
+                          }
+                          alt=""
+                        />
+                        {WalletBTC?.selectedAccount.replace(
+                          WalletBTC?.selectedAccount.substring(5, 37),
+                          "..."
+                        )}
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+                        <Dropdown.Item
+                          onClick={() => {
+                            logoutBTC();
+                          }}
+                        >
+                          Logout
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                    // <button className="ms-auto common-btn">
+                    //   {WalletBTC?.selectedAccount.replace(
+                    //     WalletBTC?.selectedAccount.substring(5, 37),
+                    //     "..."
+                    //   )}
+                    // </button>
                   )}
                   <button
                     className="ms-auto common-btn"

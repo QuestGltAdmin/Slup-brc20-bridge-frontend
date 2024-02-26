@@ -15,8 +15,7 @@ export const SlupTokenBalance = async (data) => {
   let balance = 0;
   const contract = new web3.eth.Contract(abi, tokenAddress);
   balance = await contract.methods.balanceOf(userAddress).call();
-  const decimal = await contract.methods.decimals().call();
-  balance = balance / 10 ** decimal;
+  balance = web3.utils.fromWei(balance, "ether");
 
   return balance;
 };
