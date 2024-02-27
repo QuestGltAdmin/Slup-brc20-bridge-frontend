@@ -598,7 +598,7 @@ export const Homepage = () => {
                         style={{ cursor: "pointer" }}
                         onClick={() => {
                           navigator.clipboard.writeText(token.address);
-                          toast.success("Copid...");
+                          toast.success("Copied...");
                         }}
                       >
                         <img src="assets/images/copy.png" alt="" />
