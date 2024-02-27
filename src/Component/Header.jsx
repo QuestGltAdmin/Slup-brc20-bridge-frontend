@@ -10,6 +10,7 @@ import {
   Modal,
   Form,
   Dropdown,
+  InputGroup,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ConnectWalletModal from "./ui/ConnectWalletModal";
@@ -21,6 +22,8 @@ import { toast } from "react-toastify";
 import { linkAddress } from "../helpers/linkAddress";
 import { checkAddressType } from "../btcHelper/btcAddressCheck";
 import { Disconnect } from "../helpers/Web3Helper";
+import { encryptData } from "../helpers/encryption";
+import axiosBack from "../http/axios/axios_Back";
 
 export default function Header(props) {
   //===============================Global Variables==================================//
@@ -46,6 +49,12 @@ export default function Header(props) {
   });
   const [disableLink, setDisableLink] = useState(false);
   const [showLinkModel, setShowLinkModel] = useState(false);
+  const [checkForTrueAddress, setCheckForTrueAddress] = useState({
+    nativeCheck: false,
+    nestedCheck: false,
+    taprootCheck: false,
+    legacyCheck: false,
+  });
   //===============================End Of Code==================================//
 
   //===============================Connect Wallet model props==================================//
@@ -165,6 +174,68 @@ export default function Header(props) {
       const disconnect = await onDisconnect();
       console.log(disconnect);
       dispatch(setEVMWallet({}));
+    } catch (err) {}
+  };
+
+  const checkForAddress = async (data, type) => {
+    console.log(type);
+    console.log(data);
+    try {
+      let RowAddress = "";
+      if (type === "witnesspubkeyhash") {
+        console.log("yha11");
+        RowAddress = await encryptData(data);
+        setAddressLink({ ...addressLink, nativeAddress: data });
+      } else if (type === "scripthash") {
+        RowAddress = await encryptData(addressLink.nestedAddress);
+      } else if (type === "taproot") {
+        RowAddress = await encryptData(addressLink.taprootAddress);
+      } else if (type === "pubkeyhash") {
+        RowAddress = await encryptData(addressLink.legacyAddress);
+      }
+      const RowNetworkType = await encryptData(WalletBTC?.network);
+      const getType = await axiosBack.post("/signature/check-address", {
+        address: RowAddress,
+        networkType: RowNetworkType,
+      });
+      console.log("getType", getType);
+      if (getType?.data?.status) {
+        if (getType?.data?.data?.type === "witnesspubkeyhash") {
+          setCheckForTrueAddress({ ...checkForTrueAddress, nativeCheck: true });
+        } else {
+          setCheckForTrueAddress({
+            ...checkForTrueAddress,
+            nativeCheck: false,
+          });
+        }
+        if (getType?.data?.data?.type === "scripthash") {
+          setCheckForTrueAddress({ ...checkForTrueAddress, nestedCheck: true });
+        } else {
+          setCheckForTrueAddress({
+            ...checkForTrueAddress,
+            nestedCheck: false,
+          });
+        }
+        if (getType?.data?.data?.type === "taproot") {
+          setCheckForTrueAddress({
+            ...checkForTrueAddress,
+            taprootCheck: true,
+          });
+        } else {
+          setCheckForTrueAddress({
+            ...checkForTrueAddress,
+            taprootCheck: false,
+          });
+        }
+        if (getType?.data?.data?.type === "pubkeyhash") {
+          setCheckForTrueAddress({ ...checkForTrueAddress, legacyCheck: true });
+        } else {
+          setCheckForTrueAddress({
+            ...checkForTrueAddress,
+            legacyCheck: false,
+          });
+        }
+      }
     } catch (err) {}
   };
   return (
@@ -301,7 +372,7 @@ export default function Header(props) {
         show={showLinkModel}
         onHide={handleLinkClose}
         centered
-        className="transaction-proceed-modal"
+        className="transaction-proceed-modal link-address-modal"
         backdrop="static"
       >
         <Modal.Header closeButton>
@@ -314,43 +385,85 @@ export default function Header(props) {
           </div>
           <Form.Group className="mb-3">
             <Form.Label>Native Segwit</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter native segwit address"
-              name="nativeAddress"
-              onChange={HandelAddress}
-              value={addressLink.nativeAddress}
-            />
+            <InputGroup>
+              <Form.Control
+                type="text"
+                placeholder="Enter native segwit address"
+                name="nativeAddress"
+                onChange={(e) => {
+                  checkForAddress(e.target.value, "witnesspubkeyhash");
+                }}
+                // onInput={() => {
+                //   checkForAddress("witnesspubkeyhash");
+                // }}
+                value={addressLink.nativeAddress}
+              />
+              <InputGroup.Text className="check">
+              <i class="fa fa-check" aria-hidden="true"></i>
+                {/* {checkForTrueAddress.nativeCheck === true ? (
+                  <i class="fa fa-check" aria-hidden="true"></i>
+                ) : (
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                )} */}
+              </InputGroup.Text>
+            </InputGroup>
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Nested Segwit</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter nested segwit address"
-              name="nestedAddress"
-              onChange={HandelAddress}
-              value={addressLink.nestedAddress}
-            />
+            <InputGroup>
+              <Form.Control
+                type="text"
+                placeholder="Enter nested segwit address"
+                name="nestedAddress"
+                onChange={HandelAddress}
+                value={addressLink.nestedAddress}
+              />
+              <InputGroup.Text>
+                {checkForTrueAddress.nestedCheck === true ? (
+                  <i class="fa fa-check" aria-hidden="true"></i>
+                ) : (
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                )}
+              </InputGroup.Text>
+            </InputGroup>
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Taproot</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter taproot address"
-              name="taprootAddress"
-              onChange={HandelAddress}
-              value={addressLink.taprootAddress}
-            />
+            <InputGroup>
+              <Form.Control
+                type="text"
+                placeholder="Enter taproot address"
+                name="taprootAddress"
+                onChange={HandelAddress}
+                value={addressLink.taprootAddress}
+              />
+              <InputGroup.Text>
+                {checkForTrueAddress.taprootCheck === true ? (
+                  <i class="fa fa-check" aria-hidden="true"></i>
+                ) : (
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                )}
+              </InputGroup.Text>
+            </InputGroup>
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Legacy</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter legacy address"
-              name="legacyAddress"
-              onChange={HandelAddress}
-              value={addressLink.legacyAddress}
-            />
+            <InputGroup>
+              <Form.Control
+                type="text"
+                placeholder="Enter legacy address"
+                name="legacyAddress"
+                onChange={HandelAddress}
+                value={addressLink.legacyAddress}
+              />
+              <InputGroup.Text>
+                {checkForTrueAddress.legacyCheck === true ? (
+                  <i class="fa fa-check" aria-hidden="true"></i>
+                ) : (
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                )}
+              </InputGroup.Text>
+            </InputGroup>
           </Form.Group>
           <div className="swap-row">
             <button
