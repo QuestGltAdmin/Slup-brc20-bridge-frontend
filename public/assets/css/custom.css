@@ -667,3 +667,6 @@ color: orangered;
 .transaction-proceed-modal.for-4-swap .currency-transfer-loading div {
     width: 24%;
 }
+.swap-currency-drop.swap-enter-amount .form-control {
+    padding: 5px;
+}

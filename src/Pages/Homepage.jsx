@@ -844,13 +844,13 @@ export const Homepage = () => {
                         readOnly
                       />
                       {from === "Slup" && to === "Bitcoin" ? (
-                        <InputGroupText>
+                       
                           <Dropdown
                             onSelect={(e) => {
                               setBtcAddressType(e);
                             }}
                           >
-                            <Dropdown.Toggle>{btcAddressType}</Dropdown.Toggle>
+                            <Dropdown.Toggle className="">{btcAddressType}</Dropdown.Toggle>
                             <Dropdown.Menu>
                               <Dropdown.Item eventKey="NativeSegwit">
                                 NativeSegwit
@@ -866,7 +866,7 @@ export const Homepage = () => {
                               </Dropdown.Item>
                             </Dropdown.Menu>
                           </Dropdown>
-                        </InputGroupText>
+                       
                       ) : (
                         ""
                       )}
