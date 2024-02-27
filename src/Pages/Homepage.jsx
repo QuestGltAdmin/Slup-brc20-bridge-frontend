@@ -14,6 +14,7 @@ import {
   Form,
   Modal,
   Button,
+  InputGroup,
 } from "react-bootstrap";
 import Tokens from "../JSON/TokenList.json";
 import axios from "axios";
@@ -43,6 +44,8 @@ import { encryptData } from "../helpers/encryption";
 import axiosBack from "../http/axios/axios_Back";
 import { useNavigate } from "react-router-dom";
 import { transferBtc } from "../btcHelper/sendBtc";
+import { getBtcAddress, getSlupAddress } from "../helpers/getLinkedAddress";
+import InputGroupText from "react-bootstrap/esm/InputGroupText";
 
 export const Homepage = () => {
   //===============================Global Variables==================================//
@@ -81,6 +84,7 @@ export const Homepage = () => {
   const [totalTokenSupply, setTotalTokenSupply] = useState(0);
   const [showSlupToBtc, setShowSlupToBtc] = useState(false);
   const [checkForProcessSTB, setCheckForProcessSTB] = useState(0);
+  const [btcAddressType, setBtcAddressType] = useState("NativeSegwit");
   //===============================End Of Code==================================//
 
   //===============================Connect Model Close==================================//
@@ -236,8 +240,8 @@ export const Homepage = () => {
       toast.warn("Please enter valid amount");
     } else if (tokenBalanceBTC < amount) {
       toast.warn("Balance insufficent");
-    } else if (!checkForAddress) {
-      toast.warn("Please enter valid wallet address");
+    } else if (!checkForAddress || bitcoinAddress === "0x0000000000000000000000000000000000000000") {
+      toast.warn("Please link your address");
     } else if (checkBoxActive === false) {
       toast.warn("Please check checkbox first");
     } else {
@@ -417,16 +421,16 @@ export const Homepage = () => {
 
   //===============================Function For Slup to BTC==================================//
   const burnSlupToBtc = async () => {
-    const checkAddress = await checkAddressType(
-      bitcoinAddress,
-      WalletBTC.network
-    );
+    // const checkAddress = await checkAddressType(
+    //   bitcoinAddress,
+    //   WalletBTC.network
+    // );
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
     } else if (tokenBalanceSLUP < amount) {
       toast.warn("Balance insufficent");
-    } else if (!checkAddress) {
-      toast.warn("Please enter valid wallet address");
+    } else if (!bitcoinAddress) {
+      toast.warn("Please link your address");
     } else if (checkBoxActive === false) {
       toast.warn("Please check checkbox first");
     } else {
@@ -490,6 +494,71 @@ export const Homepage = () => {
     }
   };
   //===============================End Of Code==================================//
+
+  const getAddressSlup = async () => {
+    console.log("yha ");
+    try {
+      const RowAddress = await encryptData(WalletBTC?.selectedAccount);
+      const RowNetworkType = await encryptData(WalletBTC?.network);
+      const getType = await axiosBack.post("/signature/check-address", {
+        address: RowAddress,
+        networkType: RowNetworkType,
+      });
+      // console.log(getType);
+      if (getType?.data?.status) {
+        let payload = {
+          userBtcAddress: WalletBTC?.selectedAccount,
+          nativeSegwit: false,
+          nestedSegwit: false,
+          taproot: false,
+          legacy: false,
+        };
+        if (getType?.data?.data?.type === "witnesspubkeyhash") {
+          payload = { ...payload, nativeSegwit: true };
+        } else if (getType?.data?.data?.type === "scripthash") {
+          payload = { ...payload, nestedSegwit: true };
+        } else if (getType?.data?.data?.type === "taproot") {
+          payload = { ...payload, taproot: true };
+        } else if (getType?.data?.data?.type === "pubkeyhash") {
+          payload = { ...payload, legacy: true };
+        }
+        try {
+          console.log(payload);
+          const getAddress = await getSlupAddress(payload);
+          // console.log("getAddress", getAddress);
+          setBitcoinAddress(getAddress);
+        } catch (err) {}
+      }
+    } catch (err) {}
+  };
+
+  const getAddressBTC = async () => {
+    try {
+      const payload = {
+        userSlupAddress: WalletEVM?.selectedAccount,
+      };
+      const getAddress = await getBtcAddress(payload);
+      console.log("getAddress", getAddress);
+      if (btcAddressType === "NativeSegwit") {
+        setBitcoinAddress(getAddress?.NativeSegwit);
+      } else if (btcAddressType === "NestedSegwit") {
+        setBitcoinAddress(getAddress?.NestedSegwit);
+      } else if (btcAddressType === "Taproot") {
+        setBitcoinAddress(getAddress?.Taproot);
+      } else if (btcAddressType === "Legacy") {
+        setBitcoinAddress(getAddress?.Legacy);
+      }
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    if (from === "Bitcoin" && to === "Slup") {
+      getAddressSlup();
+    } else {
+      getAddressBTC();
+      // setBitcoinAddress("");
+    }
+  }, [WalletBTC?.selectedAccount, from, to, btcAddressType]);
 
   return (
     <>
@@ -761,17 +830,47 @@ export const Homepage = () => {
                   </div>
 
                   <div className="swap-currency-drop swap-enter-amount mt-3">
-                    <Form.Control
-                      type="text"
-                      placeholder={`Enter ${
-                        to === "Slup" ? "slup Chain" : "BRC-20"
-                      } Recipient Address`}
-                      name="bitcoinAddress"
-                      onChange={(e) => {
-                        setBitcoinAddress(e.target.value);
-                      }}
-                      value={bitcoinAddress}
-                    />
+                    <InputGroup>
+                      <Form.Control
+                        type="text"
+                        placeholder={`Enter ${
+                          to === "Slup" ? "slup Chain" : "BRC-20"
+                        } Recipient Address`}
+                        name="bitcoinAddress"
+                        onChange={(e) => {
+                          setBitcoinAddress(e.target.value);
+                        }}
+                        value={bitcoinAddress}
+                        readOnly
+                      />
+                      {from === "Slup" && to === "Bitcoin" ? (
+                        <InputGroupText>
+                          <Dropdown
+                            onSelect={(e) => {
+                              setBtcAddressType(e);
+                            }}
+                          >
+                            <Dropdown.Toggle>{btcAddressType}</Dropdown.Toggle>
+                            <Dropdown.Menu>
+                              <Dropdown.Item eventKey="NativeSegwit">
+                                NativeSegwit
+                              </Dropdown.Item>
+                              <Dropdown.Item eventKey="NestedSegwit">
+                                NestedSegwit
+                              </Dropdown.Item>
+                              <Dropdown.Item eventKey="Taproot">
+                                Taproot
+                              </Dropdown.Item>
+                              <Dropdown.Item eventKey="Legacy">
+                                Legacy
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        </InputGroupText>
+                      ) : (
+                        ""
+                      )}
+                    </InputGroup>
                   </div>
                   {/* </>
                   ) : (
