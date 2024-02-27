@@ -372,7 +372,7 @@ export default function Header(props) {
         show={showLinkModel}
         onHide={handleLinkClose}
         centered
-        className="transaction-proceed-modal"
+        className="transaction-proceed-modal link-address-modal"
         backdrop="static"
       >
         <Modal.Header closeButton>
@@ -398,12 +398,13 @@ export default function Header(props) {
                 // }}
                 value={addressLink.nativeAddress}
               />
-              <InputGroup.Text>
-                {checkForTrueAddress.nativeCheck === true ? (
+              <InputGroup.Text className="check">
+              <i class="fa fa-check" aria-hidden="true"></i>
+                {/* {checkForTrueAddress.nativeCheck === true ? (
                   <i class="fa fa-check" aria-hidden="true"></i>
                 ) : (
                   <i class="fa fa-times" aria-hidden="true"></i>
-                )}
+                )} */}
               </InputGroup.Text>
             </InputGroup>
           </Form.Group>
