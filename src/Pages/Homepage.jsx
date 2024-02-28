@@ -38,7 +38,6 @@ import CheckWallet from "../helpers/checkWalletHelper";
 import { MintBrc20 } from "../helpers/mintbrc20";
 import { BurnBrc20 } from "../helpers/burnbrc20";
 import { Connect } from "../helpers/Connect";
-import { checkAddressType } from "../btcHelper/btcAddressCheck";
 import { SlupTokenBalance, slupTokenSupply } from "../helpers/slupTokenDetails";
 import { encryptData } from "../helpers/encryption";
 import axiosBack from "../http/axios/axios_Back";
@@ -421,10 +420,7 @@ export const Homepage = () => {
 
   //===============================Function For Slup to BTC==================================//
   const burnSlupToBtc = async () => {
-    // const checkAddress = await checkAddressType(
-    //   bitcoinAddress,
-    //   WalletBTC.network
-    // );
+ 
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
     } else if (tokenBalanceSLUP < amount) {

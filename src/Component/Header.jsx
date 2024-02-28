@@ -20,7 +20,6 @@ import { useDispatch } from "react-redux";
 import { setBitcoinWallet, setEVMWallet } from "../store/reducers/authReducer";
 import { toast } from "react-toastify";
 import { linkAddress } from "../helpers/linkAddress";
-import { checkAddressType } from "../btcHelper/btcAddressCheck";
 import { Disconnect } from "../helpers/Web3Helper";
 import { encryptData } from "../helpers/encryption";
 import axiosBack from "../http/axios/axios_Back";
@@ -49,12 +48,15 @@ export default function Header(props) {
   });
   const [disableLink, setDisableLink] = useState(false);
   const [showLinkModel, setShowLinkModel] = useState(false);
-  const [checkForTrueAddress, setCheckForTrueAddress] = useState({
-    nativeCheck: false,
-    nestedCheck: false,
-    taprootCheck: false,
-    legacyCheck: false,
-  });
+  const [checkForTrueAddressNative, setCheckForTrueAddressNative] =
+    useState(false);
+  const [checkForTrueAddressNested, setCheckForTrueAddressNested] =
+    useState(false);
+  const [checkForTrueAddressTaproot, setCheckForTrueAddressTaproot] =
+    useState(false);
+  const [checkForTrueAddressLegacy, setCheckForTrueAddressLegacy] =
+    useState(false);
+
   //===============================End Of Code==================================//
 
   //===============================Connect Wallet model props==================================//
@@ -123,44 +125,122 @@ export default function Header(props) {
 
   //===============================Link Address Code==================================//
   const linkAddressFunction = async () => {
-    const checkNativeAddress = await checkAddressType(
-      addressLink.nativeAddress,
-      WalletBTC.network
-    );
-    const checkTaprootAddress = await checkAddressType(
-      addressLink.taprootAddress,
-      WalletBTC.network
-    );
-    if (!checkNativeAddress) {
-      toast.warn("Please enter valid native address");
-    } else if (!checkTaprootAddress) {
-      toast.warn("Please enter valid taproot address");
+    if (
+      !addressLink?.nativeAddress ||
+      !addressLink?.nestedAddress ||
+      !addressLink?.taprootAddress ||
+      !addressLink?.legacyAddress
+    ) {
+      toast.warn("Please fill all details");
     } else {
-      setDisableLink(true);
-      try {
-        const linkPayload = {
-          type: WalletEVM?.type,
-          nativeAddress: addressLink.nativeAddress,
-          nestedAddress: addressLink.nestedAddress,
-          taprootAddress: addressLink.taprootAddress,
-          legacyAddress: addressLink.legacyAddress,
-          chainId: WalletEVM.chainId,
-        };
-        const LinkAddress = await linkAddress(linkPayload);
-        console.log(LinkAddress);
-        if (LinkAddress) {
-          setDisableLink(false);
-          toast.success("Address link successfully");
-          setAddressLink({
-            nativeAddress: "",
-            nestedAddress: "",
-            taprootAddress: "",
-            legacyAddress: "",
-          });
-          handleLinkClose();
+      let checkObj = {
+        NestedCheck: false,
+        NativeCheck: false,
+        TaprootCheck: false,
+        LegacyCheck: false,
+      };
+      const RowNetworkType = await encryptData(WalletBTC?.network);
+
+      const RowAddressNative = await encryptData(addressLink?.nativeAddress);
+      const RowAddressNested = await encryptData(addressLink?.nestedAddress);
+      const RowAddressTaproot = await encryptData(addressLink?.taprootAddress);
+      const RowAddressLegacy = await encryptData(addressLink?.legacyAddress);
+      const checkNativeAddress = await axiosBack.post(
+        "/signature/check-address",
+        {
+          address: RowAddressNative,
+          networkType: RowNetworkType,
         }
-      } catch (err) {
-        setDisableLink(false);
+      );
+      console.log("checkNativeAddress", checkNativeAddress);
+      if (checkNativeAddress?.data?.data?.type === "witnesspubkeyhash") {
+        console.log("yaha");
+        setCheckForTrueAddressNative(true);
+        checkObj = { ...checkObj, NativeCheck: true };
+      } else {
+        console.log("checkNativeAddress", checkNativeAddress);
+        setCheckForTrueAddressNative(false);
+        checkObj = { ...checkObj, NativeCheck: false };
+      }
+      const checkNestedAddress = await axiosBack.post(
+        "/signature/check-address",
+        {
+          address: RowAddressNested,
+          networkType: RowNetworkType,
+        }
+      );
+      if (checkNestedAddress?.data?.data?.type === "scripthash") {
+        setCheckForTrueAddressNested(true);
+        checkObj = { ...checkObj, NestedCheck: true };
+      } else {
+        setCheckForTrueAddressNested(false);
+        checkObj = { ...checkObj, NestedCheck: false };
+      }
+      const checkTaprootAddress = await axiosBack.post(
+        "/signature/check-address",
+        {
+          address: RowAddressTaproot,
+          networkType: RowNetworkType,
+        }
+      );
+      if (checkTaprootAddress?.data?.data?.type === "taproot") {
+        setCheckForTrueAddressTaproot(true);
+        checkObj = { ...checkObj, TaprootCheck: true };
+      } else {
+        setCheckForTrueAddressTaproot(false);
+        checkObj = { ...checkObj, TaprootCheck: false };
+      }
+      const checkLegacyAddress = await axiosBack.post(
+        "/signature/check-address",
+        {
+          address: RowAddressLegacy,
+          networkType: RowNetworkType,
+        }
+      );
+
+      if (checkLegacyAddress?.data?.data?.type === "pubkeyhash") {
+        setCheckForTrueAddressLegacy(true);
+        checkObj = { ...checkObj, LegacyCheck: true };
+      } else {
+        setCheckForTrueAddressLegacy(false);
+        checkObj = { ...checkObj, LegacyCheck: false };
+      }
+
+      if (!checkObj?.NativeCheck) {
+        toast.warn("Please enter valid native address");
+      } else if (!checkObj?.NestedCheck) {
+        toast.warn("Please enter valid nested address");
+      } else if (!checkObj?.TaprootCheck) {
+        toast.warn("Please enter valid taproot address");
+      } else if (!checkObj?.LegacyCheck) {
+        toast.warn("Please enter valid legacy address");
+      } else {
+        setDisableLink(true);
+        try {
+          const linkPayload = {
+            type: WalletEVM?.type,
+            nativeAddress: addressLink.nativeAddress,
+            nestedAddress: addressLink.nestedAddress,
+            taprootAddress: addressLink.taprootAddress,
+            legacyAddress: addressLink.legacyAddress,
+            chainId: WalletEVM.chainId,
+          };
+          const LinkAddress = await linkAddress(linkPayload);
+          console.log(LinkAddress);
+          if (LinkAddress) {
+            setDisableLink(false);
+            toast.success("Address link successfully");
+            setAddressLink({
+              nativeAddress: "",
+              nestedAddress: "",
+              taprootAddress: "",
+              legacyAddress: "",
+            });
+            handleLinkClose();
+          }
+        } catch (err) {
+          setDisableLink(false);
+        }
       }
     }
   };
@@ -177,67 +257,6 @@ export default function Header(props) {
     } catch (err) {}
   };
 
-  const checkForAddress = async (data, type) => {
-    console.log(type);
-    console.log(data);
-    try {
-      let RowAddress = "";
-      if (type === "witnesspubkeyhash") {
-        console.log("yha11");
-        RowAddress = await encryptData(data);
-        setAddressLink({ ...addressLink, nativeAddress: data });
-      } else if (type === "scripthash") {
-        RowAddress = await encryptData(addressLink.nestedAddress);
-      } else if (type === "taproot") {
-        RowAddress = await encryptData(addressLink.taprootAddress);
-      } else if (type === "pubkeyhash") {
-        RowAddress = await encryptData(addressLink.legacyAddress);
-      }
-      const RowNetworkType = await encryptData(WalletBTC?.network);
-      const getType = await axiosBack.post("/signature/check-address", {
-        address: RowAddress,
-        networkType: RowNetworkType,
-      });
-      console.log("getType", getType);
-      if (getType?.data?.status) {
-        if (getType?.data?.data?.type === "witnesspubkeyhash") {
-          setCheckForTrueAddress({ ...checkForTrueAddress, nativeCheck: true });
-        } else {
-          setCheckForTrueAddress({
-            ...checkForTrueAddress,
-            nativeCheck: false,
-          });
-        }
-        if (getType?.data?.data?.type === "scripthash") {
-          setCheckForTrueAddress({ ...checkForTrueAddress, nestedCheck: true });
-        } else {
-          setCheckForTrueAddress({
-            ...checkForTrueAddress,
-            nestedCheck: false,
-          });
-        }
-        if (getType?.data?.data?.type === "taproot") {
-          setCheckForTrueAddress({
-            ...checkForTrueAddress,
-            taprootCheck: true,
-          });
-        } else {
-          setCheckForTrueAddress({
-            ...checkForTrueAddress,
-            taprootCheck: false,
-          });
-        }
-        if (getType?.data?.data?.type === "pubkeyhash") {
-          setCheckForTrueAddress({ ...checkForTrueAddress, legacyCheck: true });
-        } else {
-          setCheckForTrueAddress({
-            ...checkForTrueAddress,
-            legacyCheck: false,
-          });
-        }
-      }
-    } catch (err) {}
-  };
   return (
     <>
       <header className="main-header" id="headerId">
@@ -390,21 +409,19 @@ export default function Header(props) {
                 type="text"
                 placeholder="Enter native segwit address"
                 name="nativeAddress"
-                onChange={(e) => {
-                  checkForAddress(e.target.value, "witnesspubkeyhash");
-                }}
-                // onInput={() => {
-                //   checkForAddress("witnesspubkeyhash");
-                // }}
+                onChange={HandelAddress}
                 value={addressLink.nativeAddress}
               />
-              <InputGroup.Text className="check">
-              <i class="fa fa-check" aria-hidden="true"></i>
-                {/* {checkForTrueAddress.nativeCheck === true ? (
+              <InputGroup.Text
+                className={checkForTrueAddressNative === true ? "check" : ""}
+              >
+                {/* <i class="fa fa-check" aria-hidden="true"></i> */}
+                {checkForTrueAddressNative === true ? (
                   <i class="fa fa-check" aria-hidden="true"></i>
                 ) : (
-                  <i class="fa fa-times" aria-hidden="true"></i>
-                )} */}
+                  // <i class="fa fa-times" aria-hidden="true"></i>
+                  ""
+                )}
               </InputGroup.Text>
             </InputGroup>
           </Form.Group>
@@ -418,11 +435,14 @@ export default function Header(props) {
                 onChange={HandelAddress}
                 value={addressLink.nestedAddress}
               />
-              <InputGroup.Text>
-                {checkForTrueAddress.nestedCheck === true ? (
+              <InputGroup.Text
+                className={checkForTrueAddressNested === true ? "check" : ""}
+              >
+                {checkForTrueAddressNested === true ? (
                   <i class="fa fa-check" aria-hidden="true"></i>
                 ) : (
-                  <i class="fa fa-times" aria-hidden="true"></i>
+                  ""
+                  // <i class="fa fa-times" aria-hidden="true"></i>
                 )}
               </InputGroup.Text>
             </InputGroup>
@@ -437,11 +457,14 @@ export default function Header(props) {
                 onChange={HandelAddress}
                 value={addressLink.taprootAddress}
               />
-              <InputGroup.Text>
-                {checkForTrueAddress.taprootCheck === true ? (
+              <InputGroup.Text
+                className={checkForTrueAddressTaproot === true ? "check" : ""}
+              >
+                {checkForTrueAddressTaproot === true ? (
                   <i class="fa fa-check" aria-hidden="true"></i>
                 ) : (
-                  <i class="fa fa-times" aria-hidden="true"></i>
+                  ""
+                  // <i class="fa fa-times" aria-hidden="true"></i>
                 )}
               </InputGroup.Text>
             </InputGroup>
@@ -456,11 +479,14 @@ export default function Header(props) {
                 onChange={HandelAddress}
                 value={addressLink.legacyAddress}
               />
-              <InputGroup.Text>
-                {checkForTrueAddress.legacyCheck === true ? (
+              <InputGroup.Text
+                className={checkForTrueAddressLegacy === true ? "check" : ""}
+              >
+                {checkForTrueAddressLegacy === true ? (
                   <i class="fa fa-check" aria-hidden="true"></i>
                 ) : (
-                  <i class="fa fa-times" aria-hidden="true"></i>
+                  ""
+                  // <i class="fa fa-times" aria-hidden="true"></i>
                 )}
               </InputGroup.Text>
             </InputGroup>
