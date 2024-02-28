@@ -20,6 +20,20 @@ body{
     box-shadow: none !important;
     outline: none !important;
 }
+.border-btn {
+    background: #f4e4f2;
+    border-radius: 16px;
+    padding: 8px 20px;
+    font-size: 16px;
+    line-height: 26px;
+    text-decoration: none;
+    color: #fa255f !important;
+    font-weight: 600;
+    border: 1px solid #fa255f !important;
+    text-align: center;
+    box-shadow: none !important;
+    outline: none !important;
+}
 .common-btn.disable{
 opacity: 0.5;
 }

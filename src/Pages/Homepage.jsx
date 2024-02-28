@@ -1233,12 +1233,13 @@ export const Homepage = () => {
               <h4>Select Inscription</h4>
               <p>Transaction status can also be tracked in Recent Trades</p>
             </div>
-            <div className="swap-row">
+            <div className="swap-row d-flex justify-content-center flex-wrap gap-3">
               {showAllreadyInscribeData?.length > 0
                 ? showAllreadyInscribeData.map((items, index) => {
                     return (
                       <button
-                        className="common-btn"
+                        // className="common-btn"
+                        className={items?.inscriptionId === inscriptionIdPRV ? "common-btn" : "border-btn"}
                         target="_blank"
                         onClick={() => {
                           AllreadyInscribeFunction(items);
@@ -1252,6 +1253,7 @@ export const Homepage = () => {
                     );
                   })
                 : ""}
+                
             </div>
           </Modal.Body>
         </Modal>
