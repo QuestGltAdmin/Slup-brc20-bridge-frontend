@@ -238,7 +238,7 @@ export const Homepage = () => {
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
     } else if (tokenBalanceBTC < amount) {
-      toast.warn("Balance insufficent");
+      toast.warn("Balance insufficient");
     } else if (!checkForAddress || bitcoinAddress === "0x0000000000000000000000000000000000000000") {
       toast.warn("Please link your address");
     } else if (checkBoxActive === false) {
@@ -424,7 +424,7 @@ export const Homepage = () => {
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
     } else if (tokenBalanceSLUP < amount) {
-      toast.warn("Balance insufficent");
+      toast.warn("Balance insufficient");
     } else if (!bitcoinAddress) {
       toast.warn("Please link your address");
     } else if (checkBoxActive === false) {
