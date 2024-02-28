@@ -84,6 +84,10 @@ export const Homepage = () => {
   const [showSlupToBtc, setShowSlupToBtc] = useState(false);
   const [checkForProcessSTB, setCheckForProcessSTB] = useState(0);
   const [btcAddressType, setBtcAddressType] = useState("NativeSegwit");
+
+  const [showAllreadyInscribeData, setShowAllreadyInscribeData] = useState([]);
+  const [inscriptionModel, setInscriptionModel] = useState(false);
+  const [inscriptionIdPRV, setInscriptionIdPRV] = useState("");
   //===============================End Of Code==================================//
 
   //===============================Connect Model Close==================================//
@@ -131,6 +135,9 @@ export const Homepage = () => {
   const handleSlupToBTC = () => {
     setShowSlupToBtc(false);
   };
+  const handleInscriptionModel = () => {
+    setInscriptionModel(false);
+  };
   //===============================End Of Code==================================//
 
   const handleClose1 = () => setShow1(false);
@@ -144,7 +151,11 @@ export const Homepage = () => {
       );
 
       if (getData) {
-        setTokenBalanceBTC(getData?.data?.data?.availableBalance);
+        console.log("getData", getData);
+        setTokenBalanceBTC(getData?.data?.data?.overallBalance);
+        setShowAllreadyInscribeData(
+          getData?.data?.data?.transferableInscriptions
+        );
       }
     } catch (err) {}
   };
@@ -232,6 +243,12 @@ export const Homepage = () => {
   }, [walletAddress]);
   //===============================End Of Code==================================//
 
+  const AllreadyInscribeFunction = async (e) => {
+    setInscriptionIdPRV(e.inscriptionId);
+    setAmount(e.data.amt);
+    handleInscriptionModel();
+  };
+
   //===============================Function For BTC to SLUP==================================//
   const inscribeFunction = async () => {
     const checkForAddress = await CheckWallet(bitcoinAddress);
@@ -239,7 +256,10 @@ export const Homepage = () => {
       toast.warn("Please enter valid amount");
     } else if (tokenBalanceBTC < amount) {
       toast.warn("Balance insufficient");
-    } else if (!checkForAddress || bitcoinAddress === "0x0000000000000000000000000000000000000000") {
+    } else if (
+      !checkForAddress ||
+      bitcoinAddress === "0x0000000000000000000000000000000000000000"
+    ) {
       toast.warn("Please link your address");
     } else if (checkBoxActive === false) {
       toast.warn("Please check checkbox first");
@@ -258,12 +278,20 @@ export const Homepage = () => {
               amount: amount,
               ticker: token.symbol,
             };
-            const inscribeData = await inscribeTransfer(inscribePayload);
+            let inscribeData = "";
+            if (inscriptionIdPRV !== "") {
+              inscribeData = true;
+            } else {
+              inscribeData = await inscribeTransfer(inscribePayload);
+            }
             if (inscribeData) {
               setCheckForProcess(2);
-              dispatch(setUnisatInscription(inscribeData));
+              // dispatch(setUnisatInscription(inscribeData));
               const transferPayload = {
-                inscriptionID: inscribeData.inscriptionId,
+                inscriptionID:
+                  inscriptionIdPRV !== ""
+                    ? inscriptionIdPRV
+                    : inscribeData.inscriptionId,
                 reciever: "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd",
               };
               setTimeout(async () => {
@@ -274,7 +302,10 @@ export const Homepage = () => {
                   setCheckForProcess(3);
                   try {
                     let data = {
-                      inscriptionId: inscribeData.inscriptionId,
+                      inscriptionId:
+                        inscriptionIdPRV !== ""
+                          ? inscriptionIdPRV
+                          : inscribeData.inscriptionId,
                       unisataddress: WalletBTC?.selectedAccount,
                     };
                     const trxCheck = await TransactionConfirmCheck(data);
@@ -420,7 +451,6 @@ export const Homepage = () => {
 
   //===============================Function For Slup to BTC==================================//
   const burnSlupToBtc = async () => {
- 
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
     } else if (tokenBalanceSLUP < amount) {
@@ -803,8 +833,33 @@ export const Homepage = () => {
                       onWheel={(e) => {
                         e.target.blur();
                       }}
+                      disabled={inscriptionIdPRV !== "" ? true : false}
                     />
-                    <button className="common-btn">Max</button>
+                    <button
+                      className="common-btn"
+                      onClick={() => {
+                        if (showAllreadyInscribeData?.length > 0) {
+                          setInscriptionModel(true);
+                        }
+                      }}
+                    >
+                      {showAllreadyInscribeData?.length > 0
+                        ? "Select Inscription"
+                        : "No Inscription"}
+                    </button>
+                    {inscriptionIdPRV !== "" ? (
+                      <button
+                        className="common-btn m-2"
+                        onClick={() => {
+                          setInscriptionIdPRV("");
+                          setAmount(0);
+                        }}
+                      >
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </button>
+                    ) : (
+                      ""
+                    )}
                   </div>
 
                   <div className="service-charge-box">
@@ -840,29 +895,29 @@ export const Homepage = () => {
                         readOnly
                       />
                       {from === "Slup" && to === "Bitcoin" ? (
-                       
-                          <Dropdown
-                            onSelect={(e) => {
-                              setBtcAddressType(e);
-                            }}
-                          >
-                            <Dropdown.Toggle className="">{btcAddressType}</Dropdown.Toggle>
-                            <Dropdown.Menu>
-                              <Dropdown.Item eventKey="NativeSegwit">
-                                NativeSegwit
-                              </Dropdown.Item>
-                              <Dropdown.Item eventKey="NestedSegwit">
-                                NestedSegwit
-                              </Dropdown.Item>
-                              <Dropdown.Item eventKey="Taproot">
-                                Taproot
-                              </Dropdown.Item>
-                              <Dropdown.Item eventKey="Legacy">
-                                Legacy
-                              </Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                       
+                        <Dropdown
+                          onSelect={(e) => {
+                            setBtcAddressType(e);
+                          }}
+                        >
+                          <Dropdown.Toggle className="">
+                            {btcAddressType}
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item eventKey="NativeSegwit">
+                              NativeSegwit
+                            </Dropdown.Item>
+                            <Dropdown.Item eventKey="NestedSegwit">
+                              NestedSegwit
+                            </Dropdown.Item>
+                            <Dropdown.Item eventKey="Taproot">
+                              Taproot
+                            </Dropdown.Item>
+                            <Dropdown.Item eventKey="Legacy">
+                              Legacy
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
                       ) : (
                         ""
                       )}
@@ -1157,6 +1212,44 @@ export const Homepage = () => {
               >
                 View
               </a>
+            </div>
+          </Modal.Body>
+        </Modal>
+
+        <Modal
+          show={inscriptionModel}
+          onHide={handleInscriptionModel}
+          centered
+          className="transaction-proceed-modal"
+          backdrop="static"
+        >
+          <Modal.Header closeButton>
+            {/* <Modal.Title>Connect Wallet</Modal.Title> */}
+          </Modal.Header>
+          <Modal.Body>
+            <div className="heading-box">
+              <h4>Select Inscription</h4>
+              <p>Transaction status can also be tracked in Recent Trades</p>
+            </div>
+            <div className="swap-row">
+              {showAllreadyInscribeData?.length > 0
+                ? showAllreadyInscribeData.map((items, index) => {
+                    return (
+                      <button
+                        className="common-btn"
+                        target="_blank"
+                        onClick={() => {
+                          AllreadyInscribeFunction(items);
+                        }}
+                      >
+                        {items?.data?.tick}
+                        <br />
+                        {items?.data?.amt}
+                        <br />#{items.inscriptionNumber}
+                      </button>
+                    );
+                  })
+                : ""}
             </div>
           </Modal.Body>
         </Modal>
