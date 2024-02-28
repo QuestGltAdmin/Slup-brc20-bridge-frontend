@@ -254,7 +254,7 @@ export const Homepage = () => {
     const checkForAddress = await CheckWallet(bitcoinAddress);
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
-    } else if (tokenBalanceBTC < amount) {
+    } else if (parseInt(tokenBalanceBTC) < parseInt(amount)) {
       toast.warn("Balance insufficient");
     } else if (
       !checkForAddress ||
@@ -263,7 +263,7 @@ export const Homepage = () => {
       toast.warn("Please link your address");
     } else if (checkBoxActive === false) {
       toast.warn("Please check checkbox first");
-    } else {
+    } else { 
       handleShow();
       try {
         try {
@@ -283,7 +283,7 @@ export const Homepage = () => {
               inscribeData = true;
             } else {
               inscribeData = await inscribeTransfer(inscribePayload);
-            }
+            } 
             if (inscribeData) {
               setCheckForProcess(2);
               // dispatch(setUnisatInscription(inscribeData));
@@ -453,7 +453,7 @@ export const Homepage = () => {
   const burnSlupToBtc = async () => {
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
-    } else if (tokenBalanceSLUP < amount) {
+    } else if (parseInt(tokenBalanceSLUP) < parseInt(amount)) {
       toast.warn("Balance insufficient");
     } else if (!bitcoinAddress) {
       toast.warn("Please link your address");
