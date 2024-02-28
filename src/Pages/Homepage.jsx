@@ -190,6 +190,8 @@ export const Homepage = () => {
 
   //===============================Token Total Supply==================================//
   const getTokenTotalSupply = async () => {
+    setInscriptionIdPRV("");
+    setAmount(0)
     try {
       const payload = {
         tokenAddress: token.address,
