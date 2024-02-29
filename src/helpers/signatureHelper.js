@@ -40,15 +40,12 @@ export const createSignature1 = async (data1) => {
       brc20Token: data1.brc20Token,
     };
 
-    console.log("voucher", message);
 
     const signer = new ethers.Wallet(PRIVATEKEY);
 
-    console.log("signer", signer);
 
     // Sign the typed data message
     const output = await signer._signTypedData(domain, { Permit: Permit }, message);
-    console.log("output", output);
 
 
     if (output) {

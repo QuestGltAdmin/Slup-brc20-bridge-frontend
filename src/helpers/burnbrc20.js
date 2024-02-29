@@ -25,7 +25,6 @@ export const BurnBrc20 = async (data) => {
 
         let lockingBRC20Contract = new web3connect.eth.Contract(abi, caddress);
         let amount = "0x" + (parseFloat((data.amount * (10 ** 18)).toFixed(0))).toString(16);
-        console.log(amount , data.amount);
         let Data = lockingBRC20Contract.methods
         .BurnBrc20(data.userAddress,data.brcTokenAddress,amount)
         .encodeABI();
@@ -119,7 +118,6 @@ export const BurnBrc20 = async (data) => {
 
             let lockingBRC20Contract = new web3connect.eth.Contract(abi, caddress);
             let amount = "0x" + (parseFloat((data.amount * (10 ** 18)).toFixed(0))).toString(16);
-            console.log(amount , data.amount);
             let Data = lockingBRC20Contract.methods
             .BurnBrc20(data.userAddress,data.brcTokenAddress,amount)
             .encodeABI();

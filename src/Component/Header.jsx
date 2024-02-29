@@ -152,13 +152,10 @@ export default function Header(props) {
           networkType: RowNetworkType,
         }
       );
-      console.log("checkNativeAddress", checkNativeAddress);
       if (checkNativeAddress?.data?.data?.type === "witnesspubkeyhash") {
-        console.log("yaha");
         setCheckForTrueAddressNative(true);
         checkObj = { ...checkObj, NativeCheck: true };
       } else {
-        console.log("checkNativeAddress", checkNativeAddress);
         setCheckForTrueAddressNative(false);
         checkObj = { ...checkObj, NativeCheck: false };
       }
@@ -226,7 +223,6 @@ export default function Header(props) {
             chainId: WalletEVM.chainId,
           };
           const LinkAddress = await linkAddress(linkPayload);
-          console.log(LinkAddress);
           if (LinkAddress) {
             setDisableLink(false);
             toast.success("Address link successfully");
@@ -252,7 +248,6 @@ export default function Header(props) {
   const logoutEVM = async () => {
     try {
       const disconnect = await onDisconnect();
-      console.log(disconnect);
       dispatch(setEVMWallet({}));
     } catch (err) {}
   };

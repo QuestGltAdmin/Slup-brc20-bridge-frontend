@@ -1,8 +1,7 @@
 import axiosMain from "../http/axios/axios_main";
 
 export const TransactionConfirmCheck = async (data) => {
-    console.log("data-----------------", data);
-    try {
+    try { 
         let adminWallet = "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd";
 
         const expectedBlockTime = 10000; // 1sec
@@ -16,7 +15,6 @@ export const TransactionConfirmCheck = async (data) => {
                 `/v1/indexer/inscription/info/${data.inscriptionId}`
             );
             walletFromAPI = getTransfaredBalance?.data?.data?.address;
-            // console.log("walletFromAPI-----------------", walletFromAPI);
 
             await sleep(expectedBlockTime);
         }

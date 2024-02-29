@@ -110,6 +110,5 @@ export const Provider = async (type) => {
 
 export const Disconnect = async () => {
   const disconnect = await web3Modal.clearCachedProvider();
-  console.log("disconnect" , disconnect);
   return disconnect;
 }

@@ -153,7 +153,6 @@ export const Homepage = () => {
       );
 
       if (getData) {
-        console.log("getData", getData);
         setTokenBalanceBTC(getData?.data?.data?.overallBalance);
         setShowAllreadyInscribeData(
           getData?.data?.data?.transferableInscriptions
@@ -327,7 +326,6 @@ export const Homepage = () => {
                       if (signature) {
                         setCheckForProcess(4);
                         // dispatch(setUnisatSign(signature));
-                        console.log(signature);
                         try {
                           const RowTokenSymbol = await encryptData(
                             token.symbol
@@ -494,12 +492,10 @@ export const Homepage = () => {
                   "/signature/create-tranx",
                   burnInPayload
                 );
-                console.log("createTrx", createTrx);
                 if (createTrx?.status == 200) {
                   setCheckForProcessSTB(3);
                   setShowSlupToBtc(false);
                   toast.success("Transaction success");
-                  // console.log(createTrx?.data);
                   setBitcoinAddress("");
                   setAmount(0);
                   setTrxAddress(createTrx?.data);
@@ -526,7 +522,6 @@ export const Homepage = () => {
   //===============================End Of Code==================================//
 
   const getAddressSlup = async () => {
-    console.log("yha ");
     try {
       const RowAddress = await encryptData(WalletBTC?.selectedAccount);
       const RowNetworkType = await encryptData(WalletBTC?.network);
@@ -534,7 +529,6 @@ export const Homepage = () => {
         address: RowAddress,
         networkType: RowNetworkType,
       });
-      // console.log(getType);
       if (getType?.data?.status) {
         let payload = {
           userBtcAddress: WalletBTC?.selectedAccount,
@@ -553,9 +547,7 @@ export const Homepage = () => {
           payload = { ...payload, legacy: true };
         }
         try {
-          console.log(payload);
           const getAddress = await getSlupAddress(payload);
-          // console.log("getAddress", getAddress);
           setBitcoinAddress(getAddress);
         } catch (err) {}
       }
@@ -568,7 +560,6 @@ export const Homepage = () => {
         userSlupAddress: WalletEVM?.selectedAccount,
       };
       const getAddress = await getBtcAddress(payload);
-      console.log("getAddress", getAddress);
       if (btcAddressType === "NativeSegwit") {
         setBitcoinAddress(getAddress?.NativeSegwit);
       } else if (btcAddressType === "NestedSegwit") {

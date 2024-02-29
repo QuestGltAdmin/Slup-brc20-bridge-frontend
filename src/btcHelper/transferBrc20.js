@@ -1,6 +1,4 @@
 export const inscribeTransfer = async (data) => {
-  // console.log("data.ticker--------------",data.ticker);
-  // console.log("data.amount--------------",data.amount);
   if (typeof window.unisat == "undefined") {
     console.error("please install unisat wallet!");
   } else {
@@ -17,7 +15,6 @@ export const inscribeTransfer = async (data) => {
 };
 
 export const transferInscription = async (data) => {
-  console.log("data", data);
 
   if (typeof window.unisat == "undefined") {
     console.error("please install unisat wallet!");
