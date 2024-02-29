@@ -110,6 +110,8 @@ export const Homepage = () => {
 
   //===============================Switch From - To==================================//
   const switchTotoFrom = () => {
+    setInscriptionIdPRV("");
+    setAmount(0)
     if (from === "Bitcoin" && to === "Slup") {
       setFrom("Slup");
       setTo("Bitcoin");
@@ -191,7 +193,7 @@ export const Homepage = () => {
   //===============================Token Total Supply==================================//
   const getTokenTotalSupply = async () => {
     setInscriptionIdPRV("");
-    setAmount(0)
+    setAmount(0);
     try {
       const payload = {
         tokenAddress: token.address,
@@ -265,7 +267,7 @@ export const Homepage = () => {
       toast.warn("Please link your address");
     } else if (checkBoxActive === false) {
       toast.warn("Please check checkbox first");
-    } else { 
+    } else {
       handleShow();
       try {
         try {
@@ -285,7 +287,7 @@ export const Homepage = () => {
               inscribeData = true;
             } else {
               inscribeData = await inscribeTransfer(inscribePayload);
-            } 
+            }
             if (inscribeData) {
               setCheckForProcess(2);
               // dispatch(setUnisatInscription(inscribeData));
@@ -837,6 +839,7 @@ export const Homepage = () => {
                       }}
                       disabled={inscriptionIdPRV !== "" ? true : false}
                     />
+                {from === "Bitcoin" && to === "Slup" ?    <>
                     <button
                       className="common-btn"
                       onClick={() => {
@@ -862,6 +865,7 @@ export const Homepage = () => {
                     ) : (
                       ""
                     )}
+                    </> : ""}
                   </div>
 
                   <div className="service-charge-box">
@@ -1144,7 +1148,7 @@ export const Homepage = () => {
                   alt=""
                   className="loader-ing"
                 />
-                <img src="assets/images/slup.png" alt="" className="coin-img" />
+                <img src="assets/images/bitcoin.png" alt="" className="coin-img" />
                 <span>Service fees</span>
               </div>
 
@@ -1159,7 +1163,7 @@ export const Homepage = () => {
                   className="loader-ing"
                 />
                 <img
-                  src="assets/images/bitcoin.png"
+                  src="assets/images/slup.png"
                   alt=""
                   className="coin-img"
                 />
@@ -1239,7 +1243,11 @@ export const Homepage = () => {
                     return (
                       <button
                         // className="common-btn"
-                        className={items?.inscriptionId === inscriptionIdPRV ? "common-btn" : "border-btn"}
+                        className={
+                          items?.inscriptionId === inscriptionIdPRV
+                            ? "common-btn"
+                            : "border-btn"
+                        }
                         target="_blank"
                         onClick={() => {
                           AllreadyInscribeFunction(items);
@@ -1253,7 +1261,6 @@ export const Homepage = () => {
                     );
                   })
                 : ""}
-                
             </div>
           </Modal.Body>
         </Modal>
