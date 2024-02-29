@@ -1167,7 +1167,7 @@ export const Homepage = () => {
                   alt=""
                   className="coin-img"
                 />
-                <span>{to.toUpperCase()}</span>
+                <span>{from.toUpperCase()}</span>
               </div>
 
               <div>

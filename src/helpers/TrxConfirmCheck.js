@@ -5,7 +5,7 @@ export const TransactionConfirmCheck = async (data) => {
     try {
         let adminWallet = "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd";
 
-        const expectedBlockTime = 30000; // 1sec
+        const expectedBlockTime = 10000; // 1sec
         const sleep = (milliseconds) => {
             return new Promise((resolve) => setTimeout(resolve, milliseconds));
         };
