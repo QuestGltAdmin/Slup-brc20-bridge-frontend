@@ -48,7 +48,6 @@ const authSlice =  createSlice({
     },
 
     userloginSuccess: (state, action) => {
-      // console.log(action.payload);
       return {
         ...state,
         isLoading: false,
@@ -62,7 +61,6 @@ const authSlice =  createSlice({
 
     
     saveprofiledata: (state, action) => {
-      // console.log(action.payload , "data yha tak aa rha h");
       return {
         ...state,
         isLoading: false,

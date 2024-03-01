@@ -24,7 +24,6 @@ export function* userLoginSaga(action) {
   const { payload, navigate , setDisable} = action.payload;
   try {
     const response = yield axios.post(`/admin/verify-otp`, payload);
-    // console.log("user id",response);
     if (response?.data.status) {
       yield call(
         setItemToLocalStorage,

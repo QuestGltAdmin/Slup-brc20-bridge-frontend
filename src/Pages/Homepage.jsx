@@ -110,6 +110,8 @@ export const Homepage = () => {
 
   //===============================Switch From - To==================================//
   const switchTotoFrom = () => {
+    setInscriptionIdPRV("");
+    setAmount(0)
     if (from === "Bitcoin" && to === "Slup") {
       setFrom("Slup");
       setTo("Bitcoin");
@@ -151,7 +153,6 @@ export const Homepage = () => {
       );
 
       if (getData) {
-        console.log("getData", getData);
         setTokenBalanceBTC(getData?.data?.data?.overallBalance);
         setShowAllreadyInscribeData(
           getData?.data?.data?.transferableInscriptions
@@ -190,6 +191,8 @@ export const Homepage = () => {
 
   //===============================Token Total Supply==================================//
   const getTokenTotalSupply = async () => {
+    setInscriptionIdPRV("");
+    setAmount(0);
     try {
       const payload = {
         tokenAddress: token.address,
@@ -254,7 +257,7 @@ export const Homepage = () => {
     const checkForAddress = await CheckWallet(bitcoinAddress);
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
-    } else if (tokenBalanceBTC < amount) {
+    } else if (parseInt(tokenBalanceBTC) < parseInt(amount)) {
       toast.warn("Balance insufficient");
     } else if (
       !checkForAddress ||
@@ -323,7 +326,6 @@ export const Homepage = () => {
                       if (signature) {
                         setCheckForProcess(4);
                         // dispatch(setUnisatSign(signature));
-                        console.log(signature);
                         try {
                           const RowTokenSymbol = await encryptData(
                             token.symbol
@@ -453,7 +455,7 @@ export const Homepage = () => {
   const burnSlupToBtc = async () => {
     if (!amount || amount <= 0) {
       toast.warn("Please enter valid amount");
-    } else if (tokenBalanceSLUP < amount) {
+    } else if (parseInt(tokenBalanceSLUP) < parseInt(amount)) {
       toast.warn("Balance insufficient");
     } else if (!bitcoinAddress) {
       toast.warn("Please link your address");
@@ -490,12 +492,10 @@ export const Homepage = () => {
                   "/signature/create-tranx",
                   burnInPayload
                 );
-                console.log("createTrx", createTrx);
                 if (createTrx?.status == 200) {
                   setCheckForProcessSTB(3);
                   setShowSlupToBtc(false);
                   toast.success("Transaction success");
-                  // console.log(createTrx?.data);
                   setBitcoinAddress("");
                   setAmount(0);
                   setTrxAddress(createTrx?.data);
@@ -522,7 +522,6 @@ export const Homepage = () => {
   //===============================End Of Code==================================//
 
   const getAddressSlup = async () => {
-    console.log("yha ");
     try {
       const RowAddress = await encryptData(WalletBTC?.selectedAccount);
       const RowNetworkType = await encryptData(WalletBTC?.network);
@@ -530,7 +529,6 @@ export const Homepage = () => {
         address: RowAddress,
         networkType: RowNetworkType,
       });
-      // console.log(getType);
       if (getType?.data?.status) {
         let payload = {
           userBtcAddress: WalletBTC?.selectedAccount,
@@ -549,9 +547,7 @@ export const Homepage = () => {
           payload = { ...payload, legacy: true };
         }
         try {
-          console.log(payload);
           const getAddress = await getSlupAddress(payload);
-          // console.log("getAddress", getAddress);
           setBitcoinAddress(getAddress);
         } catch (err) {}
       }
@@ -564,7 +560,6 @@ export const Homepage = () => {
         userSlupAddress: WalletEVM?.selectedAccount,
       };
       const getAddress = await getBtcAddress(payload);
-      console.log("getAddress", getAddress);
       if (btcAddressType === "NativeSegwit") {
         setBitcoinAddress(getAddress?.NativeSegwit);
       } else if (btcAddressType === "NestedSegwit") {
@@ -835,6 +830,7 @@ export const Homepage = () => {
                       }}
                       disabled={inscriptionIdPRV !== "" ? true : false}
                     />
+                {from === "Bitcoin" && to === "Slup" ?    <>
                     <button
                       className="common-btn"
                       onClick={() => {
@@ -860,6 +856,7 @@ export const Homepage = () => {
                     ) : (
                       ""
                     )}
+                    </> : ""}
                   </div>
 
                   <div className="service-charge-box">
@@ -1142,7 +1139,7 @@ export const Homepage = () => {
                   alt=""
                   className="loader-ing"
                 />
-                <img src="assets/images/slup.png" alt="" className="coin-img" />
+                <img src="assets/images/bitcoin.png" alt="" className="coin-img" />
                 <span>Service fees</span>
               </div>
 
@@ -1157,11 +1154,11 @@ export const Homepage = () => {
                   className="loader-ing"
                 />
                 <img
-                  src="assets/images/bitcoin.png"
+                  src="assets/images/slup.png"
                   alt=""
                   className="coin-img"
                 />
-                <span>{to.toUpperCase()}</span>
+                <span>{from.toUpperCase()}</span>
               </div>
 
               <div>
@@ -1231,12 +1228,17 @@ export const Homepage = () => {
               <h4>Select Inscription</h4>
               <p>Transaction status can also be tracked in Recent Trades</p>
             </div>
-            <div className="swap-row">
+            <div className="swap-row d-flex justify-content-center flex-wrap gap-3">
               {showAllreadyInscribeData?.length > 0
                 ? showAllreadyInscribeData.map((items, index) => {
                     return (
                       <button
-                        className="common-btn"
+                        // className="common-btn"
+                        className={
+                          items?.inscriptionId === inscriptionIdPRV
+                            ? "common-btn"
+                            : "border-btn"
+                        }
                         target="_blank"
                         onClick={() => {
                           AllreadyInscribeFunction(items);

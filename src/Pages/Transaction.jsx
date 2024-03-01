@@ -37,7 +37,6 @@ export const Transaction = () => {
         "/signature/get-signature",
         payload
       );
-      console.log(getUserData);
       if (getUserData?.data?.status) {
         setShowData(getUserData?.data?.data);
       }

@@ -6,7 +6,6 @@ import Web3 from "web3";
 import { sendTransaction } from "@wagmi/core";
 
 export const MintBrc20 = async (data) => {
-  console.log("data", data);
 
   let address = "0x2ebb0982cA671A61a57807988392e1A19F6b310a";
   const abi = LockingABI;
