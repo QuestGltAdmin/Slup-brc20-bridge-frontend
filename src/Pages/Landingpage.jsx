@@ -57,21 +57,7 @@ export const Landingpage = () => {
         </section>
 
 
-        <section>
-            <Container>
-                <Row>
-                    <Col lg={9} className="m-auto">
-                         <div className="menu-strip-home">
-                             <img src="assets/images/logo.png" className="logo" />
-                             <div>
-                                <button className="common-btn">Buy SLUP</button>
-                                <button className="border-btn">Menu <img src="assets/images/home/Menu.png" /></button>
-                             </div>
-                         </div>
-                    </Col>
-                </Row>
-            </Container>
-        </section>
+      
 
 
        
@@ -193,13 +179,16 @@ export const Landingpage = () => {
             <Container>
                 <Row>
                     <Col lg={4}>
-                       <div className="common-heading"> 
+                       <div className="roadmap-heading">
+                         <div className="common-heading"> 
                             <h2>Roadmap</h2>
                          </div> 
+                       </div>
                     </Col>
                     <Col lg={6} className="ms-auto">
                        <ul className="timeline-outer">
-                          <li className="timeline-single">
+                          <li className="timeline-single green-active">
+                             <div className="dot-scroll"></div>
                              <h4>Jan 2024</h4>
                              <ul>
                                 <li>Activated Minting</li>
@@ -209,6 +198,7 @@ export const Landingpage = () => {
                              </ul>
                           </li>
                           <li className="timeline-single">
+                          <div className="dot-scroll"></div>
                              <h4>Feb 2024</h4>
                              <ul>
                                 <li>SLUP Wallet Testnet Release</li>
@@ -216,6 +206,7 @@ export const Landingpage = () => {
                              </ul>
                           </li>
                           <li className="timeline-single">
+                            <div className="dot-scroll"></div>
                              <h4>March 2024</h4>
                              <ul>
                                 <li>Layer-2 Blockchain Testnet</li>
@@ -224,6 +215,7 @@ export const Landingpage = () => {
                              </ul>
                           </li>
                           <li className="timeline-single">
+                            <div className="dot-scroll"></div>
                              <h4>April 2024</h4>
                              <ul>
                                 <li>SLUP Cross-chain bridge launch</li>
@@ -231,6 +223,7 @@ export const Landingpage = () => {
                              </ul>
                           </li>
                           <li className="timeline-single">
+                            <div className="dot-scroll"></div>
                              <h4>May 2024</h4>
                              <ul>
                                 <li>Enable projects to launch tokens on SLUP</li>
@@ -256,7 +249,7 @@ export const Landingpage = () => {
             </Container>       
         </section>
 
-        <footer className="footer-landing-page">
+        <section className="footer-landing-page">
             <Container>
                     <Row>
                         <Col lg={10} className="m-auto">
@@ -271,7 +264,50 @@ export const Landingpage = () => {
                             </div> 
                         </Col>
                     </Row>
-                </Container>   
+            </Container>  
+        </section>
+
+        <section className="fixed-menu">
+            <Container>
+                <Row>
+                    <Col lg={9} className="m-auto">
+                         <div className="menu-strip-home open-menu">
+                            <div className="outer-box-menu">
+                                <p><a href="">Developers</a></p>
+                                <p><a href="">Community</a></p>
+                                <p><a href="">Resources</a></p>
+                                <p><a href="">Company</a></p>
+                                <p><a href="">Use Polygon</a></p>
+                            </div>
+                             <img src="assets/images/logo.png" className="logo" />
+                             <div>
+                                <button className="common-btn">Buy SLUP</button>
+                                {/* <button className="border-btn">Close <img src="assets/images/home/close.png" /></button> */}
+                                <button className="border-btn">Menu <img src="assets/images/home/Menu.png" /></button>
+                             </div>
+                         </div>
+                    </Col>
+                </Row>
+            </Container>
+        </section>
+
+        <footer className="footer-main">
+            <Container>
+                    <Row>
+                        <Col lg={10} className="m-auto">
+                            <div className="text-center"> 
+                                <img className="logo" src="assets/images/home/white-logo.png" alt="" />
+                                <p>Pioneering a BRC-20 Mobile Wallet and the First-Ever Layer 2 Blockchain in the BRC20 Ecosystem!</p>
+
+                                <div className="copyright-box">
+                                    <p> © 2024. All Rights Reserved.</p>
+                                    <p><a href="">Privacy Policy</a></p>
+                                    <p>Your Crypto Journey, Reimagined!</p>
+                                </div>
+                            </div> 
+                        </Col>
+                    </Row>
+            </Container> 
         </footer>
 
 

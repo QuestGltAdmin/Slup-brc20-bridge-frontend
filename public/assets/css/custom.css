@@ -1042,7 +1042,16 @@ line-height: normal;
     border-left: 2px solid #FF9F98;
     padding-left: 50px;
 }
-.timeline-single::after {
+.timeline-single .dot-scroll {
+    position: sticky;
+    left: 10px;
+    top: 0;
+    margin-left: -65px;
+    margin-top: 0;
+    width: 32px;
+    height: 32px;
+}
+.timeline-single .dot-scroll::after {
     content: "";
     fill: #FFF;
     border: 8px solid #FA255F;
@@ -1051,7 +1060,7 @@ line-height: normal;
     height: 32px;
     position: absolute;
     border-radius: 50%;
-    left: -16px;
+    left: 0;
     top: 0;
 }
 .timeline-single:last-child {
@@ -1059,10 +1068,7 @@ line-height: normal;
     min-height: auto;
 }
 .timeline-single h4 {
-    background: var(--Main-Gradient, linear-gradient(135deg, #F46463 0%, #FA255F 100%));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #FA255F;
     font-size: 24px;
     font-style: normal;
     font-weight: 600;
@@ -1115,4 +1121,85 @@ display: inline-block;
 }
 .footer-landing-page .social-icon a img{
     height: 22px;
+}
+
+.green-active.timeline-single h4{
+    color: #2DA771;
+}
+.green-active.timeline-single ul li{
+color: #2DA771;
+}
+.roadmap-heading{
+    position: relative;
+    height: 100%;
+}
+.roadmap-heading .common-heading {
+    position: sticky;
+    top: 40px;
+    left: 0;
+}
+.footer-main{
+    background-color: #000;
+    padding: 60px 0 120px;
+}
+.footer-main .logo{
+    height: 40px;
+    margin-bottom: 30px;
+}
+.footer-main p{
+    color: #FFF;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+}
+.footer-main .copyright-box{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+.footer-main .copyright-box p{
+    background: var(--Main-Gradient, linear-gradient(135deg, #F46463 0%, #FA255F 100%));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+}
+.footer-main .copyright-box p a{
+    display: block;
+} 
+.fixed-menu{
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+z-index: 100;
+}
+.menu-strip-home{
+    position: relative;
+}
+.outer-box-menu {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    border-radius: 24px;
+    border: 1px solid #B8B8B8;
+    background: #FFF;
+    display: block;
+    bottom: 75px;
+    padding: 20px;
+}
+.outer-box-menu p{
+    text-align: center;
+}
+.outer-box-menu a {
+    display: inline-block;
+    color: #000;
+    text-decoration: none;
+    color: #000;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
 }
