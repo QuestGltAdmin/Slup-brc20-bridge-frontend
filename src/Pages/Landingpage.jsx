@@ -282,7 +282,7 @@ export const Landingpage = () => {
                              <img src="assets/images/logo.png" className="logo" />
                              <div>
                                 <button className="common-btn">Buy SLUP</button>
-                                {/* <button className="border-btn">Close <img src="assets/images/home/close.png" /></button> */}
+                                <button className="border-btn">Close <img src="assets/images/home/close.png" /></button>
                                 <button className="border-btn">Menu <img src="assets/images/home/Menu.png" /></button>
                              </div>
                          </div>
