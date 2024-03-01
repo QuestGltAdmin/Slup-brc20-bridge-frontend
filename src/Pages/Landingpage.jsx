@@ -1,0 +1,283 @@
+import React from 'react'
+import { Container, Col, Row } from 'react-bootstrap'
+
+export const Landingpage = () => {
+  return (
+    <>
+     <div className="outer-div-home">
+        <section className="outer-banner-sec">
+            <Container>
+                <Row>
+                    <Col lg={6}>
+                    <div>
+                            <p>Introducing SLUP,</p>
+                            <h2>The Value Layer of the Internet.</h2>
+                            <ul>
+                                <li>
+                                    <h4>Build</h4>
+                                    <p>Get access to our documents, and start building.</p>
+                                    <p className="redirection-link"><a href=""><img src="assets/images/home/arrow.png" alt="" /></a></p>
+                                </li>
+                                <li>
+                                    <h4>Stake</h4>
+                                    <p>Participate in securing the network by delegating MATIC tokens.</p>
+                                    <p className="redirection-link"><a href=""><img src="assets/images/home/arrow.png" alt="" /></a></p>
+                                </li>
+                                <li>
+                                    <h4>Use SLUP</h4>
+                                    <p>Bridge, Swap and Manage your assets on Polygon.</p>
+                                    <p className="redirection-link"><a href=""><img src="assets/images/home/arrow.png" alt="" /></a></p>
+                                </li>
+                                <li>
+                                    <h4>Launch</h4>
+                                    <p>Bridge, Swap and Manage your assets on Polygon.</p>
+                                    <p className="redirection-link"><a href=""><img src="assets/images/home/arrow.png" alt="" /></a></p>
+                                </li>
+                            </ul>
+                    </div>
+                    </Col>
+                    <Col lg={6}>
+                        <div className="outer-box-banner-right">
+                            <div className="right-img-box">
+                                <div>
+                                   <img src="assets/images/home/banner-img.png" className="img-fluid" alt="" />
+                                </div>
+                                <div className="social-icon">
+                                    <a href=""><img src="assets/images/home/Social1.png" alt="" /></a>
+                                    <a href=""><img src="assets/images/home/Social2.png" alt="" /></a>
+                                    <a href=""><img src="assets/images/home/Social3.png" alt="" /></a>
+                                    <a href=""><img src="assets/images/home/Social4.png" alt="" /></a>
+                                </div>
+                            </div>
+                          <p>The fundamental protocol that allows anyone to create and exchange value, powered by zero-knowledge technology.</p>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
+        </section>
+
+
+        <section>
+            <Container>
+                <Row>
+                    <Col lg={9} className="m-auto">
+                         <div className="menu-strip-home">
+                             <img src="assets/images/logo.png" className="logo" />
+                             <div>
+                                <button className="common-btn">Buy SLUP</button>
+                                <button className="border-btn">Menu <img src="assets/images/home/Menu.png" /></button>
+                             </div>
+                         </div>
+                    </Col>
+                </Row>
+            </Container>
+        </section>
+
+
+       
+
+        <section className="about-slup-sec">
+            <Container>
+                <Row>
+                    <Col lg={4} >
+                         <div className="common-heading">
+                            <h2>About SLUP</h2>
+                            <h5>Innovation at Your Fingertips</h5>
+                         </div>
+                    </Col>
+                    <Col lg={4} >
+                         <div className="about-box">
+                           <img src="assets/images/home/coin-about1.png" alt="" />
+                           <p>SLUP activates a beacon of innovation, making it a seamless crypto experience for the nerds, classes, and masses. We take pride in launching the first mobile-based wallet app in the entire BRC-20 ecosystem.</p>
+                           <a href=""className="border-btn">Learn more</a>
+                         </div>
+                    </Col>
+                    <Col lg={4} >
+                         <div className="about-box pink-bg">
+                           <img src="assets/images/home/coin-about2.png" alt="" />
+                           <p>SLUP not only makes the swap experience seamless but also makes it possible to wave “hello” to other chains. Therefore, it becomes a robust multi-chain powerhouse that ought to be on your devices.</p>
+                           <a href=""className="border-btn">Learn more</a>
+                         </div>
+                    </Col>
+                </Row>
+            </Container>
+        </section>
+
+        <section className="download-add-sec">
+            <Container>
+                <Row>
+                    <Col lg={5} >
+                       <div className="common-heading"> 
+                            <h5>Tired of juggling multiple wallets for different tokens?</h5>
+                            <h2>Introducing the all new SLUP Wallet App</h2>
+                         </div>
+                         <div className="download-box">   
+                            <p>Download the SLUP wallet app now!</p>
+                            <div>
+                                <a href=""><img src="assets/images/home/App-Store.png" alt="" /></a>
+                                <a href=""><img src="assets/images/home/Play-Store.png" alt="" /></a>
+                            </div>
+                         </div>
+                    </Col>
+                    <Col lg={7} >
+                         <div className="outer-download">
+                            <div className="mobile-img-box">
+                               <img src="assets/images/home/mobile.png" className="mobile-img" alt="" />
+                               <img src="assets/images/home/App-circle.png" className="circular-img" alt="" /> 
+                            </div>
+                            <div className="outer-box-info-download">
+                                <div>
+                                    <h3>12k+</h3>
+                                    <p>Downloads and couting...</p>
+                                </div>
+                                <div>
+                                    <h3>#1</h3>
+                                    <p>Top rated app in finance category</p>
+                                </div>
+                                <h6>Introducing the revolutionary BRC-20 based mobile wallet app, designed to streamline your experience and empower you with complete control.</h6>
+                            </div>
+                         </div>
+                    </Col>
+                   
+                </Row>
+            </Container>
+        </section>
+
+
+        <section className="why-choose-sec">
+            <Container>
+                <Row>
+                    <Col lg={11} className="m-auto">
+                       <div className="outer-why-choose">
+                               <div className="why-choose-heading"> 
+                                    <h2>Why Choose SLUP?</h2>
+                                    <p>SLUP not only makes the swap experience seamless but also makes it possible to wave “hello” to other chains. Therefore, it becomes a robust multi-chain powerhouse that ought to be on your devices.</p>
+                                </div>
+                                <Row>
+                                    <Col lg={4} className="p-0">
+                                        <div className="why-choose-box">
+                                            <img src="assets/images/home/why1.png" alt="" />
+                                            <h4>Providing unparalleled security</h4>
+                                            <h6>Mobile Security, Redefined</h6>
+                                            <p>App-based security: With our mobile wallet, you can keep your assets safe even when you're on the go thanks to cutting-edge security features.</p>
+                                            <p>Regular Monitoring and Updates: To safeguard against evolving threats, we keep our mobile platform updated and vigilantly monitored.</p>
+                                        </div>
+                                    </Col>
+                                    <Col lg={4} className="p-0">
+                                        <div className="why-choose-box">
+                                            <img src="assets/images/home/why2.png" alt="" />
+                                            <h4>Seamless <br/> Interoperability</h4>
+                                            <h6>The Crypto World in Your Pocket</h6>
+                                            <p>Easy Multi-Chain Access: Enjoy seamless multi-chain swaps with the first BRC-20 mobile platform.</p>
+                                            <p>Seamless Mobile Interface: With our user-friendly mobile app, crypto swaps become simple and accessible.</p>
+                                        </div>
+                                    </Col>
+                                    <Col lg={4} className="p-0">
+                                        <div className="why-choose-box">
+                                            <img src="assets/images/home/why3.png" alt="" />
+                                            <h4>Transparent <br/> Operations</h4>
+                                            <h6>Clarity at Every Step</h6>
+                                            <p>Transparent Mobile Transactions: With our mobile wallet, every transaction is transparently recorded, giving you peace of mind and complete visibility.</p>
+                                            <p>Real-Time Notifications: Receive real-time updates and notifications directly on your mobile device.</p>
+                                        </div>
+                                    </Col>
+                                </Row>
+                               
+                       </div>
+                    </Col>
+                </Row>
+            </Container>
+        </section>
+
+        <section className="roadmap-sec">
+            <Container>
+                <Row>
+                    <Col lg={4}>
+                       <div className="common-heading"> 
+                            <h2>Roadmap</h2>
+                         </div> 
+                    </Col>
+                    <Col lg={6} className="ms-auto">
+                       <ul className="timeline-outer">
+                          <li className="timeline-single">
+                             <h4>Jan 2024</h4>
+                             <ul>
+                                <li>Activated Minting</li>
+                                <li>Listed on Unisat/Ordinal</li>
+                                <li>SLUP Wallet UI Preview</li>
+                                <li>Layer-2 Blockchain Production Announcement</li>
+                             </ul>
+                          </li>
+                          <li className="timeline-single">
+                             <h4>Feb 2024</h4>
+                             <ul>
+                                <li>SLUP Wallet Testnet Release</li>
+                                <li>SLUP Wallet Mainnet Launch</li>
+                             </ul>
+                          </li>
+                          <li className="timeline-single">
+                             <h4>March 2024</h4>
+                             <ul>
+                                <li>Layer-2 Blockchain Testnet</li>
+                                <li>Layer-2 SLUP Chain Mainnet Launch</li>
+                                <li>SLUPScan Launch (Explorer)</li>
+                             </ul>
+                          </li>
+                          <li className="timeline-single">
+                             <h4>April 2024</h4>
+                             <ul>
+                                <li>SLUP Cross-chain bridge launch</li>
+                                <li>SLUP Dex Launch (self-chain)</li>
+                             </ul>
+                          </li>
+                          <li className="timeline-single">
+                             <h4>May 2024</h4>
+                             <ul>
+                                <li>Enable projects to launch tokens on SLUP</li>
+                                <li>SLUP IDO Platform Launch</li>
+                                <li>Listing of SLUP on CEX</li>
+                             </ul>
+                          </li>
+                       </ul>
+                    </Col>
+                </Row>
+            </Container>
+        </section>
+        <section className="last-join-sec">
+            <Container>
+                <Row>
+                    <Col lg={10} className="m-auto">
+                       <div className="common-heading text-center"> 
+                            <h6>SLUP: Your Mobile Gateway to the Crypto World</h6>
+                            <h2>Join the SLUP community and be a part of the mobile revolution in the BRC-20 ecosystem.</h2>
+                         </div> 
+                    </Col>
+                </Row>
+            </Container>       
+        </section>
+
+        <footer className="footer-landing-page">
+            <Container>
+                    <Row>
+                        <Col lg={10} className="m-auto">
+                        <div className="text-center"> 
+                                <h6>Follow us on for the latest updates and insights:</h6>
+                                <div className="social-icon">
+                                    <a href=""><img src="assets/images/home/Social1.png" alt="" /></a>
+                                    <a href=""><img src="assets/images/home/Social2.png" alt="" /></a>
+                                    <a href=""><img src="assets/images/home/Social3.png" alt="" /></a>
+                                    <a href=""><img src="assets/images/home/Social4.png" alt="" /></a>
+                                </div>
+                            </div> 
+                        </Col>
+                    </Row>
+                </Container>   
+        </footer>
+
+
+
+
+     </div>
+    </>
+  )
+}
