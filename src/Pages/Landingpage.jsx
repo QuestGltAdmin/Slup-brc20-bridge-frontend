@@ -16,7 +16,9 @@ export const Landingpage = () => {
           <Container>
             <Row>
               <Col lg={6}>
-                <div>
+                <div
+                data-aos="fade-right"
+                >
                   <p>Introducing SLUP,</p>
                   <h2>The Value Layer of the Internet.</h2>
                   <ul>
@@ -67,12 +69,12 @@ export const Landingpage = () => {
                   <div className="right-img-box">
                     <div>
                       <img
-                        src="assets/images/home/banner-img.png"
-                        className="img-fluid"
+                        src="assets/images/home/banner-img.gif"
+                        className="img-fluid banner-img"
                         alt=""
                       />
                     </div>
-                    <div className="social-icon">
+                    <div className="social-icon" data-aos="fade-left">
                       <a href="">
                         <img src="assets/images/home/Social1.png" alt="" />
                       </a>
@@ -87,7 +89,7 @@ export const Landingpage = () => {
                       </a>
                     </div>
                   </div>
-                  <p>
+                  <p data-aos="fade-up">
                     The fundamental protocol that allows anyone to create and
                     exchange value, powered by zero-knowledge technology.
                   </p>
@@ -101,13 +103,13 @@ export const Landingpage = () => {
           <Container>
             <Row>
               <Col lg={4}>
-                <div className="common-heading">
+                <div className="common-heading" data-aos="fade-right">
                   <h2>About SLUP</h2>
                   <h5>Innovation at Your Fingertips</h5>
                 </div>
               </Col>
-              <Col lg={4}>
-                <div className="about-box">
+              <Col lg={4} md={6}>
+                <div className="about-box" data-aos="fade-up">
                   <img src="assets/images/home/coin-about1.png" alt="" />
                   <p>
                     SLUP activates a beacon of innovation, making it a seamless
@@ -120,8 +122,8 @@ export const Landingpage = () => {
                   </a>
                 </div>
               </Col>
-              <Col lg={4}>
-                <div className="about-box pink-bg">
+              <Col lg={4} md={6}>
+                <div className="about-box pink-bg" data-aos="fade-left">
                   <img src="assets/images/home/coin-about2.png" alt="" />
                   <p>
                     SLUP not only makes the swap experience seamless but also
@@ -141,8 +143,8 @@ export const Landingpage = () => {
         <section className="download-add-sec">
           <Container>
             <Row>
-              <Col lg={5}>
-                <div className="common-heading">
+              <Col lg={5} data-aos="fade-right">
+                <div className="common-heading" >
                   <h5>
                     Tired of juggling multiple wallets for different tokens?
                   </h5>
@@ -161,20 +163,27 @@ export const Landingpage = () => {
                 </div>
               </Col>
               <Col lg={7}>
-                <div className="outer-download">
-                  <div className="mobile-img-box">
+                <div className="outer-download" >
+                  <div className="mobile-img-box" data-aos="fade-up">
                     <img
                       src="assets/images/home/mobile.png"
                       className="mobile-img"
                       alt=""
                     />
-                    <img
-                      src="assets/images/home/App-circle.png"
-                      className="circular-img"
-                      alt=""
-                    />
+                    <div className="circular-img-outer">
+                        <img
+                            src="assets/images/home/App-circle.png"
+                            className="circular-img"
+                            alt=""
+                        />
+                        <img
+                            src="assets/images/home/arrow-big.png"
+                            className="arrow-img"
+                            alt=""
+                        />
+                    </div>
                   </div>
-                  <div className="outer-box-info-download">
+                  <div className="outer-box-info-download" data-aos="fade-left">
                     <div>
                       <h3>12k+</h3>
                       <p>Downloads and couting...</p>
@@ -198,20 +207,20 @@ export const Landingpage = () => {
         <section className="why-choose-sec">
           <Container>
             <Row>
-              <Col lg={11} className="m-auto">
+              <Col lg={11} md={12} className="m-auto">
                 <div className="outer-why-choose">
-                  <div className="why-choose-heading">
-                    <h2>Why Choose SLUP?</h2>
-                    <p>
+                  <div className="why-choose-heading" >
+                    <h2 data-aos="fade-up">Why Choose SLUP?</h2>
+                    <p data-aos="fade-up">
                       SLUP not only makes the swap experience seamless but also
                       makes it possible to wave “hello” to other chains.
                       Therefore, it becomes a robust multi-chain powerhouse that
                       ought to be on your devices.
                     </p>
                   </div>
-                  <Row>
-                    <Col lg={4} className="p-0">
-                      <div className="why-choose-box">
+                  <Row className="m-0">
+                    <Col lg={4} md={4} className="p-0">
+                      <div className="why-choose-box" data-aos="fade-right">
                         <img src="assets/images/home/why1.png" alt="" />
                         <h4>Providing unparalleled security</h4>
                         <h6>Mobile Security, Redefined</h6>
@@ -227,8 +236,8 @@ export const Landingpage = () => {
                         </p>
                       </div>
                     </Col>
-                    <Col lg={4} className="p-0">
-                      <div className="why-choose-box">
+                    <Col lg={4} md={4} className="p-0">
+                      <div className="why-choose-box" data-aos="fade-up">
                         <img src="assets/images/home/why2.png" alt="" />
                         <h4>
                           Seamless <br /> Interoperability
@@ -244,8 +253,8 @@ export const Landingpage = () => {
                         </p>
                       </div>
                     </Col>
-                    <Col lg={4} className="p-0">
-                      <div className="why-choose-box">
+                    <Col lg={4} md={4} className="p-0">
+                      <div className="why-choose-box" data-aos="fade-left">
                         <img src="assets/images/home/why3.png" alt="" />
                         <h4>
                           Transparent <br /> Operations
@@ -272,15 +281,15 @@ export const Landingpage = () => {
         <section className="roadmap-sec">
           <Container>
             <Row>
-              <Col lg={4}>
+              <Col lg={4} md={4}>
                 <div className="roadmap-heading">
-                  <div className="common-heading">
+                  <div className="common-heading" data-aos="fade-right">
                     <h2>Roadmap</h2>
                   </div>
                 </div>
               </Col>
-              <Col lg={6} className="ms-auto">
-                <ul className="timeline-outer">
+              <Col lg={6} md={6} className="ms-auto">
+                <ul className="timeline-outer" data-aos="fade-up">
                   <li className="timeline-single green-active">
                     <div className="dot-scroll"></div>
                     <h4>Jan 2024</h4>
@@ -301,7 +310,7 @@ export const Landingpage = () => {
                   </li>
                   <li className="timeline-single">
                     <div className="dot-scroll"></div>
-                    <h4>March 2024</h4>
+                    <h4>Mar 2024</h4>
                     <ul>
                       <li>Layer-2 Blockchain Testnet</li>
                       <li>Layer-2 SLUP Chain Mainnet Launch</li>
@@ -310,7 +319,7 @@ export const Landingpage = () => {
                   </li>
                   <li className="timeline-single">
                     <div className="dot-scroll"></div>
-                    <h4>April 2024</h4>
+                    <h4>Apr 2024</h4>
                     <ul>
                       <li>SLUP Cross-chain bridge launch</li>
                       <li>SLUP Dex Launch (self-chain)</li>
@@ -330,11 +339,11 @@ export const Landingpage = () => {
             </Row>
           </Container>
         </section>
-        <section className="last-join-sec">
+        <section className="last-join-sec" >
           <Container>
             <Row>
               <Col lg={10} className="m-auto">
-                <div className="common-heading text-center">
+                <div className="common-heading text-center" data-aos="fade-left">
                   <h6>SLUP: Your Mobile Gateway to the Crypto World</h6>
                   <h2>
                     Join the SLUP community and be a part of the mobile
@@ -350,7 +359,7 @@ export const Landingpage = () => {
           <Container>
             <Row>
               <Col lg={10} className="m-auto">
-                <div className="text-center">
+                <div className="text-center" data-aos="fade-right">
                   <h6>Follow us on for the latest updates and insights:</h6>
                   <div className="social-icon">
                     <a href="">
@@ -395,12 +404,12 @@ export const Landingpage = () => {
                     </p>
                   </div>
                   <img src="assets/images/logo.png" className="logo" />
-                  <div>
+                  <div className="d-flex">
                     <button className="common-btn">Buy SLUP</button>
-                    <button className="border-btn" onClick={()=>{removeClassOnClick()}}>
+                    <button className="border-btn close-btn" onClick={()=>{removeClassOnClick()}}>
                       Close <img src="assets/images/home/close.png" />
                     </button>
-                    <button className="border-btn" onClick={()=>{addClassOnClick()}}>
+                    <button className="border-btn menu-btn" onClick={()=>{addClassOnClick()}}>
                       Menu <img src="assets/images/home/Menu.png" />
                     </button>
                   </div>
