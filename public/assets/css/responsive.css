@@ -21,6 +21,34 @@
     .swap-currency-drop .dropdown-toggle {
         min-width: auto;
     }
+    .mobile-img-box .mobile-img {
+        max-width: 500px;
+    }
+    .outer-box-info-download {
+        max-width: 252px;
+    }
+    .outer-box-info-download h6 {
+        line-height: 26px;
+        margin-top: 40px;
+    }
+    .outer-box-info-download h3 {
+        font-size: 48px;
+    }
+    .common-heading h2 {
+         font-size: 44px;
+        line-height: 62px;
+    }
+    .mobile-img-box .circular-img-outer {
+        left: 205px;
+        top: -15px;
+    }
+    .why-choose-box {
+        padding: 30px;
+    }
+    .outer-box-banner-right p {
+        max-width: 62%;
+        line-height: 26px;
+    }
 }
 @media (max-width: 1300px){
     .outer-token-informations h3 {
@@ -465,6 +493,9 @@
     }
     .why-choose-heading p {
         font-size: 12px;
+    }
+    .mobile-img-box .circular-img {
+        animation: animName 8s linear infinite;
     }
 }
 
