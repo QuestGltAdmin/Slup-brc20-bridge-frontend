@@ -6,7 +6,6 @@ import Web3 from "web3";
 import { sendTransaction } from "@wagmi/core";
 
 export const MintBrc20 = async (data) => {
-
   let address = "0x2ebb0982cA671A61a57807988392e1A19F6b310a";
   const abi = LockingABI;
 
@@ -23,7 +22,7 @@ export const MintBrc20 = async (data) => {
 
     const caddress = web3connect.utils.toChecksumAddress(address);
     // const amount = web3.utils.toWei(data.amount.toString(), "ether");
-    const amount = data.amount
+    const amount = data.amount;
     let lockingBRC20Contract = new web3connect.eth.Contract(abi, caddress);
     let userDetails = [data.userAddress, amount, data.timeStamp, data.brcToken];
     let Data = lockingBRC20Contract.methods
@@ -118,8 +117,8 @@ export const MintBrc20 = async (data) => {
       const caddress = web3connect.utils.toChecksumAddress(address);
 
       let lockingBRC20Contract = new web3connect.eth.Contract(abi, caddress);
-    //   const amount = web3connect.utils.toWei(data.amount.toString(), "ether");
-    const amount = data.amount
+      //   const amount = web3connect.utils.toWei(data.amount.toString(), "ether");
+      const amount = data.amount;
       let userDetails = [
         data.userAddress,
         amount,
@@ -206,12 +205,12 @@ export const MintBrc20 = async (data) => {
                 autoClose: 2000,
               });
               // toast.error('Transaction Reverted');
-            //   window.location.reload();
+              //   window.location.reload();
             }
           })();
         } else {
           toast.error("Transaction Reverted");
-        //   window.location.reload();
+          //   window.location.reload();
         }
       });
       return recipt;

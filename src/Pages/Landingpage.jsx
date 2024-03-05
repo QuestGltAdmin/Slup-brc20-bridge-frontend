@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { Container, Col, Row } from "react-bootstrap";
 
 export const Landingpage = () => {
-    const [menuCheck  , setMenuCheck] = useState(false)
-    const addClassOnClick = () => {
-        setMenuCheck(true)
-    }
-    const removeClassOnClick = () => {
-        setMenuCheck(false)
-    }
+  const [menuCheck, setMenuCheck] = useState(false);
+  const addClassOnClick = () => {
+    setMenuCheck(true);
+  };
+  const removeClassOnClick = () => {
+    setMenuCheck(false);
+  };
   return (
     <>
       <div className="outer-div-home">
@@ -16,9 +16,7 @@ export const Landingpage = () => {
           <Container>
             <Row>
               <Col lg={6}>
-                <div
-                data-aos="fade-right"
-                >
+                <div data-aos="fade-right">
                   <p>Introducing SLUP,</p>
                   <h2>The Value Layer of the Internet.</h2>
                   <ul>
@@ -144,7 +142,7 @@ export const Landingpage = () => {
           <Container>
             <Row>
               <Col lg={5} data-aos="fade-right">
-                <div className="common-heading" >
+                <div className="common-heading">
                   <h5>
                     Tired of juggling multiple wallets for different tokens?
                   </h5>
@@ -163,7 +161,7 @@ export const Landingpage = () => {
                 </div>
               </Col>
               <Col lg={7}>
-                <div className="outer-download" >
+                <div className="outer-download">
                   <div className="mobile-img-box" data-aos="fade-up">
                     <img
                       src="assets/images/home/mobile.png"
@@ -171,16 +169,16 @@ export const Landingpage = () => {
                       alt=""
                     />
                     <div className="circular-img-outer">
-                        <img
-                            src="assets/images/home/App-circle.png"
-                            className="circular-img"
-                            alt=""
-                        />
-                        <img
-                            src="assets/images/home/arrow-big.png"
-                            className="arrow-img"
-                            alt=""
-                        />
+                      <img
+                        src="assets/images/home/App-circle.png"
+                        className="circular-img"
+                        alt=""
+                      />
+                      <img
+                        src="assets/images/home/arrow-big.png"
+                        className="arrow-img"
+                        alt=""
+                      />
                     </div>
                   </div>
                   <div className="outer-box-info-download" data-aos="fade-left">
@@ -209,7 +207,7 @@ export const Landingpage = () => {
             <Row>
               <Col lg={11} md={12} className="m-auto">
                 <div className="outer-why-choose">
-                  <div className="why-choose-heading" >
+                  <div className="why-choose-heading">
                     <h2 data-aos="fade-up">Why Choose SLUP?</h2>
                     <p data-aos="fade-up">
                       SLUP not only makes the swap experience seamless but also
@@ -339,11 +337,14 @@ export const Landingpage = () => {
             </Row>
           </Container>
         </section>
-        <section className="last-join-sec" >
+        <section className="last-join-sec">
           <Container>
             <Row>
               <Col lg={10} className="m-auto">
-                <div className="common-heading text-center" data-aos="fade-left">
+                <div
+                  className="common-heading text-center"
+                  data-aos="fade-left"
+                >
                   <h6>SLUP: Your Mobile Gateway to the Crypto World</h6>
                   <h2>
                     Join the SLUP community and be a part of the mobile
@@ -385,7 +386,13 @@ export const Landingpage = () => {
           <Container>
             <Row>
               <Col lg={9} className="m-auto">
-                <div className={menuCheck === true ? "menu-strip-home open-menu" : "menu-strip-home"} >
+                <div
+                  className={
+                    menuCheck === true
+                      ? "menu-strip-home open-menu"
+                      : "menu-strip-home"
+                  }
+                >
                   <div className="outer-box-menu">
                     <p>
                       <a href="">Developers</a>
@@ -406,10 +413,20 @@ export const Landingpage = () => {
                   <img src="assets/images/logo.png" className="logo" />
                   <div className="d-flex">
                     <button className="common-btn">Buy SLUP</button>
-                    <button className="border-btn close-btn" onClick={()=>{removeClassOnClick()}}>
+                    <button
+                      className="border-btn close-btn"
+                      onClick={() => {
+                        removeClassOnClick();
+                      }}
+                    >
                       Close <img src="assets/images/home/close.png" />
                     </button>
-                    <button className="border-btn menu-btn" onClick={()=>{addClassOnClick()}}>
+                    <button
+                      className="border-btn menu-btn"
+                      onClick={() => {
+                        addClassOnClick();
+                      }}
+                    >
                       Menu <img src="assets/images/home/Menu.png" />
                     </button>
                   </div>

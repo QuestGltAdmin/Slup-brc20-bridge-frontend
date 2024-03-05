@@ -111,7 +111,7 @@ export const Homepage = () => {
   //===============================Switch From - To==================================//
   const switchTotoFrom = () => {
     setInscriptionIdPRV("");
-    setAmount(0)
+    setAmount(0);
     if (from === "Bitcoin" && to === "Slup") {
       setFrom("Slup");
       setTo("Bitcoin");
@@ -830,33 +830,37 @@ export const Homepage = () => {
                       }}
                       disabled={inscriptionIdPRV !== "" ? true : false}
                     />
-                {from === "Bitcoin" && to === "Slup" ?    <>
-                    <button
-                      className="common-btn"
-                      onClick={() => {
-                        if (showAllreadyInscribeData?.length > 0) {
-                          setInscriptionModel(true);
-                        }
-                      }}
-                    >
-                      {showAllreadyInscribeData?.length > 0
-                        ? "Select Inscription"
-                        : "No Inscription"}
-                    </button>
-                    {inscriptionIdPRV !== "" ? (
-                      <button
-                        className="common-btn m-2"
-                        onClick={() => {
-                          setInscriptionIdPRV("");
-                          setAmount(0);
-                        }}
-                      >
-                        <i class="fa fa-times" aria-hidden="true"></i>
-                      </button>
+                    {from === "Bitcoin" && to === "Slup" ? (
+                      <>
+                        <button
+                          className="common-btn"
+                          onClick={() => {
+                            if (showAllreadyInscribeData?.length > 0) {
+                              setInscriptionModel(true);
+                            }
+                          }}
+                        >
+                          {showAllreadyInscribeData?.length > 0
+                            ? "Select Inscription"
+                            : "No Inscription"}
+                        </button>
+                        {inscriptionIdPRV !== "" ? (
+                          <button
+                            className="common-btn m-2"
+                            onClick={() => {
+                              setInscriptionIdPRV("");
+                              setAmount(0);
+                            }}
+                          >
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                          </button>
+                        ) : (
+                          ""
+                        )}
+                      </>
                     ) : (
                       ""
                     )}
-                    </> : ""}
                   </div>
 
                   <div className="service-charge-box">
@@ -1139,7 +1143,11 @@ export const Homepage = () => {
                   alt=""
                   className="loader-ing"
                 />
-                <img src="assets/images/bitcoin.png" alt="" className="coin-img" />
+                <img
+                  src="assets/images/bitcoin.png"
+                  alt=""
+                  className="coin-img"
+                />
                 <span>Service fees</span>
               </div>
 
@@ -1153,11 +1161,7 @@ export const Homepage = () => {
                   alt=""
                   className="loader-ing"
                 />
-                <img
-                  src="assets/images/slup.png"
-                  alt=""
-                  className="coin-img"
-                />
+                <img src="assets/images/slup.png" alt="" className="coin-img" />
                 <span>{from.toUpperCase()}</span>
               </div>
 

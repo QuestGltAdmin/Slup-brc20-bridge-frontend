@@ -1,36 +1,32 @@
 import axiosMain from "../http/axios/axios_main";
 
 export const TransactionConfirmCheck = async (data) => {
-    try { 
-        let adminWallet = "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd";
+  try {
+    let adminWallet = "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd";
 
-        const expectedBlockTime = 10000; // 1sec
-        const sleep = (milliseconds) => {
-            return new Promise((resolve) => setTimeout(resolve, milliseconds));
-        };
-        let walletFromAPI = data.unisataddress;
-        while (walletFromAPI == data.unisataddress) {
-            // Waiting expectedBlockTime until the transaction is mined
-            const getTransfaredBalance = await axiosMain.get(
-                `/v1/indexer/inscription/info/${data.inscriptionId}`
-            );
-            walletFromAPI = getTransfaredBalance?.data?.data?.address;
+    const expectedBlockTime = 10000; // 1sec
+    const sleep = (milliseconds) => {
+      return new Promise((resolve) => setTimeout(resolve, milliseconds));
+    };
+    let walletFromAPI = data.unisataddress;
+    while (walletFromAPI == data.unisataddress) {
+      // Waiting expectedBlockTime until the transaction is mined
+      const getTransfaredBalance = await axiosMain.get(
+        `/v1/indexer/inscription/info/${data.inscriptionId}`
+      );
+      walletFromAPI = getTransfaredBalance?.data?.data?.address;
 
-            await sleep(expectedBlockTime);
-        }
-        if (walletFromAPI === adminWallet) {
-            return true;
-        }
-        else {
-            return false;
-        }
+      await sleep(expectedBlockTime);
     }
-    catch (e) {
-        console.error(e);
+    if (walletFromAPI === adminWallet) {
+      return true;
+    } else {
+      return false;
     }
-
+  } catch (e) {
+    console.error(e);
+  }
 };
-
 
 // const TrxConfirmCheck = async (data) => {
 //     let adminWallet = "tb1qg6l5arguyze2u96xgc0aqdl8cqfnmaawa78nj7";
