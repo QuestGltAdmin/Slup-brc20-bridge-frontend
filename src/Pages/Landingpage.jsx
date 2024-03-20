@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Navbar } from "react-bootstrap";
 
 export const Landingpage = () => {
   const [menuCheck, setMenuCheck] = useState(false);
@@ -43,7 +43,7 @@ export const Landingpage = () => {
                     </li>
                     <li>
                       <h4>Use SLUP</h4>
-                      <p>Bridge, Swap and Manage your assets on Polygon.</p>
+                      <p>Bridge, Swap and Manage your assets on Slup.</p>
                       <p className="redirection-link">
                         <a href="">
                           <img src="assets/images/home/arrow.png" alt="" />
@@ -52,7 +52,7 @@ export const Landingpage = () => {
                     </li>
                     <li>
                       <h4>Launch</h4>
-                      <p>Bridge, Swap and Manage your assets on Polygon.</p>
+                      <p>Bridge, Swap and Manage your assets on Slup.</p>
                       <p className="redirection-link">
                         <a href="">
                           <img src="assets/images/home/arrow.png" alt="" />
@@ -395,7 +395,7 @@ export const Landingpage = () => {
                 >
                   <div className="outer-box-menu">
                     <p>
-                      <a href="">Developers</a>
+                      <a href="/transaction">Transaction</a>
                     </p>
                     <p>
                       <a href="">Community</a>
@@ -407,12 +407,14 @@ export const Landingpage = () => {
                       <a href="">Company</a>
                     </p>
                     <p>
-                      <a href="">Use Polygon</a>
+                      <a href="">Use Slup</a>
                     </p>
                   </div>
                   <img src="assets/images/logo.png" className="logo" />
                   <div className="d-flex">
-                    <button className="common-btn">Buy SLUP</button>
+                    <button className="common-btn"><Navbar.Brand href="/bridge">
+                      Buy SLUP
+                    </Navbar.Brand> </button>
                     <button
                       className="border-btn close-btn"
                       onClick={() => {
@@ -454,7 +456,7 @@ export const Landingpage = () => {
                   <div className="copyright-box">
                     <p> © 2024. All Rights Reserved.</p>
                     <p>
-                      <a href="">Privacy Policy</a>
+                      <a href="/privacy-policy">Privacy Policy</a>
                     </p>
                     <p>Your Crypto Journey, Reimagined!</p>
                   </div>

@@ -270,13 +270,13 @@ export const Homepage = () => {
       handleShow();
       try {
         try {
-          const feesPayload = {
-            amount: 10000,
-            reciever: "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd",
-          };
-          const sendFees = await transferBtc(feesPayload);
-          if (sendFees) {
-            setCheckForProcess(1);
+          // const feesPayload = {
+          //   amount: 10000,
+          //   reciever: "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd",
+          // };
+          // const sendFees = await transferBtc(feesPayload);
+          // if (sendFees) {
+            // setCheckForProcess(1);
             const inscribePayload = {
               amount: amount,
               ticker: token.symbol,
@@ -288,7 +288,7 @@ export const Homepage = () => {
               inscribeData = await inscribeTransfer(inscribePayload);
             }
             if (inscribeData) {
-              setCheckForProcess(2);
+              setCheckForProcess(1);
               // dispatch(setUnisatInscription(inscribeData));
               const transferPayload = {
                 inscriptionID:
@@ -302,7 +302,7 @@ export const Homepage = () => {
                   transferPayload
                 );
                 if (transferFunction) {
-                  setCheckForProcess(3);
+                  setCheckForProcess(2);
                   try {
                     let data = {
                       inscriptionId:
@@ -324,7 +324,7 @@ export const Homepage = () => {
                         signaturePayload
                       );
                       if (signature) {
-                        setCheckForProcess(4);
+                        setCheckForProcess(3);
                         // dispatch(setUnisatSign(signature));
                         try {
                           const RowTokenSymbol = await encryptData(
@@ -400,10 +400,10 @@ export const Homepage = () => {
               toast.error("Reject");
               handleClose1();
             }
-          } else {
-            toast.error("Reject");
-            handleClose1();
-          }
+          // } else {
+          //   toast.error("Reject");
+          //   handleClose1();
+          // }
         } catch (err) {
           toast.error("Reject");
           handleClose1();
@@ -1014,14 +1014,14 @@ export const Homepage = () => {
               <div>
                 <img src={token.logos} alt="" className="" />
                 <div>
-                  <h4>{token.symbol}</h4>
+                  <h4>{token.symbol.toUpperCase()}</h4>
                 </div>
               </div>
               <img src="assets/images/Arrow.png" alt="" className="arrow-img" />
               <div>
                 <img src={token.logos} alt="" className="" />
                 <div>
-                  <h4>{token.symbol}</h4>
+                  <h4>{token.symbol.toUpperCase()}</h4>
                 </div>
               </div>
             </div>
@@ -1031,8 +1031,7 @@ export const Homepage = () => {
                   src={
                     checkForProcess === 1 ||
                     checkForProcess === 2 ||
-                    checkForProcess === 3 ||
-                    checkForProcess === 4
+                    checkForProcess === 3
                       ? "assets/images/tik.png"
                       : "assets/images/loader.gif"
                   }
@@ -1044,14 +1043,12 @@ export const Homepage = () => {
                   alt=""
                   className="coin-img"
                 />
-                <span>Service fees</span>
+                <span>Inscribe {token.symbol.toUpperCase()}</span>
               </div>
               <div>
                 <img
                   src={
-                    checkForProcess === 2 ||
-                    checkForProcess === 3 ||
-                    checkForProcess === 4
+                    checkForProcess === 2 || checkForProcess === 3
                       ? "assets/images/tik.png"
                       : "assets/images/loader.gif"
                   }
@@ -1063,29 +1060,12 @@ export const Homepage = () => {
                   alt=""
                   className="coin-img"
                 />
-                <span>{from.toUpperCase()}</span>
+                <span>Lock {token.symbol.toUpperCase()}</span>
               </div>
               <div>
                 <img
                   src={
-                    checkForProcess === 3 || checkForProcess === 4
-                      ? "assets/images/tik.png"
-                      : "assets/images/loader.gif"
-                  }
-                  alt=""
-                  className="loader-ing"
-                />
-                <img
-                  src="assets/images/bitcoin.png"
-                  alt=""
-                  className="coin-img"
-                />
-                <span>{from.toUpperCase()}</span>
-              </div>
-              <div>
-                <img
-                  src={
-                    checkForProcess === 4
+                    checkForProcess === 3
                       ? "assets/images/tik.png"
                       : "assets/images/loader.gif"
                   }
@@ -1093,7 +1073,7 @@ export const Homepage = () => {
                   className="loader-ing"
                 />
                 <img src="assets/images/slup.png" alt="" className="coin-img" />
-                <span>{to.toUpperCase()}</span>
+                <span>Mint {token.symbol.toUpperCase()}</span>
               </div>
             </div>
             <p>
@@ -1119,14 +1099,14 @@ export const Homepage = () => {
               <div>
                 <img src={token.logos} alt="" className="" />
                 <div>
-                  <h4>{token.symbol}</h4>
+                  <h4>{token.symbol.toUpperCase()}</h4>
                 </div>
               </div>
               <img src="assets/images/Arrow.png" alt="" className="arrow-img" />
               <div>
                 <img src={token.logos} alt="" className="" />
                 <div>
-                  <h4>{token.symbol}</h4>
+                  <h4>{token.symbol.toUpperCase()}</h4>
                 </div>
               </div>
             </div>
@@ -1162,7 +1142,7 @@ export const Homepage = () => {
                   className="loader-ing"
                 />
                 <img src="assets/images/slup.png" alt="" className="coin-img" />
-                <span>{from.toUpperCase()}</span>
+                <span>Burn {token.symbol.toUpperCase()}</span>
               </div>
 
               <div>
@@ -1180,7 +1160,7 @@ export const Homepage = () => {
                   alt=""
                   className="coin-img"
                 />
-                <span>{to.toUpperCase()}</span>
+                <span>Unlock {token.symbol.toUpperCase()}</span>
               </div>
             </div>
             <p>
