@@ -1250,3 +1250,29 @@ display: none;
 .menu-strip-home.open-menu .border-btn.close-btn{
     display: block; 
  }
+ .transaction-common-tab{
+justify-content: center;
+ }
+ .transaction-common-tab .nav-item button{
+    background: #f28787;
+    border-radius: 16px;
+    padding: 8px 20px;
+    font-size: 16px;
+    line-height: 26px;
+    text-decoration: none;
+    color: #000 !important;
+    font-weight: 600;
+    border: none !important;
+    text-align: center;
+    box-shadow: none !important;
+    outline: none !important;
+    margin-right: 10px;
+
+ }
+ .transaction-common-tab .nav-item button:hover,
+ .transaction-common-tab .nav-item button:focus,
+ .transaction-common-tab .nav-item button.active{
+    background: linear-gradient(to bottom, #f46463 0%, #fa255f 100%);
+    color: #fff !important;
+    
+ }

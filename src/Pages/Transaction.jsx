@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../Component/Layout";
-import { Col, Container, Modal, Row, Table } from "react-bootstrap";
+import { Col, Container, Modal, Row, Tab, Table, Tabs } from "react-bootstrap";
 import { encryptData } from "../helpers/encryption";
 import useAuth from "../hooks/useAuth";
 import axiosBack from "../http/axios/axios_Back";
@@ -118,129 +118,268 @@ export const Transaction = () => {
             <Row>
               <Col>
                 <h2>Transactions</h2>
-                <div className="table-responsive table-outer-box">
-                  <Table className="table">
-                    <thead>
-                      <tr>
-                        <th>S.No</th>
-                        <th>BTC Address</th>
-                        <th>Slup Address</th>
-                        <th>Amount</th>
-
-                        <th>Date</th>
-                        <th>In TRX Hash</th>
-                        <th>Trx Hash</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {showData?.length > 0 ? (
-                        showData.map((items, index) => {
-                          return (
+                <Tabs
+                    defaultActiveKey="Slup-to-btc"
+                    transition={false}
+                    id="noanim-tab-example"
+                    className="mb-3 transaction-common-tab"
+                  >
+                    <Tab eventKey="Slup-to-btc" title="SLUP to BTC">
+                      <div className="table-responsive table-outer-box">
+                        <Table className="table">
+                          <thead>
                             <tr>
-                              <td>{index + 1}</td>
-                              <td>
-                                <a
-                                  href={`https://mempool.space/testnet/address/${items.btcWalletAddress}`}
-                                  target="_blank"
-                                >
-                                  {items.btcWalletAddress.replace(
-                                    items.btcWalletAddress.substring(5, 37),
-                                    "..."
-                                  )}
-                                </a>
-                              </td>
-                              <td>
-                                <a
-                                  href={`https://testnet.bscscan.com/address/${items?.voucher?.evmAddress}`}
-                                  target="_blank"
-                                >
-                                  {items?.voucher?.evmAddress.replace(
-                                    items?.voucher?.evmAddress.substring(5, 37),
-                                    "..."
-                                  )}
-                                </a>
-                              </td>
-                              <td>
-                                {(items.btcAmount * 1).toFixed(2)}{" "}
-                                {items?.brcTokenSymbol}
-                              </td>
+                              <th>S.No</th>
+                              <th>BTC Address</th>
+                              <th>Slup Address</th>
+                              <th>Amount</th>
 
-                              <td>{moment(items.createdAt).format("lll")}</td>
-                              <td>
-                                {items?.incomingTrxHash ? (
-                                  <a
-                                    href={`https://mempool.space/testnet/tx/${items?.incomingTrxHash}`}
-                                    target="_blank"
-                                  >
-                                    {" "}
-                                    {items?.incomingTrxHash?.replace(
-                                      items?.incomingTrxHash?.substring(5, 61),
-                                      "..."
-                                    )}
-                                  </a>
-                                ) : (
-                                  ""
-                                )}
-                              </td>
-                              <td>
-                                {items?.transactionHash ? (
-                                  <a
-                                    href={`https://testnet.bscscan.com/tx/${items?.transactionHash}`}
-                                    target="_blank"
-                                  >
-                                    {" "}
-                                    {items?.transactionHash?.replace(
-                                      items?.transactionHash?.substring(5, 61),
-                                      "..."
-                                    )}
-                                  </a>
-                                ) : (
-                                  ""
-                                )}
-                              </td>
-                              <td>
-                                <b
-                                  className={
-                                    items.status === "SUCCESS"
-                                      ? "success"
-                                      : "pending"
-                                  }
-                                >
-                                  {items.status}
-                                </b>
-                              </td>
-
-                              <td>
-                                {items?.status === "SUCCESS" ? (
-                                  <button className="common-btn disable">
-                                    Claimed
-                                  </button>
-                                ) : (
-                                  <button
-                                    className="common-btn"
-                                    onClick={() => {
-                                      modelOpenFun(items);
-                                    }}
-                                  >
-                                    Claim
-                                  </button>
-                                )}
-                              </td>
+                              <th>Date</th>
+                              <th>In TRX Hash</th>
+                              <th>Trx Hash</th>
+                              <th>Status</th>
+                              <th>Action</th>
                             </tr>
-                          );
-                        })
-                      ) : (
-                        <tr>
-                          <td colSpan={10}>
-                            <p className="text-center">No Data Found</p>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </Table>
-                </div>
+                          </thead>
+                          <tbody>
+                            {showData?.length > 0 ? (
+                              showData.map((items, index) => {
+                                return (
+                                  <tr>
+                                    <td>{index + 1}</td>
+                                    <td>
+                                      <a
+                                        href={`https://mempool.space/testnet/address/${items.btcWalletAddress}`}
+                                        target="_blank"
+                                      >
+                                        {items.btcWalletAddress.replace(
+                                          items.btcWalletAddress.substring(5, 37),
+                                          "..."
+                                        )}
+                                      </a>
+                                    </td>
+                                    <td>
+                                      <a
+                                        href={`https://testnet.bscscan.com/address/${items?.voucher?.evmAddress}`}
+                                        target="_blank"
+                                      >
+                                        {items?.voucher?.evmAddress.replace(
+                                          items?.voucher?.evmAddress.substring(5, 37),
+                                          "..."
+                                        )}
+                                      </a>
+                                    </td>
+                                    <td>
+                                      {(items.btcAmount * 1).toFixed(2)}{" "}
+                                      {items?.brcTokenSymbol}
+                                    </td>
+
+                                    <td>{moment(items.createdAt).format("lll")}</td>
+                                    <td>
+                                      {items?.incomingTrxHash ? (
+                                        <a
+                                          href={`https://mempool.space/testnet/tx/${items?.incomingTrxHash}`}
+                                          target="_blank"
+                                        >
+                                          {" "}
+                                          {items?.incomingTrxHash?.replace(
+                                            items?.incomingTrxHash?.substring(5, 61),
+                                            "..."
+                                          )}
+                                        </a>
+                                      ) : (
+                                        ""
+                                      )}
+                                    </td>
+                                    <td>
+                                      {items?.transactionHash ? (
+                                        <a
+                                          href={`https://testnet.bscscan.com/tx/${items?.transactionHash}`}
+                                          target="_blank"
+                                        >
+                                          {" "}
+                                          {items?.transactionHash?.replace(
+                                            items?.transactionHash?.substring(5, 61),
+                                            "..."
+                                          )}
+                                        </a>
+                                      ) : (
+                                        ""
+                                      )}
+                                    </td>
+                                    <td>
+                                      <b
+                                        className={
+                                          items.status === "SUCCESS"
+                                            ? "success"
+                                            : "pending"
+                                        }
+                                      >
+                                        {items.status}
+                                      </b>
+                                    </td>
+
+                                    <td>
+                                      {items?.status === "SUCCESS" ? (
+                                        <button className="common-btn disable">
+                                          Claimed
+                                        </button>
+                                      ) : (
+                                        <button
+                                          className="common-btn"
+                                          onClick={() => {
+                                            modelOpenFun(items);
+                                          }}
+                                        >
+                                          Claim
+                                        </button>
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })
+                            ) : (
+                              <tr>
+                                <td colSpan={10}>
+                                  <p className="text-center">No Data Found</p>
+                                </td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </Table>
+                      </div>
+                    </Tab>
+                    <Tab eventKey="btc-to-slup" title="BTC to SLUP">
+                      
+                    <div className="table-responsive table-outer-box">
+                        <Table className="table">
+                          <thead>
+                            <tr>
+                              <th>S.No</th>
+                              <th>BTC Address</th>
+                              <th>Slup Address</th>
+                              <th>Amount</th>
+
+                              <th>Date</th>
+                              <th>In TRX Hash</th>
+                              <th>Trx Hash</th>
+                              <th>Status</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {showData?.length > 0 ? (
+                              showData.map((items, index) => {
+                                return (
+                                  <tr>
+                                    <td>{index + 1}</td>
+                                    <td>
+                                      <a
+                                        href={`https://mempool.space/testnet/address/${items.btcWalletAddress}`}
+                                        target="_blank"
+                                      >
+                                        {items.btcWalletAddress.replace(
+                                          items.btcWalletAddress.substring(5, 37),
+                                          "..."
+                                        )}
+                                      </a>
+                                    </td>
+                                    <td>
+                                      <a
+                                        href={`https://testnet.bscscan.com/address/${items?.voucher?.evmAddress}`}
+                                        target="_blank"
+                                      >
+                                        {items?.voucher?.evmAddress.replace(
+                                          items?.voucher?.evmAddress.substring(5, 37),
+                                          "..."
+                                        )}
+                                      </a>
+                                    </td>
+                                    <td>
+                                      {(items.btcAmount * 1).toFixed(2)}{" "}
+                                      {items?.brcTokenSymbol}
+                                    </td>
+
+                                    <td>{moment(items.createdAt).format("lll")}</td>
+                                    <td>
+                                      {items?.incomingTrxHash ? (
+                                        <a
+                                          href={`https://mempool.space/testnet/tx/${items?.incomingTrxHash}`}
+                                          target="_blank"
+                                        >
+                                          {" "}
+                                          {items?.incomingTrxHash?.replace(
+                                            items?.incomingTrxHash?.substring(5, 61),
+                                            "..."
+                                          )}
+                                        </a>
+                                      ) : (
+                                        ""
+                                      )}
+                                    </td>
+                                    <td>
+                                      {items?.transactionHash ? (
+                                        <a
+                                          href={`https://testnet.bscscan.com/tx/${items?.transactionHash}`}
+                                          target="_blank"
+                                        >
+                                          {" "}
+                                          {items?.transactionHash?.replace(
+                                            items?.transactionHash?.substring(5, 61),
+                                            "..."
+                                          )}
+                                        </a>
+                                      ) : (
+                                        ""
+                                      )}
+                                    </td>
+                                    <td>
+                                      <b
+                                        className={
+                                          items.status === "SUCCESS"
+                                            ? "success"
+                                            : "pending"
+                                        }
+                                      >
+                                        {items.status}
+                                      </b>
+                                    </td>
+
+                                    <td>
+                                      {items?.status === "SUCCESS" ? (
+                                        <button className="common-btn disable">
+                                          Claimed
+                                        </button>
+                                      ) : (
+                                        <button
+                                          className="common-btn"
+                                          onClick={() => {
+                                            modelOpenFun(items);
+                                          }}
+                                        >
+                                          Claim
+                                        </button>
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })
+                            ) : (
+                              <tr>
+                                <td colSpan={10}>
+                                  <p className="text-center">No Data Found</p>
+                                </td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </Table>
+                      </div>
+                    </Tab>
+                    
+                  </Tabs>
+
+
+                
               </Col>
             </Row>
           </Container>

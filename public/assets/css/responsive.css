@@ -239,7 +239,16 @@
     }
 }
 @media (max-width: 768px){
-    
+    .transaction-common-tab {
+        justify-content: center;
+    }
+    .transaction-common-tab .nav-item button {
+        border-radius: 5px;
+        padding: 5px 5px;
+        font-size: 10px;
+        line-height: 12px;
+        margin: 0 5px;
+    }
     .for-2-swap.currency-transfer-loading div::after {
         width: 370px;
     }
