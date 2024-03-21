@@ -15,6 +15,7 @@ import {
   Modal,
   Button,
   InputGroup,
+  Navbar,
 } from "react-bootstrap";
 import Tokens from "../JSON/TokenList.json";
 import axios from "axios";
@@ -88,6 +89,7 @@ export const Homepage = () => {
   const [showAllreadyInscribeData, setShowAllreadyInscribeData] = useState([]);
   const [inscriptionModel, setInscriptionModel] = useState(false);
   const [inscriptionIdPRV, setInscriptionIdPRV] = useState("");
+
   //===============================End Of Code==================================//
 
   //===============================Connect Model Close==================================//
@@ -662,7 +664,7 @@ export const Homepage = () => {
   return (
     <>
       <Layout chainSelect={from}>
-        <section className="swap-main-sec">
+        <section className="swap-main-sec mb-5">
           <Container>
             <Row className="align-items-center">
               <Col lg={5} md={12}>
@@ -1069,6 +1071,36 @@ export const Homepage = () => {
                       I don't have a wallet plug-in,{" "}
                       <a href="">HD Wallet Mode →</a>
                     </h5> */}
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </Container>
+        </section>
+
+        <section className="fixed-menu">
+          <Container>
+            <Row>
+              <Col lg={9} className="m-auto">
+                <div className="menu-strip-home">
+                  <img src="assets/images/logo.png" className="logo" />
+                  <div className="d-flex gap-2">
+                    <button
+                      className="common-btn"
+                      onClick={() => {
+                        navigate("/");
+                      }}
+                    >
+                      Home
+                    </button>
+                    <button
+                      className="common-btn"
+                      onClick={() => {
+                        navigate("/transaction");
+                      }}
+                    >
+                      Transactions
+                    </button>
                   </div>
                 </div>
               </Col>

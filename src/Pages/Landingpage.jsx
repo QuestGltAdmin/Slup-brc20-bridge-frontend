@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Container, Col, Row, Navbar } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 export const Landingpage = () => {
+  const navigate = useNavigate()
   const [menuCheck, setMenuCheck] = useState(false);
   const addClassOnClick = () => {
     setMenuCheck(true);
@@ -412,9 +414,9 @@ export const Landingpage = () => {
                   </div>
                   <img src="assets/images/logo.png" className="logo" />
                   <div className="d-flex">
-                    <button className="common-btn"><Navbar.Brand href="/bridge">
+                    <button className="common-btn" onClick={()=>{navigate("/bridge")}}>
                       Buy SLUP
-                    </Navbar.Brand> </button>
+                  </button>
                     <button
                       className="border-btn close-btn"
                       onClick={() => {
