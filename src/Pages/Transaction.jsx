@@ -92,6 +92,7 @@ export const Transaction = () => {
             "/signature/update-signature",
             apiPayload
           );
+          console.log(updateRes);
           if (updateRes?.data?.status) {
             setDisableClaim(false);
             getData();
@@ -124,10 +125,10 @@ export const Transaction = () => {
                         <th>S.No</th>
                         <th>BTC Address</th>
                         <th>Slup Address</th>
-                        <th>BTC Amount</th>
-                        <th>Slup Amount</th>
+                        <th>Amount</th>
+
                         <th>Date</th>
-                        <th>Token Symbol</th>
+                        <th>In TRX Hash</th>
                         <th>Trx Hash</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -161,12 +162,28 @@ export const Transaction = () => {
                                   )}
                                 </a>
                               </td>
-                              <td>{(items.btcAmount * 1).toFixed(2)}</td>
                               <td>
-                                {(items?.voucher?.amount / 1e18).toFixed(2)}
+                                {(items.btcAmount * 1).toFixed(2)}{" "}
+                                {items?.brcTokenSymbol}
                               </td>
+
                               <td>{moment(items.createdAt).format("lll")}</td>
-                              <td>{items?.brcTokenSymbol}</td>
+                              <td>
+                                {items?.incomingTrxHash ? (
+                                  <a
+                                    href={`https://mempool.space/testnet/tx/${items?.incomingTrxHash}`}
+                                    target="_blank"
+                                  >
+                                    {" "}
+                                    {items?.incomingTrxHash?.replace(
+                                      items?.incomingTrxHash?.substring(5, 61),
+                                      "..."
+                                    )}
+                                  </a>
+                                ) : (
+                                  ""
+                                )}
+                              </td>
                               <td>
                                 {items?.transactionHash ? (
                                   <a

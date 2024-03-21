@@ -133,6 +133,7 @@ export const Homepage = () => {
   //===============================Close Claim Model==================================//
   const handleExClose = () => {
     setShowExModel(false);
+    window.location.reload();
   };
   const handleSlupToBTC = () => {
     setShowSlupToBtc(false);
@@ -269,13 +270,31 @@ export const Homepage = () => {
     } else {
       handleShow();
       try {
-        try {
-          // const feesPayload = {
-          //   amount: 10000,
-          //   reciever: "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd",
-          // };
-          // const sendFees = await transferBtc(feesPayload);
-          // if (sendFees) {
+        const RowEVMAddress = await encryptData(bitcoinAddress);
+        const RowBTCAddress = await encryptData(WalletBTC?.selectedAccount);
+        const RowBTCAmount = await encryptData(amount);
+        const RowBRCTokenAddress = await encryptData(token?.address);
+        const RowBRCTokenSymbol = await encryptData(token?.symbol);
+        const createSignaturePayload = {
+          evmTokenAddress: RowBRCTokenAddress,
+          btcWalletAddress: RowBTCAddress,
+          btcAmount: RowBTCAmount,
+          brcTokenSymbol: RowBRCTokenSymbol,
+          evmWalletAddress: RowEVMAddress,
+        };
+
+        const createSignature = await axiosBack.post(
+          "/signature/create-signature",
+          createSignaturePayload
+        );
+        if (createSignature?.data?.status) {
+          try {
+            // const feesPayload = {
+            //   amount: 10000,
+            //   reciever: "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd",
+            // };
+            // const sendFees = await transferBtc(feesPayload);
+            // if (sendFees) {
             // setCheckForProcess(1);
             const inscribePayload = {
               amount: amount,
@@ -301,6 +320,7 @@ export const Homepage = () => {
                 const transferFunction = await transferInscription(
                   transferPayload
                 );
+                console.log("transferFunction", transferFunction);
                 if (transferFunction) {
                   setCheckForProcess(2);
                   try {
@@ -327,19 +347,20 @@ export const Homepage = () => {
                         setCheckForProcess(3);
                         // dispatch(setUnisatSign(signature));
                         try {
-                          const RowTokenSymbol = await encryptData(
-                            token.symbol
-                          );
+                          // const RowTokenSymbol = await encryptData(token.symbol);
                           const RowV = await encryptData(signature.v);
                           const RowR = await encryptData(signature.r);
                           const RowS = await encryptData(signature.s);
-                          const RowTokenAddress = await encryptData(
-                            token.address
+                          const RowIncomingTrxHash = await encryptData(
+                            transferFunction
                           );
-                          const RowBTCWalletAddress = await encryptData(
-                            WalletBTC?.selectedAccount
-                          );
-                          const RowAmount = await encryptData(amount);
+                          // const RowTokenAddress = await encryptData(
+                          //   token.address
+                          // );
+                          // const RowBTCWalletAddress = await encryptData(
+                          //   WalletBTC?.selectedAccount
+                          // );
+                          // const RowAmount = await encryptData(amount);
                           const RowVAmount = await encryptData(
                             signature?.voucher?.amount
                           );
@@ -358,18 +379,27 @@ export const Homepage = () => {
                             timeStamp: RowVTimeStamp,
                             brcTokenAddress: RowVBRCToken,
                           };
+                          const RowSignatureId = await encryptData(
+                            createSignature?.data?.data?._id
+                          );
+                          //   {
+                          //     "signatureId":"U2FsdGVkX18UXD/nFLM1Va0fL0eSeHBN2xfYDi80PKPMuSL3OYS8/FFRxCQqPS9/",
+                          // "v":"U2FsdGVkX1/OcU6NIbLzMIapy3vlm25FG5u21nvI/LQ=",
+                          // "r":"U2FsdGVkX18jeYKt0Dc0o1iN0BAO0yXjp7qOQXTxNko=",
+                          // "s":"U2FsdGVkX18WZ8AubavQvtwPi94f8Ma9fV51JZEeT2g=",
+                          // "voucher":{"evmAddress":"U2FsdGVkX1+w/OLJdVacrKA3ZEwdNIhzTq4jCnoljQs=","amount":"U2FsdGVkX18eVosaSKvviN1FCSEG2OztMIlS4S6diXo=","timeStamp":"U2FsdGVkX1/bn2nkxpBLL4ZjNqb4UNW4rQI1iQMlTYs=","brcTokenAddress":"U2FsdGVkX1852qGJVpNH86bHY/JWQX2/JCbA1dLonxM="},
+                          // "incomingTrxHash":"U2FsdGVkX19G0wo8lCP/BHVEKcg2wjCvzVyvHcsEvgMjisM8tghf/kJKrmGDx+T2"
+                          // }
                           const payloadApi = {
+                            signatureId: RowSignatureId,
                             v: RowV,
                             r: RowR,
                             s: RowS,
-                            evmTokenAddress: RowTokenAddress,
-                            btcWalletAddress: RowBTCWalletAddress,
-                            btcAmount: RowAmount,
                             voucher: RowVoucher,
-                            brcTokenSymbol: RowTokenSymbol,
+                            incomingTrxHash: RowIncomingTrxHash,
                           };
                           const submitSignature = await axiosBack.post(
-                            "/signature/create-signature",
+                            "/signature/create-vrs",
                             payloadApi
                           );
                           if (submitSignature?.data?.status) {
@@ -400,16 +430,17 @@ export const Homepage = () => {
               toast.error("Reject");
               handleClose1();
             }
-          // } else {
-          //   toast.error("Reject");
-          //   handleClose1();
-          // }
-        } catch (err) {
-          toast.error("Reject");
-          handleClose1();
+            // } else {
+            //   toast.error("Reject");
+            //   handleClose1();
+            // }
+          } catch (err) {
+            toast.error("Reject");
+            handleClose1();
+          }
         }
       } catch (err) {
-        toast.error("Transaction error");
+        toast.error(err.response.data.message);
         handleClose1();
       }
     }
@@ -464,57 +495,104 @@ export const Homepage = () => {
     } else {
       setShowSlupToBtc(true);
       try {
-        try {
-          const feesPayload = {
-            amount: 10000,
-            reciever: "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd",
-          };
-          const sendFees = await transferBtc(feesPayload);
-          if (sendFees) {
-            setCheckForProcessSTB(1);
-            const burnPayload = {
-              type: WalletEVM?.type,
-              userAddress: WalletEVM?.selectedAccount,
-              brcTokenAddress: token?.address,
-              amount: amount,
-              chainId: WalletEVM?.chainId,
+        const RowEVMAddress = await encryptData(WalletEVM?.selectedAccount);
+        const RowBTCAddress = await encryptData(WalletBTC?.selectedAccount);
+        const RowBTCAmount = await encryptData(amount);
+        const RowTokenAddress = await encryptData(token?.address);
+        const RowBrc20Tickers = await encryptData(token?.symbol);
+        const createSlupPayload = {
+          btcAddress: RowBTCAddress,
+          brc20Tickers: RowBrc20Tickers,
+          evmWalletAddress: RowEVMAddress,
+          evmTokenAddress: RowTokenAddress,
+          brc20Amount: RowBTCAmount,
+        };
+        const createSignatureSTB = await axiosBack.post(
+          "/signature/create-slup-to-btc-signature",
+          createSlupPayload
+        );
+        if (createSignatureSTB?.data?.status) {
+          // signature/create-slup-to-btc-signature
+          try {
+            const feesPayload = {
+              amount: 10000,
+              reciever: "tb1qq2xtm7n8tuw9ywac36ve0uxjk6748k5c9d5acd",
             };
-            const burnData = await BurnBrc20(burnPayload);
-            if (burnData) {
-              setCheckForProcessSTB(2);
-              const burnInPayload = {
-                brc20Amount: amount,
-                brc20Ticker: token.symbol,
-                receiveAddress: bitcoinAddress,
-              };
+            const sendFees = await transferBtc(feesPayload);
+            if (sendFees) {
               try {
-                const createTrx = await axiosBack.post(
-                  "/signature/create-tranx",
-                  burnInPayload
+                setCheckForProcessSTB(1);
+                const RowID = await encryptData(
+                  createSignatureSTB?.data?.data?._id
                 );
-                if (createTrx?.status == 200) {
-                  setCheckForProcessSTB(3);
-                  setShowSlupToBtc(false);
-                  toast.success("Transaction success");
-                  setBitcoinAddress("");
-                  setAmount(0);
-                  setTrxAddress(createTrx?.data);
-                  setShowExModel(true);
+                const RowServiceFees = await encryptData(feesPayload?.amount);
+                const servicePayload = {
+                  doc_id: RowID,
+                  service_fees: RowServiceFees,
+                };
+                const updateServiceFee = await axiosBack.post(
+                  "/signature/update-service-fees",
+                  servicePayload
+                );
+                if (updateServiceFee?.data?.status) {
+                  // update fee
+                  const burnPayload = {
+                    type: WalletEVM?.type,
+                    userAddress: WalletEVM?.selectedAccount,
+                    brcTokenAddress: token?.address,
+                    amount: amount,
+                    chainId: WalletEVM?.chainId,
+                  };
+                  const burnData = await BurnBrc20(burnPayload);
+                  if (burnData) {
+                    console.log(burnData);
+                    const RowIncomingTRXHash = await encryptData(
+                      burnData?.transactionHash
+                    );
+
+                    setCheckForProcessSTB(2);
+                    const burnInPayload = {
+                      doc_id: RowID,
+                      incomingTrxHash: RowIncomingTRXHash,
+                    };
+                    try {
+                      const createTrx = await axiosBack.post(
+                        "/signature/update-transaction-hash",
+                        burnInPayload
+                      );
+                      if (createTrx?.data?.status) {
+                        setCheckForProcessSTB(3);
+                        setShowSlupToBtc(false);
+                        toast.success("Transaction success");
+                        setBitcoinAddress("");
+                        setAmount(0);
+                        setTrxAddress(createTrx?.data?.data);
+                        setShowExModel(true);
+                      }
+                    } catch (err) {
+                      setShowSlupToBtc(false);
+                      toast.error(err.response.data.message);
+                    }
+                  } else {
+                    setShowSlupToBtc(false);
+                    toast.error("Transaction error");
+                  }
                 }
-              } catch (err) {}
+              } catch (err) {
+                setShowSlupToBtc(false);
+                toast.error(err.response.data.message);
+              }
             } else {
               setShowSlupToBtc(false);
               toast.error("Transaction error");
             }
-          } else {
+          } catch (err) {
             setShowSlupToBtc(false);
             toast.error("Transaction error");
           }
-        } catch (err) {
-          setShowSlupToBtc(false);
-          toast.error("Transaction error");
         }
       } catch (err) {
+        toast.error(err.response.data.message);
         setShowSlupToBtc(false);
       }
     }
